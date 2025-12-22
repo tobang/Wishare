@@ -1,0 +1,105 @@
+<!-- Header -->
+<ng-container *transloco="let t">
+  <section class="header background-image">
+    <div class="promotion">
+      <h3 class="header-sub-title">{{ t('landing.header.sub-title') }}</h3>
+      <h2 class="header-title">{{ t('landing.header.title') }}</h2>
+      <p class="header-text">
+        {{ t('landing.header.text') }}
+      </p>
+      <button tuiButton color="primary" (click)="testEffect()">
+        {{ t('landing.header.button') }}
+      </button>
+    </div>
+    <div class="signup wi-container grid">
+      <div class="signup-text">
+        <h1>{{ t('landing.signup.title') }}</h1>
+        <p>
+          {{ t('landing.signup.text') }}
+        </p>
+        <img class="people" src="/assets/images/people.svg" alt="" />
+      </div>
+      <div class="signup-form">
+        <wishare-login></wishare-login>
+        <!--  <app-email-login
+          [startTab]="'signup'"
+          (loggedIn)="loggedIn($event)"
+          (signedUp)="signedUp($event)"
+          (resetMailSent)="resetMailSent()"
+        ></app-email-login> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+
+  <section class="services">
+    <div class="wi-container grid">
+      <div class="service-header">
+        <div class="divider"></div>
+
+        <h3 class="title my-3">
+          {{ t('landing.services.title-1') }}
+          <span> {{ t('landing.services.title-2') }}</span>
+        </h3>
+      </div>
+      <div class="island-container">
+        <tui-island [hoverable]="true">
+          <div class="services-card-icon">
+            <img src="/assets/images/logo_parcel_default.svg" alt="" />
+          </div>
+          <div class="services-card-header">
+            <h2 class="title my-1">
+              {{ t('landing.services.cards.card-1.title') }}
+            </h2>
+          </div>
+          <div class="services-card-content">
+            <p class="tui-island__paragraph">
+              {{ t('landing.services.cards.card-1.text') }}
+            </p>
+          </div>
+          <p class="tui-island__paragraph tui-island__paragraph_link">
+            <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
+          </p>
+        </tui-island>
+      </div>
+      <tui-island [hoverable]="true">
+        <div class="services-card-icon">
+          <img src="/assets/images/logo_parcel_default.svg" alt="" />
+        </div>
+        <div class="services-card-header">
+          <h2 class="title my-1">
+            {{ t('landing.services.cards.card-2.title') }}
+          </h2>
+        </div>
+        <div class="services-card-content">
+          <p class="tui-island__paragraph">
+            {{ t('landing.services.cards.card-2.text') }}
+          </p>
+        </div>
+        <p class="tui-island__paragraph tui-island__paragraph_link">
+          <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
+        </p>
+      </tui-island>
+      <tui-island [hoverable]="true">
+        <div class="services-card-icon">
+          <img src="/assets/images/logo_parcel_default.svg" alt="" />
+        </div>
+        <div class="services-card-header">
+          <h2 class="title my-1">
+            {{ t('landing.services.cards.card-3.title') }}
+          </h2>
+        </div>
+        <div class="services-card-content">
+          <p class="tui-island__paragraph">
+            {{ t('landing.services.cards.card-3.text') }}
+          </p>
+        </div>
+        <p class="tui-island__paragraph tui-island__paragraph_link">
+          <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
+        </p>
+      </tui-island>
+    </div>
+  </section>
+  <div class="spacer"></div>
+</ng-container>

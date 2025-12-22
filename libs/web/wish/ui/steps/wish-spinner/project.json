@@ -1,0 +1,1 @@
+{ "name": "wish-ui-steps-wish-spinner", "$schema": "../../../../node_modules/nx/schemas/project-schema.json", "projectType": "library", "sourceRoot": "libs/web/wish/ui/steps/wish-spinner/src", "prefix": "app", "tags": [] }

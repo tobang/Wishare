@@ -1,0 +1,1 @@
+{ "name": "wish-feature-wish", "$schema": "../../../node_modules/nx/schemas/project-schema.json", "projectType": "library", "sourceRoot": "libs/web/wish/feature/wish/src", "prefix": "app", "tags": [] }

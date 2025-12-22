@@ -1,0 +1,33 @@
+.select-url {
+  // max-width: 750px;
+  justify-items: center;
+  &.grid {
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: repeat(3, auto);
+    > *:first-child {
+      grid-column-start: 1;
+      grid-column-end: 1;
+      grid-row-start: 1;
+      grid-row-end: 4;
+    }
+    > *:nth-child(2) {
+      grid-column-start: 2;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      grid-row-end: 4;
+    }
+  }
+  .url-input {
+    &.wish-input {
+      width: 300px;
+    }
+  }
+  .select-url-image {
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    img {
+      max-width: 200px;
+    }
+  }
+}

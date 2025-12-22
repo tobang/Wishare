@@ -1,0 +1,13 @@
+{
+  "tabs": {
+    "tab-0": {
+      "label": "Login"
+    },
+    "tab-1": {
+      "label": "Tilmelding"
+    }
+  },
+  "server-error": {
+    "invalid-credentials": "Forkert brugernavn eller password!"
+  }
+}

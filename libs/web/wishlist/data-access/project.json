@@ -1,0 +1,1 @@
+{ "name": "wishlist-data-access", "$schema": "../../node_modules/nx/schemas/project-schema.json", "projectType": "library", "sourceRoot": "libs/web/wishlist/data-access/src", "prefix": "app", "tags": [] }

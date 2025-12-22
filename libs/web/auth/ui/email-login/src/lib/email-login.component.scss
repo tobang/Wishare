@@ -1,0 +1,26 @@
+.login {
+  margin-top: 30px;
+
+  a {
+    text-decoration: underline;
+  }
+  .action-buttons {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 30px;
+  }
+  .full-width {
+    width: 100%;
+  }
+  .input-margin {
+    margin-top: 10px;
+  }
+  .server-error {
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
+  button {
+    margin-top: 10px;
+  }
+}

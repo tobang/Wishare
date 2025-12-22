@@ -1,0 +1,1 @@
+{ "name": "board-feature-board", "$schema": "../../../node_modules/nx/schemas/project-schema.json", "projectType": "library", "sourceRoot": "libs/web/board/feature/board/src", "prefix": "app", "tags": [] }

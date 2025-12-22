@@ -1,0 +1,19 @@
+<div
+  *rxLet="wishLists$; let wishlists"
+  class="wishlist-container"
+  cdkDropListOrientation="horizontal"
+  cdkDropList
+  [cdkDropListData]="wishlists"
+  (cdkDropListDropped)="drop($event)"
+  cdkDropListGroup
+>
+  <div
+    [cdkDragData]="wishlist"
+    cdkDrag
+    wishare-wish-list
+    *rxFor="let wishlist of wishLists$"
+    [wishlist]="wishlist"
+  >
+    <tui-svg src="tuiIconDragLarge" cdkDragHandle class="handle"></tui-svg>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+{
+  "step-url": {
+    "text": "Paste eller skriv url",
+    "errors": {
+      "invalid": "Url er ikke valid",
+      "required": "Feltet skal udfyldes!"
+    },
+    "button": "Hent ønske"
+  }
+}

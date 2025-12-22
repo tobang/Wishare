@@ -1,0 +1,51 @@
+<div class="signup" *transloco="let t">
+  <form [formGroup]="signUpForm" (ngSubmit)="signup()">
+    <div class="controls-container">
+      <tui-input
+        tuiTextfieldExampleText="mail@mail.dk"
+        formControlName="email"
+        [tuiHintContent]="t('signup.form.email-hint')"
+        [tuiTextfieldCleaner]="true"
+      >
+        {{ t('signup.form.email') }}<span class="tui-required"></span>
+      </tui-input>
+      <tui-error
+        formControlName="email"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+
+      <tui-input-password class="tui-space_top-5" formControlName="password">
+        {{ t('signup.form.password') }}<span class="tui-required"></span>
+        <input tuiTextfield />
+      </tui-input-password>
+      <tui-error
+        formControlName="password"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+
+      <tui-input-password
+        class="tui-space_top-5"
+        formControlName="passwordConfirm"
+      >
+        {{ t('signup.form.password-confirm')
+        }}<span class="tui-required"></span>
+        <input tuiTextfield />
+      </tui-input-password>
+      <tui-error
+        formControlName="passwordConfirm"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </div>
+    <div class="action-buttons">
+      <button
+        tuiButton
+        color="primary"
+        [size]="'m'"
+        type="submit"
+        [disabled]="signUpForm.invalid"
+      >
+        {{ t('signup.form.button-signup') }}
+      </button>
+    </div>
+  </form>
+</div>

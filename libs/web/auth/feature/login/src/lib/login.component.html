@@ -1,0 +1,20 @@
+<div class="login-form my-2" *transloco="let t">
+  <tui-island>
+    <tui-tabs [(activeItemIndex)]="activeItemIndex">
+      <button tuiTab type="button">
+        {{ t('login.tabs.tab-0.label') }}
+      </button>
+      <button tuiTab type="button">
+        {{ t('login.tabs.tab-1.label') }}
+      </button>
+    </tui-tabs>
+    <ng-container [ngSwitch]="activeItemIndex">
+      <ng-template [ngSwitchCase]="0">
+        <wishare-email-login (login)="login($event)"></wishare-email-login>
+      </ng-template>
+      <ng-template [ngSwitchCase]="1">
+        <wishare-signup></wishare-signup>
+      </ng-template>
+    </ng-container>
+  </tui-island>
+</div>

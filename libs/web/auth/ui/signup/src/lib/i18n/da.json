@@ -1,0 +1,16 @@
+{
+  "form": {
+    "email": "Email",
+    "email-error": "Ikke en gyldig email adresse!",
+    "email-hint": "Indtast din email adresse",
+    "password": "Password",
+    "password-error": "Password skal mindst være 6 karakterer langt!",
+    "password-confirm": "Gentag password",
+    "password-confirm-error": "Password er ikke ens!",
+    "button-signup": "Tilmeld",
+    "required": "Feltet skal udfyldes!"
+  },
+  "server-error": {
+    "auth/email-already-in-use": "Email adressen er allerede i brug, log ind i stedet?"
+  }
+}

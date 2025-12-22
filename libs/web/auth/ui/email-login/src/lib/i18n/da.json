@@ -1,0 +1,16 @@
+{
+  "form": {
+    "email": "Email",
+    "email-error": "Ikke en gyldig email adresse!",
+    "email-type": "Indtast din email",
+    "email-hint": "Brug din email til at logge ind",
+    "password": "Password",
+    "password-type": "Indtast password",
+    "password-error": "Password skal mindst være 6 karakterer langt!",
+    "button-login": "Login",
+    "button-reset": "Nulstil password",
+    "button-forgot": "Glemt password",
+    "reset-text": "Skriv din email herunder og vi sender dig en mail med information om hvordan du ændrer dit password.",
+    "required": "Feltet skal udfyldes!"
+  }
+}

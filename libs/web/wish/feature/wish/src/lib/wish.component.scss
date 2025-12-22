@@ -1,0 +1,42 @@
+:host {
+  display: flex;
+  flex: 1;
+}
+
+.wish-wrap {
+  touch-action: manipulation;
+  cursor: -webkit-grab;
+  cursor: grab;
+  margin: 8px 5px;
+  width: 100%;
+  &.selected {
+    border: 2px solid black;
+    border-radius: var(--tui-radius-l);
+  }
+  .tui-island {
+    height: 100px;
+    padding: 10px;
+  }
+  .content-container {
+    display: flex;
+    justify-content: space-between;
+    .wish-image {
+      background-color: white;
+      width: 40%;
+      min-width: 100px;
+      padding: 10px 0;
+      border-radius: var(--tui-radius-l);
+      img {
+        object-fit: cover;
+        object-position: center;
+        max-width: 100px;
+        max-height: 100px;
+        padding: 0 10px;
+      }
+    }
+    .wish-title {
+      border-left: 1px solid gray;
+      padding-left: 8px;
+    }
+  }
+}

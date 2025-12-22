@@ -1,0 +1,45 @@
+<div class="nav-wrapper" *rxLet="vm$; let vm">
+  <div class="grad-bar"></div>
+  <nav class="navbar" *transloco="let t">
+    <span class="logo" routerLink="/"
+      ><img src="assets/images/ws_logo.svg" alt=""
+    /></span>
+    <div
+      class="menu-toggle"
+      [ngClass]="vm.menuOpen ? 'is-active' : ''"
+      id="mobile-menu"
+      (click)="toggleMenu()"
+    >
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+    <ul class="nav nav-animate" [ngClass]="vm.menuOpen ? 'mobile-nav' : ''">
+      <li class="nav-item">
+        <a href="javascript:void(0)" routerLink="/">{{
+          t('navbar.homepage')
+        }}</a>
+      </li>
+      <li class="nav-item" *ngIf="!vm.authenticated">
+        <a href="javascript:void(0)" routerLink="/signup">{{
+          t('navbar.signup')
+        }}</a>
+      </li>
+      <li class="nav-item" *ngIf="!vm.authenticated">
+        <a href="javascript:void(0)" routerLink="/login">{{
+          t('navbar.login')
+        }}</a>
+      </li>
+      <li class="nav-item" *ngIf="vm.authenticated">
+        <a href="javascript:void(0)" routerLink="/wishlists">{{
+          t('navbar.wishlists')
+        }}</a>
+      </li>
+      <li class="nav-item" *ngIf="vm.authenticated">
+        <a href="javascript:void(0)" (click)="onLogout()">{{
+          t('navbar.logout')
+        }}</a>
+      </li>
+    </ul>
+  </nav>
+</div>
