@@ -1,0 +1,9 @@
+{
+  "name": "wishare-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/wishare-e2e/src",
+  "implicitDependencies": ["wishare"],
+  "// targets": "to see all targets run: nx show project wishare-e2e --web",
+  "targets": {}
+}
