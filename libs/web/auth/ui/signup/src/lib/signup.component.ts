@@ -4,27 +4,27 @@ import {
   Component,
   EventEmitter,
   Output,
+  signal,
 } from '@angular/core';
-import { ReactiveFormsModule, FormPath, form } from '@angular/forms/signals';
 import {
-  TranslocoModule,
-  TRANSLOCO_SCOPE,
-} from '@ngneat/transloco';
+  Field,
+  SchemaPath,
+  SchemaPathTree,
+  form,
+} from '@angular/forms/signals';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import {
   TuiButton,
-  TuiError,
   TuiHint,
   TuiTextfield,
   TuiLabel,
   TuiIcon,
 } from '@taiga-ui/core';
-import {
-  TuiFieldErrorPipe,
-  TuiPassword,
-} from '@taiga-ui/kit';
+import { TuiPassword } from '@taiga-ui/kit';
 import { scopeLoader } from 'scoped-translations';
 
 import { vestValidation } from '@wishare/web/shared/validators';
+import { FieldErrorComponent } from '@wishare/web/shared/utils';
 import { signupValidationSuite, SignupFormModel } from './signup.validation';
 
 @Component({
@@ -32,15 +32,14 @@ import { signupValidationSuite, SignupFormModel } from './signup.validation';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     TranslocoModule,
+    Field,
     TuiTextfield,
     TuiLabel,
     TuiIcon,
     TuiButton,
     TuiHint,
-    TuiFieldErrorPipe,
-    TuiError,
+    FieldErrorComponent,
     TuiPassword,
   ],
   providers: [
@@ -61,21 +60,24 @@ import { signupValidationSuite, SignupFormModel } from './signup.validation';
 export class SignupComponent {
   @Output() signUp = new EventEmitter<{ email: string; password: string }>();
 
-  private readonly initialModel: SignupFormModel = {
+  private readonly model = signal<SignupFormModel>({
     email: '',
     password: '',
     passwordConfirm: '',
-  };
-
-  readonly signUpForm = form(this.initialModel, (path: FormPath<SignupFormModel>) => {
-    vestValidation(path, signupValidationSuite);
   });
 
+  readonly signUpForm = form(
+    this.model,
+    (path: SchemaPath<SignupFormModel> & SchemaPathTree<SignupFormModel>) => {
+      vestValidation(path, signupValidationSuite);
+    },
+  );
+
   signup(): void {
-    if (!this.signUpForm.valid()) {
+    if (!this.signUpForm().valid()) {
       return;
     }
-    const { email, password } = this.signUpForm.value();
+    const { email, password } = this.signUpForm().value();
     this.signUp.emit({ email, password });
   }
 }

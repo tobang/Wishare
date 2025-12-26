@@ -10,27 +10,21 @@
           tuiTextfield
           type="email"
           placeholder="mail@mail.dk"
-          [formControl]="loginForm.controls.email"
+          [field]="loginForm.email"
         />
         <tui-icon [tuiHint]="t('emaillogin.form.email-hint')" />
       </tui-textfield>
-      <tui-error
-        [formControl]="loginForm.controls.email"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <wishare-field-error [field]="loginForm.email" />
 
       <tui-textfield [tuiTextfieldCleaner]="true">
         <label tuiLabel>
           {{ t('emaillogin.form.password-type')
           }}<span class="tui-required"></span>
         </label>
-        <input tuiTextfield type="password" [formControl]="loginForm.controls.password" />
+        <input tuiTextfield type="password" [field]="loginForm.password" />
         <tui-icon tuiPassword />
       </tui-textfield>
-      <tui-error
-        [formControl]="loginForm.controls.password"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <wishare-field-error [field]="loginForm.password" />
     </div>
     <div class="action-buttons">
       <button
@@ -38,7 +32,7 @@
         [size]="'m'"
         color="primary"
         type="submit"
-        [disabled]="!loginForm.valid()"
+        [disabled]="!loginForm().valid()"
       >
         {{ t('emaillogin.form.button-login') }}
       </button>

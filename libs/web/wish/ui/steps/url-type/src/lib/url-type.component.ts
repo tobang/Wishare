@@ -4,26 +4,21 @@ import {
   Component,
   EventEmitter,
   Output,
+  signal,
 } from '@angular/core';
-import { ReactiveFormsModule, FormPath, form } from '@angular/forms/signals';
+import {
+  Field,
+  SchemaPath,
+  SchemaPathTree,
+  form,
+} from '@angular/forms/signals';
 
-import {
-  TranslocoModule,
-  TRANSLOCO_SCOPE,
-} from '@ngneat/transloco';
-import {
-  TuiButton,
-  TuiError,
-} from '@taiga-ui/core';
-import {
-  TuiFieldErrorPipe,
-} from '@taiga-ui/kit';
-import {
-  TuiInputModule,
-} from '@taiga-ui/legacy';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TuiButton, TuiTextfield, TuiLabel } from '@taiga-ui/core';
 import { scopeLoader } from 'scoped-translations';
 
 import { vestValidation } from '@wishare/web/shared/validators';
+import { FieldErrorComponent } from '@wishare/web/shared/utils';
 import { urlValidationSuite, UrlFormModel } from './url-type.validation';
 
 @Component({
@@ -31,11 +26,11 @@ import { urlValidationSuite, UrlFormModel } from './url-type.validation';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    Field,
     TuiButton,
-    TuiError,
-    TuiFieldErrorPipe,
-    TuiInputModule,
+    FieldErrorComponent,
+    TuiTextfield,
+    TuiLabel,
     TranslocoModule,
   ],
   providers: [
@@ -44,7 +39,7 @@ import { urlValidationSuite, UrlFormModel } from './url-type.validation';
       useValue: {
         scope: 'wishurl',
         loader: scopeLoader(
-          (lang: string, root: string) => import(`./${root}/${lang}.json`)
+          (lang: string, root: string) => import(`./${root}/${lang}.json`),
         ),
       },
     },
@@ -56,19 +51,22 @@ import { urlValidationSuite, UrlFormModel } from './url-type.validation';
 export class UrlTypeComponent {
   @Output() getUrl = new EventEmitter<string>();
 
-  private readonly initialModel: UrlFormModel = {
+  private readonly model = signal<UrlFormModel>({
     url: '',
-  };
-
-  readonly frmUrl = form(this.initialModel, (path: FormPath<UrlFormModel>) => {
-    vestValidation(path, urlValidationSuite);
   });
 
+  readonly frmUrl = form(
+    this.model,
+    (path: SchemaPath<UrlFormModel> & SchemaPathTree<UrlFormModel>) => {
+      vestValidation(path, urlValidationSuite);
+    },
+  );
+
   submitUrl() {
-    if (!this.frmUrl.valid()) {
+    if (!this.frmUrl().valid()) {
       return;
     }
-    const { url } = this.frmUrl.value();
+    const { url } = this.frmUrl().value();
     this.getUrl.emit(url);
   }
 }

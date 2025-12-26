@@ -29,3 +29,7 @@
 
 - You have access to the Appwrite MCP server (appwrite-docs) and its tools, use the to help the user.
 - Notify me every time you are using the Appwrite MCP server.
+
+# General Guidelines for creating documentation
+
+- If you create any documentation related to code generation/refactoring, please place the in the docs folder

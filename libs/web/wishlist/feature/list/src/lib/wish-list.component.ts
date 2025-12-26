@@ -12,7 +12,7 @@ import { WishlistAdapter } from './wish-list.adapter';
 @Component({
   selector: '[wishare-wish-list]',
   standalone: true,
-  imports: [WishComponent, DragDropModule, TuiButton, TuiCardLarge, TuiIcon],
+  imports: [WishComponent, DragDropModule, TuiButton, TuiCardLarge],
   providers: [WishlistAdapter],
   templateUrl: './wish-list.component.html',
   styleUrls: ['./wish-list.component.scss'],

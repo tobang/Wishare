@@ -4,47 +4,45 @@ import {
   Component,
   EventEmitter,
   Output,
+  signal,
 } from '@angular/core';
 import {
-  ReactiveFormsModule,
-  FormPath,
+  Field,
+  SchemaPath,
+  SchemaPathTree,
   form,
 } from '@angular/forms/signals';
-import {
-  TranslocoModule,
-  TRANSLOCO_SCOPE,
-} from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import {
   TuiButton,
-  TuiError,
   TuiHint,
   TuiTextfield,
   TuiLabel,
   TuiIcon,
 } from '@taiga-ui/core';
-import {
-  TuiFieldErrorPipe,
-  TuiPassword,
-} from '@taiga-ui/kit';
+import { TuiPassword } from '@taiga-ui/kit';
 import { scopeLoader } from 'scoped-translations';
 
 import { vestValidation } from '@wishare/web/shared/validators';
-import { emailLoginValidationSuite, EmailLoginFormModel } from './email-login.validation';
+import { FieldErrorComponent } from '@wishare/web/shared/utils';
+import {
+  emailLoginValidationSuite,
+  EmailLoginFormModel,
+} from './email-login.validation';
 
 @Component({
   selector: 'wishare-email-login',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     TranslocoModule,
+    Field,
     TuiTextfield,
     TuiLabel,
     TuiIcon,
     TuiButton,
     TuiHint,
-    TuiFieldErrorPipe,
-    TuiError,
+    FieldErrorComponent,
     TuiPassword,
   ],
   providers: [
@@ -66,20 +64,26 @@ export class EmailLoginComponent {
   @Output() login = new EventEmitter<{ email: string; password: string }>();
   @Output() forgotPassword = new EventEmitter<void>();
 
-  private readonly initialModel: EmailLoginFormModel = {
+  private readonly model = signal<EmailLoginFormModel>({
     email: '',
     password: '',
-  };
-
-  readonly loginForm = form(this.initialModel, (path: FormPath<EmailLoginFormModel>) => {
-    vestValidation(path, emailLoginValidationSuite);
   });
 
+  readonly loginForm = form(
+    this.model,
+    (
+      path: SchemaPath<EmailLoginFormModel> &
+        SchemaPathTree<EmailLoginFormModel>,
+    ) => {
+      vestValidation(path, emailLoginValidationSuite);
+    },
+  );
+
   onLogin(): void {
-    if (!this.loginForm.valid()) {
+    if (!this.loginForm().valid()) {
       return;
     }
-    const { email, password } = this.loginForm.value();
+    const { email, password } = this.loginForm().value();
     this.login.emit({ email, password });
   }
 

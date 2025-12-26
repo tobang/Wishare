@@ -8,11 +8,11 @@
   </div>
   <div class="url-input wish-input">
     <form (ngSubmit)="submitUrl()">
-      <tui-input [formControl]="frmUrl.controls.url">Indtast url </tui-input>
-      <tui-error
-        [formControl]="frmUrl.controls.url"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <tui-textfield>
+        <label tuiLabel>Indtast url</label>
+        <input tuiTextfield type="url" [field]="frmUrl.url" />
+      </tui-textfield>
+      <wishare-field-error [field]="frmUrl.url" />
     </form>
   </div>
   <div class="url-button">
@@ -20,7 +20,7 @@
       tuiButton
       type="submit"
       [appearance]="'secondary'"
-      [disabled]="!frmUrl.valid()"
+      [disabled]="!frmUrl().valid()"
     >
       {{ t('wishurl.step-url.button') }}
     </button>

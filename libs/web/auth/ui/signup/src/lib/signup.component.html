@@ -9,39 +9,34 @@
           tuiTextfield
           type="email"
           placeholder="mail@mail.dk"
-          [formControl]="signUpForm.controls.email"
+          [field]="signUpForm.email"
         />
         <tui-icon [tuiHint]="t('signup.form.email-hint')" />
       </tui-textfield>
-      <tui-error
-        [formControl]="signUpForm.controls.email"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <wishare-field-error [field]="signUpForm.email" />
 
       <tui-textfield [tuiTextfieldCleaner]="true">
         <label tuiLabel>
           {{ t('signup.form.password') }}<span class="tui-required"></span>
         </label>
-        <input tuiTextfield type="password" [formControl]="signUpForm.controls.password" />
+        <input tuiTextfield type="password" [field]="signUpForm.password" />
         <tui-icon tuiPassword />
       </tui-textfield>
-      <tui-error
-        [formControl]="signUpForm.controls.password"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <wishare-field-error [field]="signUpForm.password" />
 
       <tui-textfield [tuiTextfieldCleaner]="true">
         <label tuiLabel>
           {{ t('signup.form.password-confirm')
           }}<span class="tui-required"></span>
         </label>
-        <input tuiTextfield type="password" [formControl]="signUpForm.controls.passwordConfirm" />
+        <input
+          tuiTextfield
+          type="password"
+          [field]="signUpForm.passwordConfirm"
+        />
         <tui-icon tuiPassword />
       </tui-textfield>
-      <tui-error
-        [formControl]="signUpForm.controls.passwordConfirm"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <wishare-field-error [field]="signUpForm.passwordConfirm" />
     </div>
     <div class="action-buttons">
       <button
@@ -49,7 +44,7 @@
         color="primary"
         [size]="'m'"
         type="submit"
-        [disabled]="!signUpForm.valid()"
+        [disabled]="!signUpForm().valid()"
       >
         {{ t('signup.form.button-signup') }}
       </button>
