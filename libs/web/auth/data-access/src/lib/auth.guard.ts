@@ -1,20 +1,21 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { map, Observable, tap } from 'rxjs';
-import { AuthState } from './auth.state';
+import { AuthStore } from './store/auth.store';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard  {
-  private authState = inject(AuthState);
+export class AuthGuard {
+  private authStore = inject(AuthStore);
   private router = inject(Router);
 
   canActivate(): Observable<boolean> | boolean {
     return this.checkLogin().pipe(
       tap((loggedIn) => {
         if (!loggedIn) {
-          this.router.navigateByUrl('/');
+          this.router.navigateByUrl('/login');
         }
-      })
+      }),
     );
   }
 
@@ -27,6 +28,6 @@ export class AuthGuard  {
   }
 
   checkLogin(): Observable<boolean> {
-    return this.authState.account$.pipe(map((account) => !!account));
+    return toObservable(this.authStore.vm.account).pipe(map((account) => !!account));
   }
 }

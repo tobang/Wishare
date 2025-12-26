@@ -1,18 +1,34 @@
-<div
-  *rxLet="wishLists$; let wishlists"
-  class="wishlist-container"
-  cdkDropListOrientation="horizontal"
-  cdkDropList
-  [cdkDropListData]="wishlists"
-  (cdkDropListDropped)="drop($event)"
-  cdkDropListGroup
->
+@let wishlists = wishLists();
+@if (wishlists && wishlists.length > 0) {
   <div
-    [cdkDragData]="wishlist"
-    cdkDrag
-    wishare-wish-list
-    *rxFor="let wishlist of wishLists$"
-    [wishlist]="wishlist"
+    class="wishlist-container"
+    cdkDropListOrientation="horizontal"
+    cdkDropList
+    [cdkDropListData]="wishlists"
+    (cdkDropListDropped)="drop($event)"
+    cdkDropListGroup
   >
+    @for (wishlist of wishlists; track wishlist.$id) {
+      <div
+        [cdkDragData]="wishlist"
+        cdkDrag
+        wishare-wish-list
+        [wishlist]="wishlist"
+      ></div>
+    }
   </div>
-</div>
+} @else {
+  <div class="empty-state">
+    <h2>No wishlists yet</h2>
+    <p>Create your first wishlist to get started!</p>
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      size="l"
+      (click)="createWishlist()"
+    >
+      Create Wishlist
+    </button>
+  </div>
+}

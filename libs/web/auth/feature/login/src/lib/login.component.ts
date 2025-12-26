@@ -1,7 +1,6 @@
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiTabs } from '@taiga-ui/kit';
 
-
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { RxState } from '@rx-angular/state';
@@ -24,8 +23,8 @@ export interface LoginModel {
     TuiCardLarge,
     TuiTabs,
     EmailLoginComponent,
-    SignupComponent
-],
+    SignupComponent,
+  ],
   providers: [
     RxState,
     {
@@ -34,7 +33,7 @@ export interface LoginModel {
       useValue: {
         scope: 'login',
         loader: scopeLoader(
-          (lang: string, root: string) => import(`./${root}/${lang}.json`)
+          (lang: string, root: string) => import(`./${root}/${lang}.json`),
         ),
       },
     },
@@ -56,6 +55,14 @@ export class LoginComponent {
   login(credentials: { email: string; password: string }) {
     this.authEffects.ui.loginWithCredentials([
       credentials.email,
+      credentials.password,
+    ]);
+  }
+
+  signup(credentials: { email: string; password: string }) {
+    this.authEffects.ui.registerWithCredentials([
+      credentials.email,
+      '',
       credentials.password,
     ]);
   }

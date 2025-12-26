@@ -1,67 +1,28 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { rxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 import { catchError, defer, from, map, of, switchMap, tap } from 'rxjs';
-
-import { AuthState } from './auth.state';
 
 import { TranslocoService } from '@ngneat/transloco';
 import { TuiAlertService } from '@taiga-ui/core';
 import { APPWRITE } from '@wishare/web/shared/app-config';
 
-import { Account, Databases, ID, Models, OAuthProvider } from 'appwrite';
+import { Account, Databases, ID, Models } from 'appwrite';
+import { AuthStore } from '../auth.store';
 
-type Actions = {
-  loginWithCredentials: [string, string];
-  registerWithCredentials: [string, string, string];
-  logout: void;
-  loginWithGoogle: void;
-  loginError: void;
-};
-
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthEffects {
-  private readonly router: Router = inject(Router);
-  private readonly appwrite: {
-    database: Databases;
-    account: Account;
-  } = inject(APPWRITE);
-  private readonly authState: AuthState = inject(AuthState);
+@Injectable()
+export class AuthLoginEffects {
+  private readonly router = inject(Router);
+  private readonly appwrite: { database: Databases; account: Account } = inject(APPWRITE);
+  private readonly authStore = inject(AuthStore);
   private readonly alertService = inject(TuiAlertService);
   private readonly transloco = inject(TranslocoService);
 
-  readonly ui = rxActions<Actions>();
-
-  constructor() {
-    rxEffects(({ register }) => {
-      // Logout
+  register(actions: any) {
+    return rxEffects(({ register }) => {
       register(
-        this.ui.logout$.pipe(
-          switchMap(() =>
-            from(
-              this.appwrite.account.deleteSession({ sessionId: 'current' }),
-            ).pipe(
-              tap(() => {
-                this.authState.actions.updateAuthState({
-                  account: null,
-                  session: null,
-                });
-                localStorage.clear();
-                sessionStorage.clear();
-                this.router.navigate(['/']);
-              }),
-            ),
-          ),
-        )
-      );
-
-      // Login with credentials
-      register(
-        this.ui.loginWithCredentials$.pipe(
-          switchMap(([email, password]) => {
+        actions['loginWithCredentials$'].pipe(
+          switchMap(([email, password]: [string, string]) => {
             console.log('Email', email, password, this.appwrite.account);
             return from(
               this.appwrite.account.createEmailPasswordSession({ email, password }),
@@ -81,12 +42,10 @@ export class AuthEffects {
               tap(() => this.router.navigate(['/wishlists'])),
               catchError((error) => {
                 console.error('Login error:', error);
-                return of({ session: null, account: null }).pipe(
-                  tap(() => this.ui.loginError()),
-                );
+                return of({ session: null, account: null });
               }),
               tap(({ account, session }) =>
-                this.authState.actions.updateAuthState({
+                this.authStore.actions.updateAuthState({
                   account,
                   session,
                 }),
@@ -96,10 +55,9 @@ export class AuthEffects {
         )
       );
 
-      // Register with credentials
       register(
-        this.ui.registerWithCredentials$.pipe(
-          switchMap(([email, name, password]) =>
+        actions['registerWithCredentials$'].pipe(
+          switchMap(([email, name, password]: [string, string, string]) =>
             defer(() =>
               this.appwrite.account.create({
                 userId: ID.unique(),
@@ -132,7 +90,7 @@ export class AuthEffects {
                 );
               }),
               tap(({ account, session }) =>
-                this.authState.actions.updateAuthState({
+                this.authStore.actions.updateAuthState({
                   account,
                   session,
                 }),
@@ -143,22 +101,8 @@ export class AuthEffects {
         )
       );
 
-      // Login with Google
       register(
-        this.ui.loginWithGoogle$.pipe(
-          tap(() =>
-            this.appwrite.account.createOAuth2Session({
-              provider: OAuthProvider.Google,
-              success: location.origin,
-              failure: `${location.origin}/login`,
-            }),
-          ),
-        )
-      );
-
-      // Login error
-      register(
-        this.ui.loginError$.pipe(
+        actions['loginError$'].pipe(
           switchMap(() =>
             this.transloco.selectTranslate(
               'server-error.invalid-credentials',
@@ -166,20 +110,11 @@ export class AuthEffects {
               'login',
             ),
           ),
-          switchMap((trans) => {
+          switchMap((trans: string) => {
             return this.alertService.open(trans);
           }),
         )
       );
     });
   }
-
-  /* deleteAccount = () => {
-    this.appwrite.account
-      .delete()
-      .then(() => this.authState.actions.updateAuthState({ account: null, session: null }))
-      .then(() => localStorage.clear())
-      .then(() => sessionStorage.clear())
-      .then(() => this.router.navigate(['/login']));
-  }; */
 }

@@ -15,6 +15,8 @@
 # General Guidelines for working with Angular
 
 - You have access to the Angular MCP server (angular-cli) and its tools, use the to help the user.
+- When working with forms, allways prefer signal forms.
+- Use Vest for validation: [text](https://vestjs.dev/docs/api_reference)
 - Notify me every time you are using the Angular MCP server.
 
 # General Guidelines for working with Taiga UI

@@ -2,7 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { TuiButton } from '@taiga-ui/core';
+import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { WishComponent } from '@wishare/web/wish/feature/wish';
 
@@ -12,12 +12,7 @@ import { WishlistAdapter } from './wish-list.adapter';
 @Component({
   selector: '[wishare-wish-list]',
   standalone: true,
-  imports: [
-    WishComponent,
-    DragDropModule,
-    TuiButton,
-    TuiCardLarge
-],
+  imports: [WishComponent, DragDropModule, TuiButton, TuiCardLarge, TuiIcon],
   providers: [WishlistAdapter],
   templateUrl: './wish-list.component.html',
   styleUrls: ['./wish-list.component.scss'],

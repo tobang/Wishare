@@ -1,6 +1,5 @@
 
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { RxLet } from '@rx-angular/template/let';
 
 import { TranslocoModule } from '@ngneat/transloco';
 import { TuiDialogContext } from '@taiga-ui/core';
@@ -10,7 +9,7 @@ import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { UrlTypeComponent } from '@wishare/web/wish/ui/steps/url-type';
 import { WishTypeComponent } from '@wishare/web/wish/ui/steps/wish-type';
 import { WishDialog, WishDialogInput } from './models/wish-dialog.model';
-import { WishDialogAdapter } from './wish-dialog.adapter';
+import { WishDialogStore } from './store/wish-dialog.store';
 
 @Component({
   selector: 'wishare-wish-dialog',
@@ -18,11 +17,10 @@ import { WishDialogAdapter } from './wish-dialog.adapter';
   imports: [
     TuiStepper,
     TranslocoModule,
-    RxLet,
     WishTypeComponent,
     UrlTypeComponent
 ],
-  providers: [WishDialogAdapter],
+  providers: [WishDialogStore],
   templateUrl: './wish-dialog.component.html',
   styleUrls: ['./wish-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +32,7 @@ export class WishDialogComponent {
       WishDialog | null,
       WishDialogInput
     >,
-    public readonly adapter: WishDialogAdapter
+    public readonly adapter: WishDialogStore
   ) {}
 
   closeDialog() {

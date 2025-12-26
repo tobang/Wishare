@@ -10,6 +10,11 @@
     margin-bottom: 10px;
   }
 
+  .card-paragraph {
+    display: flex;
+    gap: 8px;
+  }
+
   .cdk-drop-list-dragging {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
     .cdk-drag:not(.cdk-drag-placeholder) {

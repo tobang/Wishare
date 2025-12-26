@@ -8,13 +8,7 @@
       "runtime": "node-21.0",
       "path": "functions/scrapeMetaTags",
       "entrypoint": "src/main.js",
-      "ignore": [
-        "node_modules",
-        ".npm",
-        "*.md",
-        ".git",
-        ".gitignore"
-      ],
+      "ignore": ["node_modules", ".npm", "*.md", ".git", ".gitignore"],
       "execute": ["any"],
       "events": [],
       "schedule": "",
@@ -141,6 +135,16 @@
       "databaseId": "wishare",
       "enabled": true,
       "documentSecurity": true,
+      "permissions": [
+        {
+          "permission": "create",
+          "target": "users"
+        },
+        {
+          "permission": "read",
+          "target": "users"
+        }
+      ],
       "attributes": [
         {
           "key": "title",

@@ -19,7 +19,7 @@ type Actions = {
 };
 
 @Injectable()
-export class WishlistAdapter {
+export class WishlistStore {
   private readonly componentInjector = inject(Injector);
   private readonly dialogService = inject(TuiDialogService);
   public readonly commands = rxActions<Actions>();
@@ -54,3 +54,6 @@ export class WishlistAdapter {
     this.commands.createWish();
   }
 }
+
+// Backwards compatibility
+export { WishlistStore as WishlistAdapter };

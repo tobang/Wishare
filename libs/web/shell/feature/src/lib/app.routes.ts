@@ -11,16 +11,27 @@ export const appRoutes: Routes = [
         path: '',
         loadComponent: () =>
           import('@wishare/web/landing-page/feature').then(
-            (m) => m.LandingPageComponent
+            (m) => m.LandingPageComponent,
+          ),
+      },
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('@wishare/web/auth/feature/login').then(
+            (m) => m.LoginComponent,
           ),
       },
       {
         path: 'wishlists',
         loadComponent: () =>
           import('@wishare/web/board/feature/board').then(
-            (m) => m.BoardComponent
+            (m) => m.BoardComponent,
           ),
         canActivate: [AuthGuard],
+      },
+      {
+        path: '**',
+        redirectTo: '',
       },
     ],
   },

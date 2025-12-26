@@ -1,6 +1,6 @@
-import { inject, Injectable } from '@angular/core';
-import { RxState } from '@rx-angular/state';
-import { RxActionFactory } from '@rx-angular/state/actions';
+import { inject, Injectable, computed } from '@angular/core';
+import { rxState } from '@rx-angular/state';
+import { rxActions } from '@rx-angular/state/actions';
 import { AuthStateModel } from './auth-state.model';
 
 import { WithInitializer } from '@wishare/web/shared/utils';
@@ -9,44 +9,44 @@ import { AccountService } from './services/account.service';
 
 export interface AuthCommand {
   fetchAccount: void;
+  updateAuthState: Partial<AuthStateModel>;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthState
-  extends RxState<AuthStateModel>
-  implements WithInitializer
-{
-  private readonly rxAction = inject(RxActionFactory<AuthCommand>);
+export class AuthState implements WithInitializer {
   private readonly accountService = inject(AccountService);
-  readonly actions = this.rxAction.create();
-  readonly session$ = this.select('session');
-  readonly account$ = this.select('account');
-
-  readonly preferences$ = this.account$.pipe(
-    map((account) => (account ? account.prefs : {}))
-  );
-
-  readonly isGuest$ = this.preferences$.pipe(
-    map(
-      (prefs) =>
-        Object.prototype.hasOwnProperty.call(prefs, 'guest') &&
-        prefs.guest === true
-    )
-  );
-
-  constructor() {
-    super();
-
-    this.connect(
+  public readonly actions = rxActions<AuthCommand>();
+  
+  public readonly store = rxState<AuthStateModel>(({ connect, set }) => {
+    connect(
       'account',
       this.actions.fetchAccount$.pipe(
         switchMap(() => this.accountService.getAccount()),
         catchError(() => of(null))
       )
     );
-  }
+
+    connect(this.actions.updateAuthState$, (state, update) => ({
+      ...state,
+      ...update
+    }));
+  });
+
+  readonly session = this.store.signal('session');
+  readonly account = this.store.signal('account');
+
+  readonly preferences = computed(() => {
+    const account = this.account();
+    return account ? account.prefs : {};
+  });
+
+  readonly isGuest = computed(() => {
+    const prefs = this.preferences();
+    return Object.prototype.hasOwnProperty.call(prefs, 'guest') &&
+      prefs.guest === true;
+  });
 
   initialize(): void {
     this.actions.fetchAccount();

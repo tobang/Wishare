@@ -5,10 +5,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { appRoutes } from './app.routes';
 import { APP_PROVIDERS } from './app.providers';
-import {
-  provideTransloco,
-  TranslocoConfig,
-} from '@ngneat/transloco';
+import { provideTransloco, TranslocoConfig } from '@ngneat/transloco';
 import { availableLangs } from 'scoped-translations';
 import { environment } from '../environments/environment';
 import { translocoLoader } from '../transloco-loader';

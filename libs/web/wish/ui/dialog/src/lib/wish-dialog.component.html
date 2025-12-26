@@ -1,17 +1,16 @@
-<ng-container *rxLet="adapter.vm$; let vm">
-  <tui-stepper
-    [activeItemIndex]="vm.activeItemIndex"
-    (activeItemIndexChange)="setActiveItemIndex($event)"
-  ></tui-stepper>
-  @switch (vm.activeItemIndex) {
-    @case (0) {
-      <wishare-wish-type
-        (createAutomatic)="createAutomatic()"
-        (createManual)="createManual()"
-      ></wishare-wish-type>
-    }
-    @case (1) {
-      <wishare-url-type></wishare-url-type>
-    }
+@let activeItemIndex = adapter.vm.activeItemIndex();
+<tui-stepper
+  [activeItemIndex]="activeItemIndex"
+  (activeItemIndexChange)="setActiveItemIndex($event)"
+></tui-stepper>
+@switch (activeItemIndex) {
+  @case (0) {
+    <wishare-wish-type
+      (createAutomatic)="createAutomatic()"
+      (createManual)="createManual()"
+    ></wishare-wish-type>
   }
-</ng-container>
+  @case (1) {
+    <wishare-url-type></wishare-url-type>
+  }
+}

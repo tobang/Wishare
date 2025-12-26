@@ -5,33 +5,23 @@
   </div>
   <div>
     @for (wish of wishlist.wishes?.documents; track wish; let i = $index) {
-      <wishare-wish
-        [wish]="wish"
-      ></wishare-wish>
+      <wishare-wish [wish]="wish"></wishare-wish>
     }
   </div>
   <p class="card-paragraph card-paragraph_link">
     <button
       tuiIconButton
       type="button"
-      class="tui-space_right-2"
-      [size]="'m'"
-      iconStart="tuiIconPlus"
+      size="s"
+      iconStart="@tui.plus"
       (click)="createWish()"
     ></button>
     <button
       tuiIconButton
       type="button"
-      class="tui-space_right-2"
-      [size]="'m'"
-      iconStart="tuiIconTrash"
+      size="s"
+      iconStart="@tui.trash"
     ></button>
-    <button
-      tuiIconButton
-      type="button"
-      class="tui-space_right-2"
-      [size]="'m'"
-      iconStart="tuiIconDraft"
-    ></button>
+    <button tuiIconButton type="button" size="s" iconStart="@tui.edit"></button>
   </p>
 </div>

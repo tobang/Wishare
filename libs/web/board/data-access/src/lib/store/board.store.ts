@@ -1,25 +1,27 @@
 import { inject, Injectable } from '@angular/core';
 import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
-import { rxEffects } from '@rx-angular/state/effects';
-import { BoardStateModel } from './board-state.model';
 
 import { WithInitializer } from '@wishare/web/shared/utils';
 import { catchError, map, of, switchMap, tap, type Observable } from 'rxjs';
 import { BoardService } from '../services/board.service';
 import type { Models } from 'appwrite';
 import type { Wishlist } from '@wishare/web/wishlist/data-access';
+import { createBoardViewModel } from './board.selectors';
+import { BoardActions, BoardStateModel } from './board.types';
 
-export interface BoardCommand {
-  fetchWishlists: void;
-  fetchBoard: void;
-  createWishlist: void;
-}
-
+/**
+ * Store managing the state for the board feature.
+ *
+ * Key responsibilities:
+ * - Managing wishlists
+ * - Creating new wishlists
+ * - Fetching board data
+ */
 @Injectable()
-export class BoardAdapter implements WithInitializer {
+export class BoardStore implements WithInitializer {
   private readonly boardService = inject(BoardService);
-  public readonly actions = rxActions<BoardCommand>();
+  public readonly actions = rxActions<BoardActions>();
 
   public readonly store = rxState<BoardStateModel>(({ connect, set }) => {
     set({ wishLists: [] });
@@ -42,15 +44,7 @@ export class BoardAdapter implements WithInitializer {
     );
   });
 
-  constructor() {
-    rxEffects(({ register }) => {
-      register(this.actions.createWishlist$, () => {
-        this.boardService.createWishlist().subscribe(() => {
-          this.actions.fetchWishlists();
-        });
-      });
-    });
-  }
+  public readonly vm = createBoardViewModel(this.store);
 
   initialize(): void {
     this.actions.fetchWishlists();

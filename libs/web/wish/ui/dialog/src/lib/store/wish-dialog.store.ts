@@ -1,30 +1,21 @@
-import { Injectable, computed } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { WishDialog, WishDialogInput } from './models/wish-dialog.model';
-
-interface WishDialogModel {
-  activeItemIndex: number;
-}
-
-type Actions = {
-  closeDialog: TuiDialogContext<WishDialog | null, WishDialogInput>;
-  updateActiveIndex: number;
-};
+import { WishDialog, WishDialogInput } from '../models/wish-dialog.model';
+import { createWishDialogViewModel } from './wish-dialog.selectors';
+import { WishDialogActions, WishDialogModel } from './wish-dialog.types';
 
 @Injectable()
-export class WishDialogAdapter {
-  public readonly commands = rxActions<Actions>();
+export class WishDialogStore {
+  public readonly commands = rxActions<WishDialogActions>();
   
   public readonly store = rxState<WishDialogModel>(({ set }) => {
     set({ activeItemIndex: 0 });
   });
 
-  public readonly vm = {
-    activeItemIndex: this.store.signal('activeItemIndex')
-  };
+  public readonly vm = createWishDialogViewModel(this.store);
 
   constructor() {
     rxEffects(({ register }) => {
