@@ -1,59 +1,31 @@
-import { inject, Injectable, Injector } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
-import { rxEffects } from '@rx-angular/state/effects';
-import { TuiDialogService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
-import { notNullOrUndefined } from '@wishare/web/shared/utils';
-import {
-  WishDialogComponent,
-  WishDialogInput,
-} from '@wishare/web/wish/ui/dialog';
-import { Wish } from '@wishare/web/wishlist/data-access';
-import { EMPTY, filter, switchMap } from 'rxjs';
 
-type Actions = {
-  createWish: void;
-  editWish: Wish;
-  deleteWish: Wish;
-};
+import { createWishlistViewModel } from './wishlist.selectors';
+import { WishlistActions, WishlistStateModel } from './wishlist.types';
+import { WishlistEffects } from './wishlist.effects';
 
+/**
+ * Store managing the state for the wishlist feature.
+ *
+ * Key responsibilities:
+ * - Managing wish dialog operations
+ */
 @Injectable()
 export class WishlistStore {
-  private readonly componentInjector = inject(Injector);
-  private readonly dialogService = inject(TuiDialogService);
-  public readonly commands = rxActions<Actions>();
+  public readonly commands = rxActions<WishlistActions>();
+  private readonly effects = inject(WishlistEffects);
   
-  public readonly store = rxState<never>(({}) => {});
+  public readonly store = rxState<WishlistStateModel>(({}) => {});
+
+  public readonly vm = createWishlistViewModel(this.store);
 
   constructor() {
-    rxEffects(({ register }) => {
-      register(
-        this.commands.createWish$.pipe(
-          switchMap(() =>
-            this.dialogService
-              .open<WishDialogInput>(
-                new PolymorpheusComponent(WishDialogComponent, this.componentInjector),
-                {
-                  dismissible: false,
-                  data: { wish: {}, images: [], editMode: false },
-                  size: 'l',
-                }
-              )
-              .pipe(
-                filter(notNullOrUndefined),
-                switchMap(() => EMPTY)
-              )
-          )
-        )
-      );
-    });
+    this.effects.register(this.commands);
   }
 
   createWish() {
     this.commands.createWish();
   }
 }
-
-// Backwards compatibility
-export { WishlistStore as WishlistAdapter };
