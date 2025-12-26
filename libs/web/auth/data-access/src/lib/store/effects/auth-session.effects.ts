@@ -15,7 +15,9 @@ import { AuthStore } from '../auth.store';
  * - Logout
  * - OAuth login
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthSessionEffects {
   private readonly router = inject(Router);
   private readonly appwrite: { database: Databases; account: Account } = inject(APPWRITE);

@@ -8,6 +8,7 @@ import { AuthStore } from './store/auth.store';
 export class AuthGuard {
   private authStore = inject(AuthStore);
   private router = inject(Router);
+  private readonly account$ = toObservable(this.authStore.vm.account);
 
   canActivate(): Observable<boolean> | boolean {
     return this.checkLogin().pipe(
@@ -28,6 +29,6 @@ export class AuthGuard {
   }
 
   checkLogin(): Observable<boolean> {
-    return toObservable(this.authStore.vm.account).pipe(map((account) => !!account));
+    return this.account$.pipe(map((account) => !!account));
   }
 }

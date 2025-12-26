@@ -22,7 +22,11 @@ import { NavBarComponent } from '@wishare/web/shell/ui/nav-bar';
 export class LayoutComponent {
   private readonly authStore = inject(AuthStore);
   private readonly AuthEffects = inject(AuthEffects);
-  public readonly authenticated$ = toObservable(this.authStore.vm.account).pipe(
+  
+  // Call toObservable in field initializer (injection context)
+  private readonly account$ = toObservable(this.authStore.vm.account);
+  
+  public readonly authenticated$ = this.account$.pipe(
     map(tuiIsPresent)
   );
 

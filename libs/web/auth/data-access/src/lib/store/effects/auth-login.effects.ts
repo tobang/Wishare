@@ -10,7 +10,17 @@ import { APPWRITE } from '@wishare/web/shared/app-config';
 import { Account, Databases, ID, Models } from 'appwrite';
 import { AuthStore } from '../auth.store';
 
-@Injectable()
+/**
+ * Effects for authentication actions.
+ *
+ * Handles:
+ * - Login with credentials
+ * - Registration with credentials
+ * - Error handling and navigation
+ */
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthLoginEffects {
   private readonly router = inject(Router);
   private readonly appwrite: { database: Databases; account: Account } = inject(APPWRITE);

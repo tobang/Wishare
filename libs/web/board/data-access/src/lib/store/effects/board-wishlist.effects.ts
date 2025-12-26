@@ -10,7 +10,9 @@ import { BoardStore } from '../board.store';
  * - Creating wishlists
  * - Refreshing board data after operations
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class BoardWishlistEffects {
   private readonly boardService = inject(BoardService);
   private readonly boardStore = inject(BoardStore);
