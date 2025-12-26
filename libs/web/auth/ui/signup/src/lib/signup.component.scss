@@ -1,14 +1,39 @@
 .signup {
-  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
   a {
     text-decoration: underline;
   }
+
+  .controls-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+
+    tui-textfield {
+      margin-top: 1rem;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
   .action-buttons {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     margin-top: 30px;
+    flex-shrink: 0;
   }
   .full-width {
     width: 100%;

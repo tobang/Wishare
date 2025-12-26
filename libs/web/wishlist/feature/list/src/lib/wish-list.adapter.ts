@@ -19,7 +19,7 @@ type Actions = {
 
 @Injectable()
 export class WishlistAdapter extends RxState<never> {
-  private readonly injector = inject(Injector);
+  private readonly componentInjector = inject(Injector);
   private readonly dialogService = inject(TuiDialogService);
   readonly commands = new RxActionFactory<Actions>().create();
   constructor() {
@@ -38,7 +38,7 @@ export class WishlistAdapter extends RxState<never> {
         switchMap(() =>
           this.dialogService
             .open<WishDialogInput>(
-              new PolymorpheusComponent(WishDialogComponent, this.injector),
+              new PolymorpheusComponent(WishDialogComponent, this.componentInjector),
               {
                 dismissible: false,
                 data: { wish: {}, images: [], editMode: false },

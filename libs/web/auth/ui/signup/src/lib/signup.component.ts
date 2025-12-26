@@ -16,13 +16,14 @@ import {
   TuiButton,
   TuiError,
   TuiHint,
-  TuiTextfieldOptionsDirective,
+  TuiTextfield,
+  TuiLabel,
+  TuiIcon,
 } from '@taiga-ui/core';
 import {
   TuiFieldErrorPipe,
-  TuiInput,
-  TuiInputPassword,
   TUI_VALIDATION_ERRORS,
+  TuiPassword,
 } from '@taiga-ui/kit';
 import { passwordMatchValidator } from '@wishare/web/auth/utils';
 import { scopeLoader } from 'scoped-translations';
@@ -43,13 +44,14 @@ export function validationErrorsFactory(transloco: TranslocoService) {
     CommonModule,
     ReactiveFormsModule,
     TranslocoModule,
-    TuiInput,
-    TuiTextfieldOptionsDirective,
+    TuiTextfield,
+    TuiLabel,
+    TuiIcon,
     TuiButton,
     TuiHint,
     TuiFieldErrorPipe,
     TuiError,
-    TuiInputPassword,
+    TuiPassword,
   ],
   providers: [
     {
@@ -57,7 +59,7 @@ export function validationErrorsFactory(transloco: TranslocoService) {
       useValue: {
         scope: 'signup',
         loader: scopeLoader(
-          (lang: string, root: string) => import(`./${root}/${lang}.json`)
+          (lang: string, root: string) => import(`./${root}/${lang}.json`),
         ),
       },
     },
@@ -74,7 +76,7 @@ export function validationErrorsFactory(transloco: TranslocoService) {
 export class SignupComponent {
   @Output() signUp = new EventEmitter<{ email: string; password: string }>();
 
-  private readonly fb: FormBuilder = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   readonly signUpForm = this.fb.group({
     email: this.fb.control('', [Validators.required, Validators.email]),
     password: this.fb.control('', [

@@ -1,3 +1,3 @@
 export interface WithInitializer {
-  initialize: (...args: any[]) => void;
+  initialize: (...args: unknown[]) => void;
 }

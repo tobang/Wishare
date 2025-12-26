@@ -43,27 +43,25 @@
           <span> {{ t('landing.services.title-2') }}</span>
         </h3>
       </div>
-      <div class="island-container">
-        <tui-island [hoverable]="true">
-          <div class="services-card-icon">
-            <img src="/assets/images/logo_parcel_default.svg" alt="" />
-          </div>
-          <div class="services-card-header">
-            <h2 class="title my-1">
-              {{ t('landing.services.cards.card-1.title') }}
-            </h2>
-          </div>
-          <div class="services-card-content">
-            <p class="tui-island__paragraph">
-              {{ t('landing.services.cards.card-1.text') }}
-            </p>
-          </div>
-          <p class="tui-island__paragraph tui-island__paragraph_link">
-            <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
+      <div tuiCardLarge>
+        <div class="services-card-icon">
+          <img src="/assets/images/logo_parcel_default.svg" alt="" />
+        </div>
+        <div class="services-card-header">
+          <h2 class="title my-1">
+            {{ t('landing.services.cards.card-1.title') }}
+          </h2>
+        </div>
+        <div class="services-card-content">
+          <p class="card-paragraph">
+            {{ t('landing.services.cards.card-1.text') }}
           </p>
-        </tui-island>
+        </div>
+        <p class="card-paragraph card-paragraph_link">
+          <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
+        </p>
       </div>
-      <tui-island [hoverable]="true">
+      <div tuiCardLarge>
         <div class="services-card-icon">
           <img src="/assets/images/logo_parcel_default.svg" alt="" />
         </div>
@@ -73,15 +71,15 @@
           </h2>
         </div>
         <div class="services-card-content">
-          <p class="tui-island__paragraph">
+          <p class="card-paragraph">
             {{ t('landing.services.cards.card-2.text') }}
           </p>
         </div>
-        <p class="tui-island__paragraph tui-island__paragraph_link">
+        <p class="card-paragraph card-paragraph_link">
           <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
         </p>
-      </tui-island>
-      <tui-island [hoverable]="true">
+      </div>
+      <div tuiCardLarge>
         <div class="services-card-icon">
           <img src="/assets/images/logo_parcel_default.svg" alt="" />
         </div>
@@ -91,14 +89,14 @@
           </h2>
         </div>
         <div class="services-card-content">
-          <p class="tui-island__paragraph">
+          <p class="card-paragraph">
             {{ t('landing.services.cards.card-3.text') }}
           </p>
         </div>
-        <p class="tui-island__paragraph tui-island__paragraph_link">
+        <p class="card-paragraph card-paragraph_link">
           <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
         </p>
-      </tui-island>
+      </div>
     </div>
   </section>
   <div class="spacer"></div>

@@ -18,9 +18,28 @@
           {
             "glob": "**/*",
             "input": "apps/wishare/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/wishare/src/assets",
+            "output": "assets"
+          },
+          {
+            "glob": "**/*",
+            "input": "libs/web/shared/assets/src/assets",
+            "output": "assets"
+          },
+          {
+            "glob": "**/*",
+            "input": "node_modules/@taiga-ui/icons/src",
+            "output": "assets/taiga-ui/icons"
           }
         ],
-        "styles": ["apps/wishare/src/styles.scss"]
+        "styles": [
+          "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+          "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
+          "apps/wishare/src/styles.scss"
+        ]
       },
       "configurations": {
         "production": {

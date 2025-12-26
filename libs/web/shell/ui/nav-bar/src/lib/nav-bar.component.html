@@ -9,7 +9,7 @@
       [ngClass]="vm.menuOpen ? 'is-active' : ''"
       id="mobile-menu"
       (click)="toggleMenu()"
-    >
+      >
       <span class="bar"></span>
       <span class="bar"></span>
       <span class="bar"></span>
@@ -20,26 +20,34 @@
           t('navbar.homepage')
         }}</a>
       </li>
-      <li class="nav-item" *ngIf="!vm.authenticated">
-        <a href="javascript:void(0)" routerLink="/signup">{{
-          t('navbar.signup')
-        }}</a>
-      </li>
-      <li class="nav-item" *ngIf="!vm.authenticated">
-        <a href="javascript:void(0)" routerLink="/login">{{
-          t('navbar.login')
-        }}</a>
-      </li>
-      <li class="nav-item" *ngIf="vm.authenticated">
-        <a href="javascript:void(0)" routerLink="/wishlists">{{
-          t('navbar.wishlists')
-        }}</a>
-      </li>
-      <li class="nav-item" *ngIf="vm.authenticated">
-        <a href="javascript:void(0)" (click)="onLogout()">{{
-          t('navbar.logout')
-        }}</a>
-      </li>
+      @if (!vm.authenticated) {
+        <li class="nav-item">
+          <a href="javascript:void(0)" routerLink="/signup">{{
+            t('navbar.signup')
+          }}</a>
+        </li>
+      }
+      @if (!vm.authenticated) {
+        <li class="nav-item">
+          <a href="javascript:void(0)" routerLink="/login">{{
+            t('navbar.login')
+          }}</a>
+        </li>
+      }
+      @if (vm.authenticated) {
+        <li class="nav-item">
+          <a href="javascript:void(0)" routerLink="/wishlists">{{
+            t('navbar.wishlists')
+          }}</a>
+        </li>
+      }
+      @if (vm.authenticated) {
+        <li class="nav-item">
+          <a href="javascript:void(0)" (click)="onLogout()">{{
+            t('navbar.logout')
+          }}</a>
+        </li>
+      }
     </ul>
   </nav>
 </div>

@@ -8,8 +8,6 @@ import { APPWRITE } from '@wishare/web/shared/app-config';
 import { leftJoin } from '@wishare/web/shared/operators';
 import { Wish, Wishlist } from '@wishare/web/wishlist/data-access';
 
-
-
 @Injectable({ providedIn: 'root' })
 export class BoardService {
   constructor(
@@ -17,36 +15,41 @@ export class BoardService {
     private readonly appwrite: {
       database: Databases;
       account: Account;
-    }
+    },
   ) {}
 
   getBoard() {
-    return this.getWishlists()
-      .pipe(
-        leftJoin(this.appwrite.database, 'wishare', '$id', 'wlid', 'wishes'),
-      )
-
+    return this.getWishlists().pipe(
+      map((wishlists) => wishlists as unknown as Record<string, unknown>[]),
+      leftJoin(this.appwrite.database, 'wishare', '$id', 'wlid', 'wishes'),
+    );
   }
 
   getWishlists(): Observable<Wishlist[]> {
-    const session$ = from(this.appwrite.account.getSession('current'));
+    const session$ = from(this.appwrite.account.getSession({ sessionId: 'current' }));
     return session$.pipe(
       switchMap((session) =>
         from(
-          this.appwrite.database.listDocuments('wishare', 'wishlists', [
-            Query.equal('uid', session.userId),
-          ])
+          this.appwrite.database.listDocuments({
+            databaseId: 'wishare',
+            collectionId: 'wishlists',
+            queries: [Query.equal('uid', session.userId)],
+          }),
         ).pipe(
-          map((docList) => docList.documents.map((doc) => doc as Wishlist))
-        )
-      )
+          map((docList) =>
+            docList.documents.map((doc) => doc as unknown as Wishlist),
+          ),
+        ),
+      ),
     );
   }
   getWishes(wlid: string): Observable<Wish[]> {
     return from(
-      this.appwrite.database.listDocuments('wishare', 'wishes', [
-        Query.equal('wlid', wlid),
-      ])
-    ).pipe(map((docList) => docList.documents as Wish[]));
+      this.appwrite.database.listDocuments({
+        databaseId: 'wishare',
+        collectionId: 'wishes',
+        queries: [Query.equal('wlid', wlid)],
+      }),
+    ).pipe(map((docList) => docList.documents as unknown as Wish[]));
   }
 }

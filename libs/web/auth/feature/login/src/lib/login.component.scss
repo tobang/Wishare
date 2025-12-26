@@ -1,7 +1,20 @@
 .login-form {
-  .tui-island {
-    height: 430px;
+  [tuiCardLarge] {
     padding: 30px;
     box-shadow: 0 4px 24px rgb(0 0 0 / 12%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  tui-tabs {
+    flex-shrink: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 }

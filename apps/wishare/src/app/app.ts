@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
+import { TuiRoot } from '@taiga-ui/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
-  selector: 'app-root',
-  templateUrl: './app.html',
-  styleUrl: './app.scss',
+  selector: 'app-wishare-root',
+  imports: [RouterModule, TuiRoot, TranslocoModule],
+  template: `
+    <tui-root>
+      <router-outlet />
+    </tui-root>
+  `,
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {
-  protected title = 'wishare';
-}
+export class App {}

@@ -14,12 +14,12 @@ export class AccountService {
     }
   ) {}
 
-  getAccount(): Observable<Models.Account<Record<string, unknown>>> {
+  getAccount(): Observable<Models.User<Record<string, unknown>>> {
     return defer(() => from(this.appwrite.account.get()));
   }
 
   logInAsGuest(): Observable<{
-    account: Models.Account<Record<string, unknown>>;
+    account: Models.User<Record<string, unknown>>;
     session: Models.Session;
   }> {
     const updatePrefs$ = defer(() =>

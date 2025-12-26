@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RxState, selectSlice } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { WishDialog, WishDialogInput } from './models/wish-dialog.model';
@@ -16,7 +16,7 @@ type Actions = {
 @Injectable()
 export class WishDialogAdapter extends RxState<WishDialogModel> {
   readonly commands = new RxActionFactory<Actions>().create();
-  public vm$ = this.select(selectSlice(['activeItemIndex']));
+  public vm$ = this.select();
   constructor() {
     super();
     this.set({ activeItemIndex: 0 });

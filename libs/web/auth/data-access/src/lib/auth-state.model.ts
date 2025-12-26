@@ -1,7 +1,7 @@
 import { Models } from 'appwrite';
 
 export interface AuthStateModel {
-  account: Models.Account<{
+  account: Models.User<{
     guest?: boolean;
   }> | null;
   session: Models.Session | null;

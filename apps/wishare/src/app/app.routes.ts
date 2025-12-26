@@ -1,3 +1,1 @@
-import { Route } from '@angular/router';
-
-export const appRoutes: Route[] = [];
+export * from '@wishare/web/shell/feature';

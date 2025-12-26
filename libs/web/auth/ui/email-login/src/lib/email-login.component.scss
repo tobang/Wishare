@@ -1,9 +1,23 @@
 .login {
-  margin-top: 30px;
-
   a {
     text-decoration: underline;
   }
+
+  .controls-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 1.5rem;
+
+    tui-textfield {
+      margin-top: 1rem;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
   .action-buttons {
     display: flex;
     align-items: flex-end;

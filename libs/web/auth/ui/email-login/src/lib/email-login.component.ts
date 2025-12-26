@@ -21,13 +21,14 @@ import {
   TuiButton,
   TuiError,
   TuiHint,
-  TuiTextfieldOptionsDirective,
+  TuiTextfield,
+  TuiLabel,
+  TuiIcon,
 } from '@taiga-ui/core';
 import {
   TuiFieldErrorPipe,
-  TuiInput,
-  TuiInputPassword,
   TUI_VALIDATION_ERRORS,
+  TuiPassword,
 } from '@taiga-ui/kit';
 import { scopeLoader } from 'scoped-translations';
 
@@ -46,13 +47,14 @@ export function validationErrorsFactory(transloco: TranslocoService) {
     FormsModule,
     ReactiveFormsModule,
     TranslocoModule,
-    TuiInput,
-    TuiTextfieldOptionsDirective,
+    TuiTextfield,
+    TuiLabel,
+    TuiIcon,
     TuiButton,
     TuiHint,
     TuiFieldErrorPipe,
     TuiError,
-    TuiInputPassword,
+    TuiPassword,
   ],
   providers: [
     {
@@ -60,7 +62,7 @@ export function validationErrorsFactory(transloco: TranslocoService) {
       useValue: {
         scope: 'emaillogin',
         loader: scopeLoader(
-          (lang: string, root: string) => import(`./${root}/${lang}.json`)
+          (lang: string, root: string) => import(`./${root}/${lang}.json`),
         ),
       },
     },

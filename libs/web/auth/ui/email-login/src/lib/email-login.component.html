@@ -1,24 +1,32 @@
 <div class="login" *transloco="let t">
   <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
     <div class="controls-container">
-      <tui-input
-        tuiTextfieldExampleText="mail@mail.dk"
-        formControlName="email"
-        [tuiHintContent]="t('emaillogin.form.email-hint')"
-        [tuiTextfieldCleaner]="true"
-      >
-        {{ t('emaillogin.form.email-type') }}<span class="tui-required"></span>
-        <input tuiTextfield placeholder="mail@mail.dk" type="email" />
-      </tui-input>
+      <tui-textfield [tuiTextfieldCleaner]="true">
+        <label tuiLabel>
+          {{ t('emaillogin.form.email-type')
+          }}<span class="tui-required"></span>
+        </label>
+        <input
+          tuiTextfield
+          type="email"
+          placeholder="mail@mail.dk"
+          formControlName="email"
+        />
+        <tui-icon [tuiHint]="t('emaillogin.form.email-hint')" />
+      </tui-textfield>
       <tui-error
         formControlName="email"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
 
-      <tui-input-password class="tui-space_top-5" formControlName="password">
-        {{ t('emaillogin.form.password-type') }}
-        <input tuiTextfield />
-      </tui-input-password>
+      <tui-textfield [tuiTextfieldCleaner]="true">
+        <label tuiLabel>
+          {{ t('emaillogin.form.password-type')
+          }}<span class="tui-required"></span>
+        </label>
+        <input tuiTextfield type="password" formControlName="password" />
+        <tui-icon tuiPassword />
+      </tui-textfield>
       <tui-error
         formControlName="password"
         [error]="[] | tuiFieldError | async"

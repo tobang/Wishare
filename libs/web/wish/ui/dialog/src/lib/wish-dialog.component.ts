@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 import { TranslocoModule } from '@ngneat/transloco';
-import { TuiDialog, TuiDialogContext } from '@taiga-ui/core';
+import { TuiDialogContext } from '@taiga-ui/core';
 import { TuiStepper } from '@taiga-ui/kit';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 
@@ -16,14 +16,12 @@ import { WishDialogAdapter } from './wish-dialog.adapter';
   selector: 'wishare-wish-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     TuiStepper,
-    TuiDialog,
     TranslocoModule,
-    LetModule,
+    RxLet,
     WishTypeComponent,
-    UrlTypeComponent,
-  ],
+    UrlTypeComponent
+],
   providers: [WishDialogAdapter],
   templateUrl: './wish-dialog.component.html',
   styleUrls: ['./wish-dialog.component.scss'],

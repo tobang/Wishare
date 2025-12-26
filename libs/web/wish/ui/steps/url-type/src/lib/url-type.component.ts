@@ -20,13 +20,14 @@ import {
 import {
   TuiButton,
   TuiError,
-  TuiTextfieldOptionsDirective,
 } from '@taiga-ui/core';
 import {
   TuiFieldErrorPipe,
-  TuiInput,
   TUI_VALIDATION_ERRORS,
 } from '@taiga-ui/kit';
+import {
+  TuiInputModule,
+} from '@taiga-ui/legacy';
 import { scopeLoader } from 'scoped-translations';
 
 import { urlValidator } from '@wishare/web/shared/validators';
@@ -46,8 +47,7 @@ export function validationErrorsFactory(transloco: TranslocoService) {
     TuiButton,
     TuiError,
     TuiFieldErrorPipe,
-    TuiInput,
-    TuiTextfieldOptionsDirective,
+    TuiInputModule,
     TranslocoModule,
   ],
   providers: [

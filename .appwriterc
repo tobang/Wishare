@@ -1,0 +1,5 @@
+{
+  "endpoint": "http://localhost/v1",
+  "projectId": "wishare",
+  "version": "1.6"
+}

@@ -4,8 +4,10 @@ import { RxActionFactory } from '@rx-angular/state/actions';
 import { BoardStateModel } from './board-state.model';
 
 import { WithInitializer } from '@wishare/web/shared/utils';
-import { catchError, of, switchMap, tap } from 'rxjs';
+import { catchError, map, of, switchMap, tap, type Observable } from 'rxjs';
 import { BoardService } from '../services/board.service';
+import type { Models } from 'appwrite';
+import type { Wishlist } from '@wishare/web/wishlist/data-access';
 
 export interface BoardCommand {
   fetchWishlists: void;
@@ -24,17 +26,21 @@ export class BoardAdapter
   constructor() {
     super();
 
+    type BoardData = (Wishlist & {
+      [x: string]: Models.DocumentList<Models.Document>;
+    })[];
 
     this.connect(
       'wishLists',
       this.actions.fetchWishlists$.pipe(
         switchMap(() =>
-          this.boardService
-            .getBoard()
-            .pipe(tap((data) => console.log('Board', data)))
+          this.boardService.getBoard().pipe(
+            tap((data) => console.log('Board', data)),
+            map((data) => data as BoardData),
+            catchError((): Observable<BoardData> => of([])),
+          ),
         ),
-        catchError(() => of([]))
-      )
+      ),
     );
   }
 

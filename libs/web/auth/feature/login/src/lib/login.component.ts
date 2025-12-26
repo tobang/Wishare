@@ -1,7 +1,7 @@
-import { TuiButton } from '@taiga-ui/core';
-import { TuiIsland, TuiTabs } from '@taiga-ui/kit';
+import { TuiCardLarge } from '@taiga-ui/layout';
+import { TuiTabs } from '@taiga-ui/kit';
 
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { RxState } from '@rx-angular/state';
@@ -19,15 +19,13 @@ export interface LoginModel {
   selector: 'wishare-login',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     TranslocoModule,
-    TuiIsland,
+    TuiCardLarge,
     TuiTabs,
-    TuiButton,
     EmailLoginComponent,
-    SignupComponent,
-  ],
+    SignupComponent
+],
   providers: [
     RxState,
     {

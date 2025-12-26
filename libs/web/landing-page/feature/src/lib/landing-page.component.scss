@@ -1,4 +1,4 @@
-@import '@taiga-ui/core/styles/taiga-ui-local';
+@use '@taiga-ui/core/styles/taiga-ui-local';
 
 // Header section
 .header {
@@ -69,11 +69,12 @@
   margin-top: 300px;
   .grid {
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-auto-rows: 1fr;
     > *:first-child {
       grid-column: 1 / span 3;
     }
   }
+
   .service-header {
     .divider {
       background: -webkit-linear-gradient(
@@ -104,8 +105,12 @@
       }
     }
   }
-  .tui-island {
-    background-color: #fff;
+  [tuiCardLarge] {
+    background-color: #e4f2f3;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
     .services-card-icon {
       img {
         height: 75px;
@@ -116,6 +121,10 @@
     }
     .services-card-content {
       text-align: center;
+      flex: 1;
+    }
+    .card-paragraph_link {
+      margin-top: auto;
     }
   }
 }

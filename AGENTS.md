@@ -11,3 +11,19 @@
 - If the user needs help with an Nx configuration or project graph error, use the `nx_workspace` tool to get any errors
 
 <!-- nx configuration end-->
+
+# General Guidelines for working with Angular
+
+- You have access to the Angular MCP server (angular-cli) and its tools, use the to help the user.
+- Notify me every time you are using the Angular MCP server.
+
+# General Guidelines for working with Taiga UI
+
+-- You have access to the Taiga UI MCP server (taiga-ui) and its tools, use the to help the user.
+
+- Notify me every time you are using the Taiga UI MCP server.
+
+# General Guidelines for working with Appwrite
+
+- You have access to the Appwrite MCP server (appwrite-docs) and its tools, use the to help the user.
+- Notify me every time you are using the Appwrite MCP server.

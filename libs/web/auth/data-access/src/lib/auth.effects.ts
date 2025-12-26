@@ -1,4 +1,3 @@
-
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { RxActionFactory } from '@rx-angular/state/actions';
@@ -10,7 +9,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { TuiAlertService } from '@taiga-ui/core';
 import { APPWRITE } from '@wishare/web/shared/app-config';
 
-import { Account, Databases, Models, OAuthProvider } from 'appwrite';
+import { Account, Databases, ID, Models, OAuthProvider } from 'appwrite';
 
 type Actions = {
   loginWithCredentials: [string, string];
@@ -39,7 +38,9 @@ export class AuthEffects {
     // Logout
     this.ui.logout$.pipe(
       switchMap(() =>
-        from(this.appwrite.account.deleteSession('current')).pipe(
+        from(
+          this.appwrite.account.deleteSession({ sessionId: 'current' }),
+        ).pipe(
           tap(() => {
             this.authState.set({
               account: null,
@@ -48,94 +49,109 @@ export class AuthEffects {
             localStorage.clear();
             sessionStorage.clear();
             this.router.navigate(['/']);
-          })
-        )
-      )
+          }),
+        ),
+      ),
     ),
     // Login with credentials
     this.ui.loginWithCredentials$.pipe(
       switchMap(([email, password]) => {
         console.log('Email', email, password, this.appwrite.account);
         return from(
-          this.appwrite.account.createEmailPasswordSession(email, password)
+          this.appwrite.account.createEmailPasswordSession({ email, password }),
         ).pipe(
           switchMap((session) =>
             from(this.appwrite.account.get()).pipe(
               map(
                 (account) =>
-                  [session, account] as [Models.Session, Models.Account<Record<string, unknown>>]
-              )
-            )
+                  [session, account] as [
+                    Models.Session,
+                    Models.User<{ guest?: boolean }>,
+                  ],
+              ),
+            ),
           ),
           map(([session, account]) => ({ session, account })),
           tap(() => this.router.navigate(['/wishlists'])),
           catchError(() =>
             of({ session: null, account: null }).pipe(
-              tap(() => this.ui.loginError())
-            )
+              tap(() => this.ui.loginError()),
+            ),
           ),
           tap(({ account, session }) =>
             this.authState.set({
               account,
               session,
-            })
-          )
+            }),
+          ),
         );
-      })
+      }),
     ),
     // Register with credentials
     this.ui.registerWithCredentials$.pipe(
       switchMap(([email, name, password]) =>
         defer(() =>
-          this.appwrite.account.create(
-            'unique()',
+          this.appwrite.account.create({
+            userId: ID.unique(),
             email,
             password,
-            name ?? undefined
-          )
+            name: name ?? undefined,
+          }),
         ).pipe(
-          switchMap((account) =>
+          switchMap(() =>
             defer(() =>
-              this.appwrite.account.createEmailPasswordSession(email, password)
-            ).pipe(map((session) => ({ session, account })))
+              this.appwrite.account.createEmailPasswordSession({
+                email,
+                password,
+              }),
+            ).pipe(
+              switchMap((session) =>
+                from(this.appwrite.account.get()).pipe(
+                  map((account) => ({
+                    session,
+                    account: account as Models.User<{ guest?: boolean }>,
+                  })),
+                ),
+              ),
+            ),
           ),
           catchError(() =>
             of({ session: null, account: null }).pipe(
-              tap(() => this.router.navigate(['/login']))
-            )
+              tap(() => this.router.navigate(['/login'])),
+            ),
           ),
           tap(({ account, session }) =>
             this.authState.set({
               account,
               session,
-            })
+            }),
           ),
-          tap(() => this.router.navigate(['/']))
-        )
-      )
+          tap(() => this.router.navigate(['/'])),
+        ),
+      ),
     ),
     // Login with Goolge
     this.ui.loginWithGoogle$.pipe(
       tap(() =>
-        this.appwrite.account.createOAuth2Session(
-          OAuthProvider.Google,
-          location.origin,
-          `${location.origin}/login`
-        )
-      )
+        this.appwrite.account.createOAuth2Session({
+          provider: OAuthProvider.Google,
+          success: location.origin,
+          failure: `${location.origin}/login`,
+        }),
+      ),
     ),
     this.ui.loginError$.pipe(
       switchMap(() =>
         this.transloco.selectTranslate(
           'server-error.invalid-credentials',
           {},
-          'login'
-        )
+          'login',
+        ),
       ),
       switchMap((trans) => {
         return this.alertService.open(trans);
-      })
-    )
+      }),
+    ),
   );
 
   constructor() {

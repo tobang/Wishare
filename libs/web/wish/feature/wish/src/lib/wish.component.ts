@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { TuiIsland } from '@taiga-ui/kit';
+import { TuiCardLarge } from '@taiga-ui/layout';
 import { Wish } from '@wishare/web/wishlist/data-access';
 
 @Component({
   selector: 'wishare-wish',
   standalone: true,
-  imports: [CommonModule, TuiIsland],
+  imports: [TuiCardLarge],
   templateUrl: './wish.component.html',
   styleUrls: ['./wish.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

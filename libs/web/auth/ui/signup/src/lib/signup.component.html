@@ -1,36 +1,43 @@
 <div class="signup" *transloco="let t">
   <form [formGroup]="signUpForm" (ngSubmit)="signup()">
     <div class="controls-container">
-      <tui-input
-        tuiTextfieldExampleText="mail@mail.dk"
-        formControlName="email"
-        [tuiHintContent]="t('signup.form.email-hint')"
-        [tuiTextfieldCleaner]="true"
-      >
-        {{ t('signup.form.email') }}<span class="tui-required"></span>
-      </tui-input>
+      <tui-textfield [tuiTextfieldCleaner]="true">
+        <label tuiLabel>
+          {{ t('signup.form.email') }}<span class="tui-required"></span>
+        </label>
+        <input
+          tuiTextfield
+          type="email"
+          placeholder="mail@mail.dk"
+          formControlName="email"
+        />
+        <tui-icon [tuiHint]="t('signup.form.email-hint')" />
+      </tui-textfield>
       <tui-error
         formControlName="email"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
 
-      <tui-input-password class="tui-space_top-5" formControlName="password">
-        {{ t('signup.form.password') }}<span class="tui-required"></span>
-        <input tuiTextfield />
-      </tui-input-password>
+      <tui-textfield [tuiTextfieldCleaner]="true">
+        <label tuiLabel>
+          {{ t('signup.form.password') }}<span class="tui-required"></span>
+        </label>
+        <input tuiTextfield type="password" formControlName="password" />
+        <tui-icon tuiPassword />
+      </tui-textfield>
       <tui-error
         formControlName="password"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
 
-      <tui-input-password
-        class="tui-space_top-5"
-        formControlName="passwordConfirm"
-      >
-        {{ t('signup.form.password-confirm')
-        }}<span class="tui-required"></span>
-        <input tuiTextfield />
-      </tui-input-password>
+      <tui-textfield [tuiTextfieldCleaner]="true">
+        <label tuiLabel>
+          {{ t('signup.form.password-confirm')
+          }}<span class="tui-required"></span>
+        </label>
+        <input tuiTextfield type="password" formControlName="passwordConfirm" />
+        <tui-icon tuiPassword />
+      </tui-textfield>
       <tui-error
         formControlName="passwordConfirm"
         [error]="[] | tuiFieldError | async"

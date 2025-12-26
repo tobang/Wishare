@@ -1,24 +1,22 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ForModule } from '@rx-angular/template/for';
-import { LetModule } from '@rx-angular/template/let';
-import { TuiSvg } from '@taiga-ui/core';
+import { RxFor } from '@rx-angular/template/for';
+import { RxLet } from '@rx-angular/template/let';
 import { BoardAdapter } from '@wishare/web/board/data-access';
-import { WishlistUi } from '@wishare/web/wishlist/data-access';
+import { WishlistUi, type Wishlist } from '@wishare/web/wishlist/data-access';
 import { WishListComponent } from '@wishare/web/wishlist/feature/list';
+import type { Models } from 'appwrite';
 
 @Component({
   selector: 'wishare-board',
   standalone: true,
   imports: [
-    CommonModule,
     DragDropModule,
-    ForModule,
-    LetModule,
-    TuiSvg,
-    WishListComponent,
-  ],
+    RxFor,
+    RxLet,
+    WishListComponent
+],
   providers: [BoardAdapter],
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
@@ -32,7 +30,7 @@ export class BoardComponent {
     this.boardAdapter.initialize();
   }
 
-  drop(wishList: CdkDragDrop<WishlistUi[]>) {
+  drop(wishList: CdkDragDrop<(Wishlist & { [x: string]: Models.DocumentList<Models.Document> })[]>) {
     console.log('Dropped', wishList);
   }
 }

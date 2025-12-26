@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,7 +12,7 @@ import { scopeLoader } from 'scoped-translations';
 @Component({
   selector: 'wishare-wish-type',
   standalone: true,
-  imports: [CommonModule, TranslocoModule, TuiButton],
+  imports: [TranslocoModule, TuiButton],
   providers: [
     {
       provide: TRANSLOCO_SCOPE,

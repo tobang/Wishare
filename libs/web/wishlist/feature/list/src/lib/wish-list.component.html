@@ -1,21 +1,22 @@
-<tui-island class="wishlist-card">
+<div tuiCardLarge class="wishlist-card">
   <div class="flex">
-    <h3 class="tui-island__title">{{ wishlist.title }}</h3>
+    <h3 class="card-title">{{ wishlist.title }}</h3>
     <ng-content select=".handle"></ng-content>
   </div>
   <div>
-    <wishare-wish
-      *ngFor="let wish of wishlist.wishes?.documents; let i = index"
-      [wish]="wish"
-    ></wishare-wish>
+    @for (wish of wishlist.wishes?.documents; track wish; let i = $index) {
+      <wishare-wish
+        [wish]="wish"
+      ></wishare-wish>
+    }
   </div>
-  <p class="tui-island__paragraph tui-island__paragraph_link">
+  <p class="card-paragraph card-paragraph_link">
     <button
       tuiIconButton
       type="button"
       class="tui-space_right-2"
       [size]="'m'"
-      [icon]="'tuiIconPlus'"
+      iconStart="tuiIconPlus"
       (click)="createWish()"
     ></button>
     <button
@@ -23,14 +24,14 @@
       type="button"
       class="tui-space_right-2"
       [size]="'m'"
-      [icon]="'tuiIconTrash'"
+      iconStart="tuiIconTrash"
     ></button>
     <button
       tuiIconButton
       type="button"
       class="tui-space_right-2"
       [size]="'m'"
-      [icon]="'tuiIconDraft'"
+      iconStart="tuiIconDraft"
     ></button>
   </p>
-</tui-island>
+</div>

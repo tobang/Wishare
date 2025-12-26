@@ -1,0 +1,19 @@
+{
+  "name": "scrape-meta-tags",
+  "version": "2.0.0",
+  "description": "Appwrite function to scrape meta tags from URLs",
+  "type": "module",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["appwrite", "function", "scraper", "metatags"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "node-appwrite": "^21.0.0",
+    "undici": "^7.16.0"
+  }
+}

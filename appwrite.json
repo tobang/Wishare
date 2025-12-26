@@ -1,0 +1,205 @@
+{
+  "projectId": "694ab35e00384ed4a1a5",
+  "projectName": "Wishare",
+  "functions": [
+    {
+      "$id": "scrapeMetaTags",
+      "name": "Scrape Meta Tags",
+      "runtime": "node-21.0",
+      "path": "functions/scrapeMetaTags",
+      "entrypoint": "src/main.js",
+      "ignore": [
+        "node_modules",
+        ".npm",
+        "*.md",
+        ".git",
+        ".gitignore"
+      ],
+      "execute": ["any"],
+      "events": [],
+      "schedule": "",
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "variables": {}
+    }
+  ],
+  "databases": [
+    {
+      "$id": "wishare",
+      "name": "Wishare Database"
+    }
+  ],
+  "collections": [
+    {
+      "$id": "wishes",
+      "name": "Wishes",
+      "databaseId": "wishare",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        {
+          "key": "title",
+          "type": "string",
+          "size": 255,
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "size": 2000,
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "uid",
+          "type": "string",
+          "size": 255,
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "wlid",
+          "type": "string",
+          "size": 255,
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "size": 1000,
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "price",
+          "type": "double",
+          "required": false,
+          "array": false,
+          "min": 0,
+          "max": 999999.99,
+          "default": null
+        },
+        {
+          "key": "priority",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 1,
+          "max": 999,
+          "default": 1
+        },
+        {
+          "key": "quantity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 1,
+          "max": 999,
+          "default": 1
+        },
+        {
+          "key": "image",
+          "type": "string",
+          "size": 5000,
+          "required": false,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": [
+        {
+          "key": "wlid_idx",
+          "type": "key",
+          "attributes": ["wlid"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "uid_idx",
+          "type": "key",
+          "attributes": ["uid"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "priority_wlid_idx",
+          "type": "unique",
+          "attributes": ["priority", "wlid"],
+          "orders": ["ASC", "ASC"]
+        }
+      ]
+    },
+    {
+      "$id": "wishlists",
+      "name": "Wishlists",
+      "databaseId": "wishare",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        {
+          "key": "title",
+          "type": "string",
+          "size": 255,
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "size": 1000,
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "uid",
+          "type": "string",
+          "size": 255,
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "priority",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 1,
+          "max": 999,
+          "default": 1
+        },
+        {
+          "key": "visibility",
+          "type": "string",
+          "size": 50,
+          "format": "enum",
+          "elements": ["draft", "published", "archived"],
+          "required": false,
+          "array": false,
+          "default": "draft"
+        }
+      ],
+      "indexes": [
+        {
+          "key": "uid_idx",
+          "type": "key",
+          "attributes": ["uid"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "priority_uid_idx",
+          "type": "unique",
+          "attributes": ["priority", "uid"],
+          "orders": ["ASC", "ASC"]
+        }
+      ]
+    }
+  ]
+}
