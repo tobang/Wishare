@@ -1,5 +1,5 @@
 <div class="signup" *transloco="let t">
-  <form [formGroup]="signUpForm" (ngSubmit)="signup()">
+  <form (ngSubmit)="signup()">
     <div class="controls-container">
       <tui-textfield [tuiTextfieldCleaner]="true">
         <label tuiLabel>
@@ -9,12 +9,12 @@
           tuiTextfield
           type="email"
           placeholder="mail@mail.dk"
-          formControlName="email"
+          [formControl]="signUpForm.controls.email"
         />
         <tui-icon [tuiHint]="t('signup.form.email-hint')" />
       </tui-textfield>
       <tui-error
-        formControlName="email"
+        [formControl]="signUpForm.controls.email"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
 
@@ -22,11 +22,11 @@
         <label tuiLabel>
           {{ t('signup.form.password') }}<span class="tui-required"></span>
         </label>
-        <input tuiTextfield type="password" formControlName="password" />
+        <input tuiTextfield type="password" [formControl]="signUpForm.controls.password" />
         <tui-icon tuiPassword />
       </tui-textfield>
       <tui-error
-        formControlName="password"
+        [formControl]="signUpForm.controls.password"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
 
@@ -35,11 +35,11 @@
           {{ t('signup.form.password-confirm')
           }}<span class="tui-required"></span>
         </label>
-        <input tuiTextfield type="password" formControlName="passwordConfirm" />
+        <input tuiTextfield type="password" [formControl]="signUpForm.controls.passwordConfirm" />
         <tui-icon tuiPassword />
       </tui-textfield>
       <tui-error
-        formControlName="passwordConfirm"
+        [formControl]="signUpForm.controls.passwordConfirm"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
     </div>
@@ -49,7 +49,7 @@
         color="primary"
         [size]="'m'"
         type="submit"
-        [disabled]="signUpForm.invalid"
+        [disabled]="!signUpForm.valid()"
       >
         {{ t('signup.form.button-signup') }}
       </button>

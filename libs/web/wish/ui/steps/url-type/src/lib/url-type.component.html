@@ -7,10 +7,10 @@
     {{ t('wishurl.step-url.text') }}
   </div>
   <div class="url-input wish-input">
-    <form [formGroup]="frmUrl" (ngSubmit)="submitUrl()">
-      <tui-input formControlName="url">Indtast url </tui-input>
+    <form (ngSubmit)="submitUrl()">
+      <tui-input [formControl]="frmUrl.controls.url">Indtast url </tui-input>
       <tui-error
-        formControlName="url"
+        [formControl]="frmUrl.controls.url"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
     </form>
@@ -20,7 +20,7 @@
       tuiButton
       type="submit"
       [appearance]="'secondary'"
-      [disabled]="frmUrl.invalid"
+      [disabled]="!frmUrl.valid()"
     >
       {{ t('wishurl.step-url.button') }}
     </button>

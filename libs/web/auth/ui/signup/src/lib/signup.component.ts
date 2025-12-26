@@ -3,13 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  inject,
   Output,
 } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormPath, form } from '@angular/forms/signals';
 import {
   TranslocoModule,
-  TranslocoService,
   TRANSLOCO_SCOPE,
 } from '@ngneat/transloco';
 import {
@@ -22,20 +20,12 @@ import {
 } from '@taiga-ui/core';
 import {
   TuiFieldErrorPipe,
-  TUI_VALIDATION_ERRORS,
   TuiPassword,
 } from '@taiga-ui/kit';
-import { passwordMatchValidator } from '@wishare/web/auth/utils';
 import { scopeLoader } from 'scoped-translations';
 
-export function validationErrorsFactory(transloco: TranslocoService) {
-  return {
-    required: transloco.translate('signup.form.required'),
-    email: transloco.translate('signup.form.email-error'),
-    minlength: transloco.translate('signup.form.password-error'),
-    passwordmatch: transloco.translate('signup.form.password-confirm-error'),
-  };
-}
+import { vestValidation } from '@wishare/web/shared/validators';
+import { signupValidationSuite, SignupFormModel } from './signup.validation';
 
 @Component({
   selector: 'wishare-signup',
@@ -63,11 +53,6 @@ export function validationErrorsFactory(transloco: TranslocoService) {
         ),
       },
     },
-    {
-      provide: TUI_VALIDATION_ERRORS,
-      useFactory: validationErrorsFactory,
-      deps: [TranslocoService],
-    },
   ],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
@@ -76,25 +61,21 @@ export function validationErrorsFactory(transloco: TranslocoService) {
 export class SignupComponent {
   @Output() signUp = new EventEmitter<{ email: string; password: string }>();
 
-  private readonly fb = inject(FormBuilder);
-  readonly signUpForm = this.fb.group({
-    email: this.fb.control('', [Validators.required, Validators.email]),
-    password: this.fb.control('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
-    passwordConfirm: this.fb.control('', [
-      Validators.required,
-      passwordMatchValidator,
-    ]),
+  private readonly initialModel: SignupFormModel = {
+    email: '',
+    password: '',
+    passwordConfirm: '',
+  };
+
+  readonly signUpForm = form(this.initialModel, (path: FormPath<SignupFormModel>) => {
+    vestValidation(path, signupValidationSuite);
   });
 
   signup(): void {
-    this.signUpForm.markAllAsTouched();
-    if (!this.signUpForm.valid) {
+    if (!this.signUpForm.valid()) {
       return;
     }
-    const { email, password } = this.signUpForm.value;
-    this.signUp.emit({ email: email as string, password: password as string });
+    const { email, password } = this.signUpForm.value();
+    this.signUp.emit({ email, password });
   }
 }

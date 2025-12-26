@@ -5,16 +5,10 @@ import {
   EventEmitter,
   Output,
 } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule, FormPath, form } from '@angular/forms/signals';
 
 import {
   TranslocoModule,
-  TranslocoService,
   TRANSLOCO_SCOPE,
 } from '@ngneat/transloco';
 import {
@@ -23,21 +17,15 @@ import {
 } from '@taiga-ui/core';
 import {
   TuiFieldErrorPipe,
-  TUI_VALIDATION_ERRORS,
 } from '@taiga-ui/kit';
 import {
   TuiInputModule,
 } from '@taiga-ui/legacy';
 import { scopeLoader } from 'scoped-translations';
 
-import { urlValidator } from '@wishare/web/shared/validators';
+import { vestValidation } from '@wishare/web/shared/validators';
+import { urlValidationSuite, UrlFormModel } from './url-type.validation';
 
-export function validationErrorsFactory(transloco: TranslocoService) {
-  return {
-    required: transloco.translate('wishurl.step-url.errors.required'),
-    url: transloco.translate('wishurl.step-url.errors.invalid'),
-  };
-}
 @Component({
   selector: 'wishare-url-type',
   standalone: true,
@@ -60,11 +48,6 @@ export function validationErrorsFactory(transloco: TranslocoService) {
         ),
       },
     },
-    {
-      provide: TUI_VALIDATION_ERRORS,
-      useFactory: validationErrorsFactory,
-      deps: [TranslocoService],
-    },
   ],
   templateUrl: './url-type.component.html',
   styleUrls: ['./url-type.component.scss'],
@@ -73,16 +56,19 @@ export function validationErrorsFactory(transloco: TranslocoService) {
 export class UrlTypeComponent {
   @Output() getUrl = new EventEmitter<string>();
 
-  frmUrl = new FormGroup({
-    url: new FormControl('', [Validators.required, urlValidator]),
+  private readonly initialModel: UrlFormModel = {
+    url: '',
+  };
+
+  readonly frmUrl = form(this.initialModel, (path: FormPath<UrlFormModel>) => {
+    vestValidation(path, urlValidationSuite);
   });
 
   submitUrl() {
-    this.frmUrl.markAllAsTouched();
-    if (!this.frmUrl.valid) {
+    if (!this.frmUrl.valid()) {
       return;
     }
-    const { url } = this.frmUrl.value;
-    this.getUrl.emit(url as string);
+    const { url } = this.frmUrl.value();
+    this.getUrl.emit(url);
   }
 }

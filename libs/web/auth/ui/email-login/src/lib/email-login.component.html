@@ -1,5 +1,5 @@
 <div class="login" *transloco="let t">
-  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+  <form (ngSubmit)="onLogin()">
     <div class="controls-container">
       <tui-textfield [tuiTextfieldCleaner]="true">
         <label tuiLabel>
@@ -10,12 +10,12 @@
           tuiTextfield
           type="email"
           placeholder="mail@mail.dk"
-          formControlName="email"
+          [formControl]="loginForm.controls.email"
         />
         <tui-icon [tuiHint]="t('emaillogin.form.email-hint')" />
       </tui-textfield>
       <tui-error
-        formControlName="email"
+        [formControl]="loginForm.controls.email"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
 
@@ -24,11 +24,11 @@
           {{ t('emaillogin.form.password-type')
           }}<span class="tui-required"></span>
         </label>
-        <input tuiTextfield type="password" formControlName="password" />
+        <input tuiTextfield type="password" [formControl]="loginForm.controls.password" />
         <tui-icon tuiPassword />
       </tui-textfield>
       <tui-error
-        formControlName="password"
+        [formControl]="loginForm.controls.password"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
     </div>
@@ -38,7 +38,7 @@
         [size]="'m'"
         color="primary"
         type="submit"
-        [disabled]="loginForm.invalid"
+        [disabled]="!loginForm.valid()"
       >
         {{ t('emaillogin.form.button-login') }}
       </button>
