@@ -6,11 +6,11 @@ import {
 } from '@ngneat/transloco';
 import { TuiButton, TuiLink } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { AuthEffects } from '@wishare/web/auth/data-access';
 import { LoginComponent } from '@wishare/web/auth/feature/login';
 import { scopeLoader } from 'scoped-translations';
+
 @Component({
-  selector: 'wishare-landing-page',
+  selector: 'wishare-landing-page-modern',
   standalone: true,
   imports: [TranslocoModule, TuiCardLarge, TuiButton, TuiLink, LoginComponent],
   providers: [
@@ -24,15 +24,10 @@ import { scopeLoader } from 'scoped-translations';
       },
     },
   ],
-  templateUrl: './landing-page.component.html',
-  styleUrls: ['./landing-page.component.scss'],
+  templateUrl: './landing-page-modern.component.html',
+  styleUrls: ['./landing-page-modern.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LandingPageComponent {
-  private readonly authEffects = inject(AuthEffects);
+export class LandingPageModernComponent {
   protected readonly transloco = inject(TranslocoService);
-
-  testEffect() {
-    this.authEffects.ui.logout();
-  }
 }

@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
         path: '',
         loadComponent: () =>
           import('@wishare/web/landing-page/feature').then(
-            (m) => m.LandingPageComponent,
+            (m) => m.LandingPageModernComponent,
           ),
       },
       {

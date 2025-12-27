@@ -1,0 +1,113 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-container wi-container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-text">{{
+          'landing.header.sub-title' | transloco
+        }}</span>
+      </div>
+      <h1 class="hero-title">
+        {{ 'landing.header.title' | transloco }}
+      </h1>
+      <p class="hero-description">
+        {{ 'landing.header.text' | transloco }}
+      </p>
+      <div class="hero-actions">
+        <button tuiButton size="l" appearance="primary">
+          {{ 'landing.header.button' | transloco }}
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-login">
+      <wishare-login [embedded]="true"></wishare-login>
+    </div>
+  </div>
+
+  <!-- Decorative elements -->
+  <div class="hero-decoration hero-decoration-1"></div>
+  <div class="hero-decoration hero-decoration-2"></div>
+  <div class="hero-decoration hero-decoration-3"></div>
+</section>
+
+<!-- Features Grid -->
+<section class="features">
+  <div class="wi-container">
+    <div class="features-header">
+      <h2 class="features-title">
+        {{ 'landing.services.title-1' | transloco }}
+        <span class="features-title-accent">{{
+          'landing.services.title-2' | transloco
+        }}</span>
+      </h2>
+      <div class="features-divider"></div>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature Card 1 -->
+      <div tuiCardLarge class="feature-card">
+        <div class="feature-icon">
+          <img src="/assets/images/logo_parcel_default.svg" alt="" />
+        </div>
+        <h3 class="feature-card-title">
+          {{ 'landing.services.cards.card-1.title' | transloco }}
+        </h3>
+        <p class="feature-card-description">
+          {{ 'landing.services.cards.card-1.text' | transloco }}
+        </p>
+        <a href="/" tuiLink class="feature-card-link">
+          {{ 'landing.services.more' | transloco }}
+        </a>
+      </div>
+
+      <!-- Feature Card 2 -->
+      <div tuiCardLarge class="feature-card">
+        <div class="feature-icon">
+          <img src="/assets/images/logo_parcel_default.svg" alt="" />
+        </div>
+        <h3 class="feature-card-title">
+          {{ 'landing.services.cards.card-2.title' | transloco }}
+        </h3>
+        <p class="feature-card-description">
+          {{ 'landing.services.cards.card-2.text' | transloco }}
+        </p>
+        <a href="/" tuiLink class="feature-card-link">
+          {{ 'landing.services.more' | transloco }}
+        </a>
+      </div>
+
+      <!-- Feature Card 3 -->
+      <div tuiCardLarge class="feature-card">
+        <div class="feature-icon">
+          <img src="/assets/images/logo_parcel_default.svg" alt="" />
+        </div>
+        <h3 class="feature-card-title">
+          {{ 'landing.services.cards.card-3.title' | transloco }}
+        </h3>
+        <p class="feature-card-description">
+          {{ 'landing.services.cards.card-3.text' | transloco }}
+        </p>
+        <a href="/" tuiLink class="feature-card-link">
+          {{ 'landing.services.more' | transloco }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+  <div class="wi-container">
+    <div class="cta-content">
+      <h2 class="cta-title">{{ 'landing.signup.title' | transloco }}</h2>
+      <p class="cta-description">{{ 'landing.signup.text' | transloco }}</p>
+      <button tuiButton size="l" appearance="accent">
+        {{ 'landing.header.button' | transloco }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Background decoration -->
+  <div class="cta-background"></div>
+</section>

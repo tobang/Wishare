@@ -1,82 +1,179 @@
-.wishlist-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
-  grid-gap: var(--spacing-2);
-  align-items: start;
-  margin-top: var(--spacing-5);
-  margin-left: var(--spacing-5);
+:host {
+  display: block;
+  min-height: 100%;
+}
 
-  .drag-handle {
-    cursor: move;
+.board-wrapper {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: var(--spacing-6) var(--spacing-4);
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-8) var(--spacing-6);
   }
 }
 
-.skeleton-card {
-  min-height: 280px;
-  padding: var(--spacing-4);
+.board-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
 
-  .skeleton-header {
-    margin-bottom: var(--spacing-4);
-    font-size: 1.25rem;
-    font-weight: 600;
+  @media (min-width: 640px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.header-content {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-3);
+}
+
+.board-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.wishlist-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg-surface-hover);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-4);
+  align-items: start;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .skeleton-wishes {
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.wishlist-item {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+// Skeleton loading styles
+.skeleton-card {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+
+  .skeleton-content {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-3);
-    margin-bottom: var(--spacing-4);
-  }
-
-  .skeleton-wish {
+    flex: 1;
     padding: var(--spacing-2) 0;
   }
 
-  .skeleton-actions {
-    margin-top: auto;
+  .skeleton-wish {
+    padding: var(--spacing-3);
+    border-radius: 0.5rem;
+    background: var(--bg-surface-hover);
+  }
+
+  .skeleton-footer {
     padding-top: var(--spacing-4);
+    margin-top: auto;
   }
 }
 
+// Empty state
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-16) var(--spacing-8);
+  padding: var(--spacing-12) var(--spacing-4);
   text-align: center;
+  background: var(--bg-surface);
+  border-radius: 1.5rem;
+  border: 2px dashed var(--border-default);
+  max-width: 480px;
+  margin: var(--spacing-8) auto;
+
+  .empty-state-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+    background: var(--bg-card-secondary);
+    color: var(--color-brand-primary);
+    margin-bottom: var(--spacing-4);
+
+    tui-icon {
+      font-size: 2rem;
+    }
+  }
 
   h2 {
-    margin: 0 0 1rem;
+    margin: 0 0 0.5rem;
     font-size: 1.5rem;
     font-weight: 600;
+    color: var(--text-primary);
   }
 
   p {
-    margin: 0;
-    color: var(--tui-text-secondary);
+    margin: 0 0 var(--spacing-6);
+    color: var(--text-secondary);
+    max-width: 320px;
+    line-height: 1.6;
   }
 }
 
-.handle {
-  position: relative;
-  top: var(--spacing-1);
-  left: 0;
-  cursor: move;
+// Drag and drop styles
+.drag-preview {
+  .preview-card {
+    min-width: 200px;
+    padding: var(--spacing-4);
+    box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.25);
+    transform: rotate(3deg);
+  }
 }
 
-.cdk-drag-placeholder {
-  opacity: 0.2;
-
-  .wishlist-wrap {
-    opacity: 0;
-  }
+.drag-placeholder {
+  background: var(--bg-surface-hover);
+  border: 2px dashed var(--border-default);
+  border-radius: 1.5rem;
+  min-height: 200px;
+  opacity: 0.6;
 }
 
 .cdk-drag-animating {
-  transition: transform 300ms ease;
+  transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.wishlist-container.cdk-drop-list-dragging .cdk-drag {
-  transition: transform 300ms ease;
+.wishlist-grid.cdk-drop-list-dragging
+  .wishlist-item:not(.cdk-drag-placeholder) {
+  transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -1,103 +1,103 @@
 <!-- Header -->
-<ng-container *transloco="let t">
-  <section class="header background-image">
-    <div class="promotion">
-      <h3 class="header-sub-title">{{ t('landing.header.sub-title') }}</h3>
-      <h2 class="header-title">{{ t('landing.header.title') }}</h2>
-      <p class="header-text">
-        {{ t('landing.header.text') }}
+<section class="header background-image">
+  <div class="promotion">
+    <h3 class="header-sub-title">
+      {{ 'landing.header.sub-title' | transloco }}
+    </h3>
+    <h2 class="header-title">{{ 'landing.header.title' | transloco }}</h2>
+    <p class="header-text">
+      {{ 'landing.header.text' | transloco }}
+    </p>
+    <button tuiButton color="primary" (click)="testEffect()">
+      {{ 'landing.header.button' | transloco }}
+    </button>
+  </div>
+  <div class="signup wi-container grid">
+    <div class="signup-text">
+      <h1>{{ 'landing.signup.title' | transloco }}</h1>
+      <p>
+        {{ 'landing.signup.text' | transloco }}
       </p>
-      <button tuiButton color="primary" (click)="testEffect()">
-        {{ t('landing.header.button') }}
-      </button>
+      <img class="people" src="/assets/images/people.svg" alt="" />
     </div>
-    <div class="signup wi-container grid">
-      <div class="signup-text">
-        <h1>{{ t('landing.signup.title') }}</h1>
-        <p>
-          {{ t('landing.signup.text') }}
-        </p>
-        <img class="people" src="/assets/images/people.svg" alt="" />
-      </div>
-      <div class="signup-form">
-        <wishare-login [embedded]="true"></wishare-login>
-        <!--  <app-email-login
+    <div class="signup-form">
+      <wishare-login [embedded]="true"></wishare-login>
+      <!--  <app-email-login
           [startTab]="'signup'"
           (loggedIn)="loggedIn($event)"
           (signedUp)="signedUp($event)"
           (resetMailSent)="resetMailSent()"
         ></app-email-login> -->
-      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Services -->
+<!-- Services -->
 
-  <section class="services">
-    <div class="wi-container grid">
-      <div class="service-header">
-        <div class="divider"></div>
+<section class="services">
+  <div class="wi-container grid">
+    <div class="service-header">
+      <div class="divider"></div>
 
-        <h3 class="title my-3">
-          {{ t('landing.services.title-1') }}
-          <span> {{ t('landing.services.title-2') }}</span>
-        </h3>
-      </div>
-      <div tuiCardLarge>
-        <div class="services-card-icon">
-          <img src="/assets/images/logo_parcel_default.svg" alt="" />
-        </div>
-        <div class="services-card-header">
-          <h2 class="title my-1">
-            {{ t('landing.services.cards.card-1.title') }}
-          </h2>
-        </div>
-        <div class="services-card-content">
-          <p class="card-paragraph">
-            {{ t('landing.services.cards.card-1.text') }}
-          </p>
-        </div>
-        <p class="card-paragraph card-paragraph_link">
-          <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
-        </p>
-      </div>
-      <div tuiCardLarge>
-        <div class="services-card-icon">
-          <img src="/assets/images/logo_parcel_default.svg" alt="" />
-        </div>
-        <div class="services-card-header">
-          <h2 class="title my-1">
-            {{ t('landing.services.cards.card-2.title') }}
-          </h2>
-        </div>
-        <div class="services-card-content">
-          <p class="card-paragraph">
-            {{ t('landing.services.cards.card-2.text') }}
-          </p>
-        </div>
-        <p class="card-paragraph card-paragraph_link">
-          <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
-        </p>
-      </div>
-      <div tuiCardLarge>
-        <div class="services-card-icon">
-          <img src="/assets/images/logo_parcel_default.svg" alt="" />
-        </div>
-        <div class="services-card-header">
-          <h2 class="title my-1">
-            {{ t('landing.services.cards.card-3.title') }}
-          </h2>
-        </div>
-        <div class="services-card-content">
-          <p class="card-paragraph">
-            {{ t('landing.services.cards.card-3.text') }}
-          </p>
-        </div>
-        <p class="card-paragraph card-paragraph_link">
-          <a href="/" tuiLink>{{ t('landing.services.more') }}</a>
-        </p>
-      </div>
+      <h3 class="title my-3">
+        {{ 'landing.services.title-1' | transloco }}
+        <span> {{ 'landing.services.title-2' | transloco }}</span>
+      </h3>
     </div>
-  </section>
-  <div class="spacer"></div>
-</ng-container>
+    <div tuiCardLarge>
+      <div class="services-card-icon">
+        <img src="/assets/images/logo_parcel_default.svg" alt="" />
+      </div>
+      <div class="services-card-header">
+        <h2 class="title my-1">
+          {{ 'landing.services.cards.card-1.title' | transloco }}
+        </h2>
+      </div>
+      <div class="services-card-content">
+        <p class="card-paragraph">
+          {{ 'landing.services.cards.card-1.text' | transloco }}
+        </p>
+      </div>
+      <p class="card-paragraph card-paragraph_link">
+        <a href="/" tuiLink>{{ 'landing.services.more' | transloco }}</a>
+      </p>
+    </div>
+    <div tuiCardLarge>
+      <div class="services-card-icon">
+        <img src="/assets/images/logo_parcel_default.svg" alt="" />
+      </div>
+      <div class="services-card-header">
+        <h2 class="title my-1">
+          {{ 'landing.services.cards.card-2.title' | transloco }}
+        </h2>
+      </div>
+      <div class="services-card-content">
+        <p class="card-paragraph">
+          {{ 'landing.services.cards.card-2.text' | transloco }}
+        </p>
+      </div>
+      <p class="card-paragraph card-paragraph_link">
+        <a href="/" tuiLink>{{ 'landing.services.more' | transloco }}</a>
+      </p>
+    </div>
+    <div tuiCardLarge>
+      <div class="services-card-icon">
+        <img src="/assets/images/logo_parcel_default.svg" alt="" />
+      </div>
+      <div class="services-card-header">
+        <h2 class="title my-1">
+          {{ 'landing.services.cards.card-3.title' | transloco }}
+        </h2>
+      </div>
+      <div class="services-card-content">
+        <p class="card-paragraph">
+          {{ 'landing.services.cards.card-3.text' | transloco }}
+        </p>
+      </div>
+      <p class="card-paragraph card-paragraph_link">
+        <a href="/" tuiLink>{{ 'landing.services.more' | transloco }}</a>
+      </p>
+    </div>
+  </div>
+</section>
+<div class="spacer"></div>

@@ -1,5 +1,5 @@
 <div class="login" *transloco="let t">
-  <form (ngSubmit)="onLogin()">
+  <form (submit)="onLogin($event)">
     <div class="controls-container">
       <div class="field-group">
         <tui-textfield [tuiTextfieldCleaner]="true">

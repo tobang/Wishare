@@ -79,7 +79,8 @@ export class EmailLoginComponent {
     },
   );
 
-  onLogin(): void {
+  onLogin(event: Event): void {
+    event.preventDefault();
     if (!this.loginForm().valid()) {
       return;
     }

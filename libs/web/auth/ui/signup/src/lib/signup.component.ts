@@ -73,7 +73,8 @@ export class SignupComponent {
     },
   );
 
-  signup(): void {
+  signup(event: Event): void {
+    event.preventDefault();
     if (!this.signUpForm().valid()) {
       return;
     }

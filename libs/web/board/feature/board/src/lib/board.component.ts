@@ -1,9 +1,14 @@
-import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDragPlaceholder,
+  CdkDragPreview,
+  DragDropModule,
+} from '@angular/cdk/drag-drop';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TuiButton } from '@taiga-ui/core';
+import { TuiAppearance, TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiSkeleton } from '@taiga-ui/kit';
-import { TuiCardLarge } from '@taiga-ui/layout';
+import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { BoardStore, BoardEffects } from '@wishare/web/board/data-access';
 import { type Wishlist } from '@wishare/web/wishlist/data-access';
 import { WishListComponent } from '@wishare/web/wishlist/feature/list';
@@ -14,9 +19,15 @@ import type { Models } from 'appwrite';
   standalone: true,
   imports: [
     DragDropModule,
+    CdkDragPreview,
+    CdkDragPlaceholder,
+    TuiAppearance,
     TuiButton,
     TuiCardLarge,
+    TuiHeader,
+    TuiIcon,
     TuiSkeleton,
+    TuiTitle,
     WishListComponent,
   ],
   providers: [BoardStore, BoardEffects],

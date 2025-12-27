@@ -1,55 +1,97 @@
 @let wishlists = wishLists();
 @let isLoading = loading();
-@if (isLoading) {
-  <div class="wishlist-container">
-    @for (i of [1, 2, 3]; track i) {
-      <div tuiCardLarge class="skeleton-card" [tuiSkeleton]="true">
-        <div class="skeleton-header">
-          <span [tuiSkeleton]="true">Wishlist title here</span>
-        </div>
-        <div class="skeleton-wishes">
-          @for (j of [1, 2, 3]; track j) {
-            <div class="skeleton-wish">
-              <span [tuiSkeleton]="true">Wish item loading</span>
-            </div>
-          }
-        </div>
-        <div class="skeleton-actions">
-          <span [tuiSkeleton]="true">Actions</span>
-        </div>
-      </div>
+
+<div class="board-wrapper">
+  <header class="board-header">
+    <div class="header-content">
+      <h1 class="board-title">My Wishlists</h1>
+      @if (wishlists && wishlists.length > 0) {
+        <span class="wishlist-count"
+          >{{ wishlists.length }}
+          {{ wishlists.length === 1 ? 'list' : 'lists' }}</span
+        >
+      }
+    </div>
+    @if (!isLoading && wishlists && wishlists.length > 0) {
+      <button
+        tuiButton
+        type="button"
+        appearance="primary"
+        size="m"
+        iconStart="@tui.plus"
+        (click)="createWishlist()"
+      >
+        New Wishlist
+      </button>
     }
-  </div>
-} @else if (wishlists && wishlists.length > 0) {
-  <div
-    class="wishlist-container"
-    cdkDropListOrientation="horizontal"
-    cdkDropList
-    [cdkDropListData]="wishlists"
-    (cdkDropListDropped)="drop($event)"
-    cdkDropListGroup
-  >
-    @for (wishlist of wishlists; track wishlist.$id) {
-      <div
-        [cdkDragData]="wishlist"
-        cdkDrag
-        wishare-wish-list
-        [wishlist]="wishlist"
-      ></div>
-    }
-  </div>
-} @else {
-  <div class="empty-state">
-    <h2>No wishlists yet</h2>
-    <p>Create your first wishlist to get started!</p>
-    <button
-      tuiButton
-      type="button"
-      appearance="primary"
-      size="l"
-      (click)="createWishlist()"
+  </header>
+
+  @if (isLoading) {
+    <div class="wishlist-grid">
+      @for (i of [1, 2, 3]; track i) {
+        <div tuiCardLarge tuiAppearance="floating" class="skeleton-card">
+          <header tuiHeader>
+            <h2 tuiTitle [tuiSkeleton]="true">Wishlist title here</h2>
+          </header>
+          <section class="skeleton-content">
+            @for (j of [1, 2, 3]; track j) {
+              <div class="skeleton-wish" [tuiSkeleton]="true">
+                <span>Loading wish item...</span>
+              </div>
+            }
+          </section>
+          <footer class="skeleton-footer">
+            <span [tuiSkeleton]="true">Actions here</span>
+          </footer>
+        </div>
+      }
+    </div>
+  } @else if (wishlists && wishlists.length > 0) {
+    <div
+      class="wishlist-grid"
+      cdkDropListOrientation="horizontal"
+      cdkDropList
+      [cdkDropListData]="wishlists"
+      (cdkDropListDropped)="drop($event)"
+      cdkDropListGroup
     >
-      Create Wishlist
-    </button>
-  </div>
-}
+      @for (wishlist of wishlists; track wishlist.$id) {
+        <div
+          class="wishlist-item"
+          [cdkDragData]="wishlist"
+          cdkDrag
+          wishare-wish-list
+          [wishlist]="wishlist"
+        >
+          <div class="drag-preview" *cdkDragPreview>
+            <div tuiCardLarge tuiAppearance="floating" class="preview-card">
+              <span>{{ wishlist.title }}</span>
+            </div>
+          </div>
+          <div class="drag-placeholder" *cdkDragPlaceholder></div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <tui-icon icon="@tui.gift"></tui-icon>
+      </div>
+      <h2>No wishlists yet</h2>
+      <p>
+        Create your first wishlist to start organizing your wishes and share
+        them with friends and family.
+      </p>
+      <button
+        tuiButton
+        type="button"
+        appearance="primary"
+        size="l"
+        iconStart="@tui.plus"
+        (click)="createWishlist()"
+      >
+        Create Your First Wishlist
+      </button>
+    </div>
+  }
+</div>
