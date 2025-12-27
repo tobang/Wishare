@@ -1,13 +1,14 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Output,
+  inject,
 } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { TuiButton } from '@taiga-ui/core';
-import { scopeLoader } from 'scoped-translations';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'wishare-wish-type',
@@ -16,11 +17,15 @@ import { scopeLoader } from 'scoped-translations';
   providers: [
     {
       provide: TRANSLOCO_SCOPE,
-      useValue: {
-        scope: 'wishtype',
-        loader: scopeLoader(
-          (lang: string, root: string) => import(`./${root}/${lang}.json`)
-        ),
+      useFactory: () => {
+        const http = inject(HttpClient);
+        return {
+          scope: 'wishtype',
+          loader: {
+            da: () => firstValueFrom(http.get('/assets/i18n/wishtype/da.json')),
+            en: () => firstValueFrom(http.get('/assets/i18n/wishtype/en.json')),
+          },
+        };
       },
     },
   ],

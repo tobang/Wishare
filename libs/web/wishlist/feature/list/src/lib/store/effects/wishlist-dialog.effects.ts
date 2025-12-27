@@ -1,7 +1,7 @@
 import { inject, Injectable, Injector } from '@angular/core';
 import { rxEffects } from '@rx-angular/state/effects';
 import { TuiDialogService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { notNullOrUndefined } from '@wishare/web/shared/utils';
 import {
   WishDialogComponent,
@@ -28,19 +28,22 @@ export class WishlistDialogEffects {
           switchMap(() =>
             this.dialogService
               .open<WishDialogInput>(
-                new PolymorpheusComponent(WishDialogComponent, this.componentInjector),
+                new PolymorpheusComponent(
+                  WishDialogComponent,
+                  this.componentInjector,
+                ),
                 {
                   dismissible: false,
                   data: { wish: {}, images: [], editMode: false },
                   size: 'l',
-                }
+                },
               )
               .pipe(
                 filter(notNullOrUndefined),
-                switchMap(() => EMPTY)
-              )
-          )
-        )
+                switchMap(() => EMPTY),
+              ),
+          ),
+        ),
       );
     });
   }

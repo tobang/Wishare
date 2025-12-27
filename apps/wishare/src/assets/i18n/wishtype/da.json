@@ -1,0 +1,10 @@
+{
+  "manual": {
+    "text": "Udfyld selv med link, billede og beskrivelse af dit ønske.",
+    "button": "Jeg gør arbejdet"
+  },
+  "auto": {
+    "text": "Giv os linket til dit ønske og vi forsøger at hente billede og beskrivelse.",
+    "button": "I gør arbejdet"
+  }
+}

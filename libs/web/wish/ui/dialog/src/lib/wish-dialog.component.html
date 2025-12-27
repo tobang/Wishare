@@ -2,12 +2,7 @@
 <tui-stepper
   [activeItemIndex]="activeItemIndex"
   (activeItemIndexChange)="setActiveItemIndex($event)"
->
-  <button tuiStep>Type</button>
-  <button tuiStep>URL</button>
-  <button tuiStep>Details</button>
-  <button tuiStep>Review</button>
-</tui-stepper>
+></tui-stepper>
 @switch (activeItemIndex) {
   @case (0) {
     <wishare-wish-type
