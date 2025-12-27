@@ -1,5 +1,26 @@
 @let wishlists = wishLists();
-@if (wishlists && wishlists.length > 0) {
+@let isLoading = loading();
+@if (isLoading) {
+  <div class="wishlist-container">
+    @for (i of [1, 2, 3]; track i) {
+      <div tuiCardLarge class="skeleton-card" [tuiSkeleton]="true">
+        <div class="skeleton-header">
+          <span [tuiSkeleton]="true">Wishlist title here</span>
+        </div>
+        <div class="skeleton-wishes">
+          @for (j of [1, 2, 3]; track j) {
+            <div class="skeleton-wish">
+              <span [tuiSkeleton]="true">Wish item loading</span>
+            </div>
+          }
+        </div>
+        <div class="skeleton-actions">
+          <span [tuiSkeleton]="true">Actions</span>
+        </div>
+      </div>
+    }
+  </div>
+} @else if (wishlists && wishlists.length > 0) {
   <div
     class="wishlist-container"
     cdkDropListOrientation="horizontal"

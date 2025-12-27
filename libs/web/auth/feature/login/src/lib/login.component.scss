@@ -1,14 +1,138 @@
-.login-form {
-  [tuiCardLarge] {
-    padding: 30px;
-    box-shadow: 0 4px 24px rgb(0 0 0 / 12%);
-    display: flex;
-    flex-direction: column;
+.login-page {
+  min-height: calc(100vh - var(--navbar-height, 70px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8);
+  background: var(--gradient-page);
+
+  // Embedded mode styling
+  &.embedded-mode {
+    min-height: auto;
+    padding: 0;
+    background: none;
+  }
+}
+
+.login-container {
+  display: flex;
+  max-width: 1000px;
+  width: 100%;
+  min-height: 600px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow-elevated);
+}
+
+// Left branding panel
+.login-branding {
+  flex: 1;
+  background: var(--gradient-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: var(--spacing-12);
+
+  .branding-content {
+    text-align: center;
+    color: var(--text-inverse);
+    z-index: 2;
+    position: relative;
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: var(--spacing-6);
+      filter: brightness(0) invert(1);
+    }
+
+    .brand-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0 0 var(--spacing-2);
+      letter-spacing: -0.5px;
+    }
+
+    .brand-tagline {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 280px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
   }
 
-  tui-tabs {
-    flex-shrink: 0;
-    margin-bottom: 1.5rem;
+  // Decorative circles
+  .decorative-circles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .circle-1 {
+      width: 300px;
+      height: 300px;
+      top: -100px;
+      right: -80px;
+    }
+
+    .circle-2 {
+      width: 200px;
+      height: 200px;
+      bottom: -60px;
+      left: -40px;
+    }
+
+    .circle-3 {
+      width: 150px;
+      height: 150px;
+      bottom: 30%;
+      right: 10%;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+// Right form panel
+.login-form-panel {
+  flex: 1.2;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-12);
+
+  .form-wrapper {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .welcome-text {
+    margin-bottom: var(--spacing-8);
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 var(--spacing-2);
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+  }
+
+  .login-tabs {
+    margin-bottom: var(--spacing-6);
   }
 
   .tab-content {
@@ -16,5 +140,105 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
+  }
+}
+
+// Embedded card styling
+.embedded-card {
+  background: var(--bg-surface);
+  padding: var(--spacing-8);
+  padding-left: var(--spacing-10);
+  box-shadow: var(--card-shadow);
+  border-radius: 12px;
+  width: 100%;
+
+  .welcome-text-embedded {
+    text-align: center;
+    margin-bottom: var(--spacing-6);
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 var(--spacing-2);
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+  }
+
+  .login-tabs {
+    margin-bottom: var(--spacing-6);
+  }
+
+  .tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .login-page {
+    padding: var(--spacing-4);
+  }
+
+  .login-container {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .login-branding {
+    padding: var(--spacing-8);
+    min-height: 200px;
+
+    .branding-content {
+      .logo {
+        width: 60px;
+        height: 60px;
+        margin-bottom: var(--spacing-4);
+      }
+
+      .brand-title {
+        font-size: 1.75rem;
+      }
+
+      .brand-tagline {
+        font-size: 0.95rem;
+      }
+    }
+
+    .decorative-circles {
+      .circle-1 {
+        width: 150px;
+        height: 150px;
+        top: -50px;
+        right: -30px;
+      }
+
+      .circle-2 {
+        width: 100px;
+        height: 100px;
+        bottom: -30px;
+        left: -20px;
+      }
+    }
+  }
+
+  .login-form-panel {
+    padding: var(--spacing-8);
+
+    .welcome-text {
+      text-align: center;
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
   }
 }

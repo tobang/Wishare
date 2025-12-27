@@ -1,8 +1,8 @@
 .select-type {
   // max-width: 750px;
-  margin-top: 30px;
+  margin-top: var(--spacing-8);
   justify-items: center;
-  padding-bottom: 20px;
+  padding-bottom: var(--spacing-5);
   &.grid {
     grid-template-columns: repeat(3, auto);
     grid-template-rows: repeat(3, auto);
@@ -22,7 +22,7 @@
   }
   .auto-text,
   .manual-text {
-    color: black;
+    color: var(--text-primary);
     width: 200px;
     text-align: center;
   }
@@ -31,7 +31,7 @@
     background: repeating-linear-gradient(
         to bottom,
         transparent 0 4px,
-        rgb(38, 36, 36) 4px 8px
+        var(--border-default) 4px 8px
       )
       80%/2px 100% no-repeat;
     background-position: center center;

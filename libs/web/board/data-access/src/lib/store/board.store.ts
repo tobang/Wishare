@@ -24,20 +24,22 @@ export class BoardStore implements WithInitializer {
   public readonly actions = rxActions<BoardActions>();
 
   public readonly store = rxState<BoardStateModel>(({ connect, set }) => {
-    set({ wishLists: [] });
+    set({ wishLists: [], loading: true });
 
     type BoardData = (Wishlist & {
       [x: string]: Models.DocumentList<Models.Document>;
     })[];
 
     connect(
-      'wishLists',
       this.actions.fetchWishlists$.pipe(
         switchMap(() =>
           this.boardService.getBoard().pipe(
             tap((data) => console.log('Board', data)),
-            map((data) => data as BoardData),
-            catchError((): Observable<BoardData> => of([])),
+            map((data) => ({ wishLists: data as BoardData, loading: false })),
+            catchError(
+              (): Observable<{ wishLists: BoardData; loading: boolean }> =>
+                of({ wishLists: [], loading: false }),
+            ),
           ),
         ),
       ),

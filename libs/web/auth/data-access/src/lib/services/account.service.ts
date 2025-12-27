@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { APPWRITE } from '@wishare/web/shared/app-config';
 
 import { Account, Databases, Models } from 'appwrite';
@@ -6,13 +6,10 @@ import { defer, from, map, Observable, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
-  constructor(
-    @Inject(APPWRITE)
-    private readonly appwrite: {
-      database: Databases;
-      account: Account;
-    }
-  ) {}
+  private readonly appwrite: {
+    database: Databases;
+    account: Account;
+  } = inject(APPWRITE);
 
   getAccount(): Observable<Models.User<Record<string, unknown>>> {
     return defer(() => from(this.appwrite.account.get()));

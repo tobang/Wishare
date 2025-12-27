@@ -2,6 +2,8 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TuiButton } from '@taiga-ui/core';
+import { TuiSkeleton } from '@taiga-ui/kit';
+import { TuiCardLarge } from '@taiga-ui/layout';
 import { BoardStore, BoardEffects } from '@wishare/web/board/data-access';
 import { type Wishlist } from '@wishare/web/wishlist/data-access';
 import { WishListComponent } from '@wishare/web/wishlist/feature/list';
@@ -10,7 +12,13 @@ import type { Models } from 'appwrite';
 @Component({
   selector: 'wishare-board',
   standalone: true,
-  imports: [DragDropModule, TuiButton, WishListComponent],
+  imports: [
+    DragDropModule,
+    TuiButton,
+    TuiCardLarge,
+    TuiSkeleton,
+    WishListComponent,
+  ],
   providers: [BoardStore, BoardEffects],
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
@@ -19,6 +27,7 @@ import type { Models } from 'appwrite';
 export class BoardComponent {
   private boardStore = inject(BoardStore);
   public readonly wishLists = this.boardStore.vm.wishLists;
+  public readonly loading = this.boardStore.vm.loading;
 
   constructor() {
     console.log('BoardComponent initialized');

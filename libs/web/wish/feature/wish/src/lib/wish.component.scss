@@ -7,36 +7,36 @@
   touch-action: manipulation;
   cursor: -webkit-grab;
   cursor: grab;
-  margin: 8px 5px;
+  margin: var(--spacing-2) var(--spacing-1);
   width: 100%;
   &.selected {
-    border: 2px solid black;
+    border: 2px solid var(--border-default);
     border-radius: var(--tui-radius-l);
   }
   .tui-island {
     height: 100px;
-    padding: 10px;
+    padding: var(--spacing-2);
   }
   .content-container {
     display: flex;
     justify-content: space-between;
     .wish-image {
-      background-color: white;
+      background-color: var(--bg-surface);
       width: 40%;
       min-width: 100px;
-      padding: 10px 0;
+      padding: var(--spacing-2) 0;
       border-radius: var(--tui-radius-l);
       img {
         object-fit: cover;
         object-position: center;
         max-width: 100px;
         max-height: 100px;
-        padding: 0 10px;
+        padding: 0 var(--spacing-2);
       }
     }
     .wish-title {
-      border-left: 1px solid gray;
-      padding-left: 8px;
+      border-left: 1px solid var(--border-default);
+      padding-left: var(--spacing-2);
     }
   }
 }

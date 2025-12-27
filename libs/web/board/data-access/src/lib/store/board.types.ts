@@ -8,6 +8,7 @@ export interface BoardStateModel {
   wishLists: (Wishlist & {
     [x: string]: Models.DocumentList<Models.Document>;
   })[];
+  loading: boolean;
 }
 
 /**

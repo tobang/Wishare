@@ -1,18 +1,18 @@
 .wishlist-card {
-  margin: 10px;
+  margin: var(--spacing-2);
   width: 370px;
-  padding: 10px;
-  background: #34626c;
-  color: white;
+  padding: var(--spacing-2);
+  background: var(--color-brand-primary);
+  color: var(--text-inverse);
   .flex {
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 10px;
+    margin-bottom: var(--spacing-2);
   }
 
   .card-paragraph {
     display: flex;
-    gap: 8px;
+    gap: var(--spacing-2);
   }
 
   .cdk-drop-list-dragging {
@@ -23,9 +23,9 @@
   }
   .cdk-drag-placeholder {
     .wish-wrap {
-      background-color: rgba(150, 150, 200, 0.1);
-      border: 2px dashed #abc;
-      margin: 5px;
+      background-color: var(--bg-surface-hover);
+      border: 2px dashed var(--border-default);
+      margin: var(--spacing-1);
 
       .wish {
         opacity: 0 !important;

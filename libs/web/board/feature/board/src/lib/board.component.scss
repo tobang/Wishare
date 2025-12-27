@@ -1,13 +1,40 @@
 .wishlist-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
-  grid-gap: 10px;
+  grid-gap: var(--spacing-2);
   align-items: start;
-  margin-top: 20px;
-  margin-left: 20px;
+  margin-top: var(--spacing-5);
+  margin-left: var(--spacing-5);
 
   .drag-handle {
     cursor: move;
+  }
+}
+
+.skeleton-card {
+  min-height: 280px;
+  padding: var(--spacing-4);
+
+  .skeleton-header {
+    margin-bottom: var(--spacing-4);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .skeleton-wishes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .skeleton-wish {
+    padding: var(--spacing-2) 0;
+  }
+
+  .skeleton-actions {
+    margin-top: auto;
+    padding-top: var(--spacing-4);
   }
 }
 
@@ -16,7 +43,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
+  padding: var(--spacing-16) var(--spacing-8);
   text-align: center;
 
   h2 {
@@ -33,7 +60,7 @@
 
 .handle {
   position: relative;
-  top: 5px;
+  top: var(--spacing-1);
   left: 0;
   cursor: move;
 }

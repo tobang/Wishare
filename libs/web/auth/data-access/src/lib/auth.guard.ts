@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, tap, filter, take } from 'rxjs';
 import { AuthStore } from './store/auth.store';
 
 @Injectable({ providedIn: 'root' })
@@ -29,6 +29,12 @@ export class AuthGuard {
   }
 
   checkLogin(): Observable<boolean> {
-    return this.account$.pipe(map((account) => !!account));
+    // Wait for the account state to be initialized (not undefined)
+    // This ensures APP_INITIALIZER has completed before deciding
+    return this.account$.pipe(
+      filter((account) => account !== undefined),
+      take(1),
+      map((account) => !!account),
+    );
   }
 }

@@ -1,1 +1,16 @@
-{}
+{
+  "tabs": {
+    "tab-0": {
+      "label": "Login"
+    },
+    "tab-1": {
+      "label": "Sign up"
+    }
+  },
+  "tagline": "Share your wishes with friends and family",
+  "welcome": "Welcome back",
+  "subtitle": "Sign in to continue to your account",
+  "server-error": {
+    "invalid-credentials": "Invalid username or password!"
+  }
+}

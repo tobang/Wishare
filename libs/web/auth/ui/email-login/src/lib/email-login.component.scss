@@ -1,40 +1,92 @@
 .login {
   a {
-    text-decoration: underline;
+    text-decoration: none;
+    color: var(--fourth-color);
+    font-weight: 500;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
   }
 
   .controls-container {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    margin-top: 1.5rem;
+    gap: var(--spacing-4);
 
     tui-textfield {
-      margin-top: 1rem;
+      transition: transform 0.2s ease;
 
-      &:first-child {
-        margin-top: 0;
+      &:focus-within {
+        transform: translateY(-1px);
       }
+    }
+
+    label {
+      font-weight: 500;
+      color: var(--text-primary);
     }
   }
 
   .action-buttons {
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-top: 30px;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    margin-top: var(--spacing-8);
+
+    button[tuiButton] {
+      width: 100%;
+      height: 48px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      background: linear-gradient(
+        135deg,
+        var(--primary-color) 0%,
+        var(--fourth-color) 100%
+      );
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: var(--button-shadow-hover);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    a {
+      text-align: center;
+      font-size: 0.9rem;
+    }
   }
+
   .full-width {
     width: 100%;
   }
+
   .input-margin {
-    margin-top: 10px;
+    margin-top: var(--spacing-2);
   }
+
   .server-error {
-    font-size: 0.8rem;
-    margin-top: 5px;
-  }
-  button {
-    margin-top: 10px;
+    font-size: 0.85rem;
+    margin-top: var(--spacing-1);
+    color: var(--color-error);
+    background: var(--color-error-light);
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: 8px;
+    border-left: 3px solid var(--color-error);
   }
 }

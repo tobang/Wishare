@@ -2,20 +2,448 @@
 
 @use 'sass:color';
 
-$prim-color-lighter: color.adjust(#34626c, $lightness: 2%);
-$prim-color-darker: color.adjust(#34626c, $lightness: -2%);
-:root {
-  --primary-color: #34626c;
-  --secondary-color: #0f3057;
-  --tertiary-color: #e7e7de;
-  --fourth-color: #008891;
-  --fifth-color: #005816;
-  --sixth-color: #333333;
+// ============================================
+// WISHARE THEME SYSTEM
+// ============================================
+
+// Brand Colors (constant across themes)
+$brand-primary: #34626c;
+$brand-secondary: #0f3057;
+$brand-accent: #008891;
+$brand-success: #005816;
+
+// Computed color variations
+$brand-primary-light: color.adjust($brand-primary, $lightness: 2%);
+$brand-primary-dark: color.adjust($brand-primary, $lightness: -2%);
+$brand-primary-lighter: color.adjust($brand-primary, $lightness: 15%);
+$brand-primary-darker: color.adjust($brand-primary, $lightness: -10%);
+
+// ============================================
+// LIGHT THEME (Default)
+// ============================================
+:root,
+[data-theme='light'] {
+  // Brand colors
+  --color-brand-primary: #{$brand-primary};
+  --color-brand-secondary: #{$brand-secondary};
+  --color-brand-accent: #{$brand-accent};
+  --color-brand-success: #{$brand-success};
+
+  // Primary color variations
+  --color-primary: #{$brand-primary};
+  --color-primary-light: #{$brand-primary-light};
+  --color-primary-dark: #{$brand-primary-dark};
+  --color-primary-lighter: #{$brand-primary-lighter};
+  --color-primary-darker: #{$brand-primary-darker};
+
+  // Semantic colors
+  --color-success: #16a34a;
+  --color-success-light: #dcfce7;
+  --color-warning: #ca8a04;
+  --color-warning-light: #fef9c3;
+  --color-error: #dc2626;
+  --color-error-light: #fef2f2;
+  --color-info: #{$brand-accent};
+  --color-info-light: #e0f7fa;
+
+  // Background colors
+  --bg-page: #fafafa;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-hover: #f5f5f5;
+  --bg-surface-active: #eeeeee;
+  --bg-muted: #f5f7fa;
+  --bg-navbar: #e7e7de;
+  --bg-card: #ffffff;
+  --bg-card-secondary: #e4f2f3;
+  --bg-input: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+
+  // Text colors
+  --text-primary: #333333;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --text-inverse: #ffffff;
+  --text-on-primary: #ffffff;
+  --text-on-brand: #ffffff;
+  --text-link: #{$brand-accent};
+  --text-link-hover: #{$brand-primary};
+
+  // Border colors
+  --border-default: #e5e7eb;
+  --border-light: #f3f4f6;
+  --border-focus: #{$brand-accent};
+  --border-error: #dc2626;
+
+  // Shadow colors
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-color-heavy: rgba(0, 0, 0, 0.15);
+  --shadow-primary: rgba(52, 98, 108, 0.3);
+
+  // Gradients
+  --gradient-brand: linear-gradient(
+    135deg,
+    #{$brand-primary} 0%,
+    #{$brand-secondary} 100%
+  );
+  --gradient-brand-accent: linear-gradient(
+    135deg,
+    #{$brand-primary} 0%,
+    #{$brand-accent} 100%
+  );
+  --gradient-page: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+
+  // Component-specific
   --navbar-height: 70px;
-  --tui-primary: var(--primary-color) !important;
-  --tui-primary-hover: #{$prim-color-lighter} !important;
-  --tui-primary-active: #{$prim-color-darker} !important;
+  --card-shadow: 0 4px 24px var(--shadow-color);
+  --card-shadow-elevated:
+    0 25px 50px -12px var(--shadow-color-heavy),
+    0 12px 24px -8px var(--shadow-color);
+  --button-shadow-hover: 0 8px 20px var(--shadow-primary);
+
+  // Spacing scale (based on 4px base unit)
+  --spacing-0: 0;
+  --spacing-1: 0.25rem; // 4px
+  --spacing-2: 0.5rem; // 8px
+  --spacing-3: 0.75rem; // 12px
+  --spacing-4: 1rem; // 16px
+  --spacing-5: 1.25rem; // 20px
+  --spacing-6: 1.5rem; // 24px
+  --spacing-7: 1.75rem; // 28px
+  --spacing-8: 2rem; // 32px
+  --spacing-9: 2.25rem; // 36px
+  --spacing-10: 2.5rem; // 40px
+  --spacing-11: 2.75rem; // 44px
+  --spacing-12: 3rem; // 48px
+  --spacing-14: 3.5rem; // 56px
+  --spacing-16: 4rem; // 64px
+  --spacing-20: 5rem; // 80px
+  --spacing-24: 6rem; // 96px
+  --spacing-28: 7rem; // 112px
+  --spacing-32: 8rem; // 128px
+  --spacing-36: 9rem; // 144px
+  --spacing-40: 10rem; // 160px
+  --spacing-44: 11rem; // 176px
+  --spacing-48: 12rem; // 192px
+  --spacing-52: 13rem; // 208px
+  --spacing-56: 14rem; // 224px
+  --spacing-60: 15rem; // 240px
+  --spacing-64: 16rem; // 256px
+  --spacing-72: 18rem; // 288px
+  --spacing-80: 20rem; // 320px
+  --spacing-96: 24rem; // 384px
+
+  // Common spacing aliases
+  --spacing-xs: var(--spacing-2); // 8px
+  --spacing-sm: var(--spacing-3); // 12px
+  --spacing-md: var(--spacing-4); // 16px
+  --spacing-lg: var(--spacing-6); // 24px
+  --spacing-xl: var(--spacing-8); // 32px
+  --spacing-2xl: var(--spacing-12); // 48px
+  --spacing-3xl: var(--spacing-16); // 64px
+
+  // Layout-specific spacing
+  --spacing-section: var(--spacing-16); // 64px
+  --spacing-container: var(--spacing-6); // 24px
+  --spacing-card-padding: var(--spacing-6); // 24px
+  --spacing-input-padding: var(--spacing-3); // 12px
+  --spacing-button-padding: var(--spacing-4); // 16px
+
+  // Taiga UI overrides
+  --tui-primary: var(--color-primary) !important;
+  --tui-primary-hover: var(--color-primary-light) !important;
+  --tui-primary-active: var(--color-primary-dark) !important;
+
+  // Legacy variable mappings (for backwards compatibility)
+  --primary-color: var(--color-primary);
+  --secondary-color: var(--color-brand-secondary);
+  --tertiary-color: var(--bg-navbar);
+  --fourth-color: var(--color-brand-accent);
+  --fifth-color: var(--color-brand-success);
+  --sixth-color: var(--text-primary);
 }
+
+// ============================================
+// DARK THEME
+// ============================================
+[data-theme='dark'] {
+  // Brand colors (same as light theme)
+  --color-brand-primary: #{$brand-primary};
+  --color-brand-secondary: #{$brand-secondary};
+  --color-brand-accent: #{$brand-accent};
+  --color-brand-success: #{$brand-success};
+
+  // Primary color variations (slightly adjusted for dark mode)
+  --color-primary: #{color.adjust($brand-primary, $lightness: 10%)};
+  --color-primary-light: #{color.adjust($brand-primary, $lightness: 15%)};
+  --color-primary-dark: #{$brand-primary};
+  --color-primary-lighter: #{color.adjust($brand-primary, $lightness: 25%)};
+  --color-primary-darker: #{color.adjust($brand-primary, $lightness: -5%)};
+
+  // Semantic colors (adjusted for dark mode)
+  --color-success: #22c55e;
+  --color-success-light: rgba(34, 197, 94, 0.15);
+  --color-warning: #eab308;
+  --color-warning-light: rgba(234, 179, 8, 0.15);
+  --color-error: #ef4444;
+  --color-error-light: rgba(239, 68, 68, 0.15);
+  --color-info: #{color.adjust($brand-accent, $lightness: 10%)};
+  --color-info-light: rgba(0, 136, 145, 0.15);
+
+  // Background colors
+  --bg-page: #121212;
+  --bg-surface: #1e1e1e;
+  --bg-surface-elevated: #2d2d2d;
+  --bg-surface-hover: #333333;
+  --bg-surface-active: #404040;
+  --bg-muted: #262626;
+  --bg-navbar: #1a1a1a;
+  --bg-card: #1e1e1e;
+  --bg-card-secondary: #252525;
+  --bg-input: #2d2d2d;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+
+  // Text colors
+  --text-primary: #e5e5e5;
+  --text-secondary: #a3a3a3;
+  --text-muted: #737373;
+  --text-inverse: #1e1e1e;
+  --text-on-primary: #ffffff;
+  --text-on-brand: #ffffff;
+  --text-link: #{color.adjust($brand-accent, $lightness: 15%)};
+  --text-link-hover: #{color.adjust($brand-accent, $lightness: 25%)};
+
+  // Border colors
+  --border-default: #404040;
+  --border-light: #333333;
+  --border-focus: #{color.adjust($brand-accent, $lightness: 10%)};
+  --border-error: #ef4444;
+
+  // Shadow colors
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-color-heavy: rgba(0, 0, 0, 0.4);
+  --shadow-primary: rgba(0, 136, 145, 0.3);
+
+  // Gradients
+  --gradient-brand: linear-gradient(
+    135deg,
+    #{color.adjust($brand-primary, $lightness: 5%)} 0%,
+    #{$brand-secondary} 100%
+  );
+  --gradient-brand-accent: linear-gradient(
+    135deg,
+    #{color.adjust($brand-primary, $lightness: 5%)} 0%,
+    #{$brand-accent} 100%
+  );
+  --gradient-page: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
+
+  // Component-specific
+  --card-shadow: 0 4px 24px var(--shadow-color);
+  --card-shadow-elevated:
+    0 25px 50px -12px var(--shadow-color-heavy),
+    0 12px 24px -8px var(--shadow-color);
+  --button-shadow-hover: 0 8px 20px var(--shadow-primary);
+
+  // Spacing scale (same as light theme)
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-7: 1.75rem;
+  --spacing-8: 2rem;
+  --spacing-9: 2.25rem;
+  --spacing-10: 2.5rem;
+  --spacing-11: 2.75rem;
+  --spacing-12: 3rem;
+  --spacing-14: 3.5rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-28: 7rem;
+  --spacing-32: 8rem;
+  --spacing-36: 9rem;
+  --spacing-40: 10rem;
+  --spacing-44: 11rem;
+  --spacing-48: 12rem;
+  --spacing-52: 13rem;
+  --spacing-56: 14rem;
+  --spacing-60: 15rem;
+  --spacing-64: 16rem;
+  --spacing-72: 18rem;
+  --spacing-80: 20rem;
+  --spacing-96: 24rem;
+
+  // Common spacing aliases
+  --spacing-xs: var(--spacing-2);
+  --spacing-sm: var(--spacing-3);
+  --spacing-md: var(--spacing-4);
+  --spacing-lg: var(--spacing-6);
+  --spacing-xl: var(--spacing-8);
+  --spacing-2xl: var(--spacing-12);
+  --spacing-3xl: var(--spacing-16);
+
+  // Layout-specific spacing
+  --spacing-section: var(--spacing-16);
+  --spacing-container: var(--spacing-6);
+  --spacing-card-padding: var(--spacing-6);
+  --spacing-input-padding: var(--spacing-3);
+  --spacing-button-padding: var(--spacing-4);
+
+  // Legacy variable mappings
+  --primary-color: var(--color-primary);
+  --secondary-color: var(--color-brand-secondary);
+  --tertiary-color: var(--bg-navbar);
+  --fourth-color: var(--color-brand-accent);
+  --fifth-color: var(--color-brand-success);
+  --sixth-color: var(--text-primary);
+}
+
+// ============================================
+// SYSTEM PREFERENCE AUTO-DETECTION
+// ============================================
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    // Brand colors (same as light theme)
+    --color-brand-primary: #{$brand-primary};
+    --color-brand-secondary: #{$brand-secondary};
+    --color-brand-accent: #{$brand-accent};
+    --color-brand-success: #{$brand-success};
+
+    // Primary color variations
+    --color-primary: #{color.adjust($brand-primary, $lightness: 10%)};
+    --color-primary-light: #{color.adjust($brand-primary, $lightness: 15%)};
+    --color-primary-dark: #{$brand-primary};
+    --color-primary-lighter: #{color.adjust($brand-primary, $lightness: 25%)};
+    --color-primary-darker: #{color.adjust($brand-primary, $lightness: -5%)};
+
+    // Semantic colors
+    --color-success: #22c55e;
+    --color-success-light: rgba(34, 197, 94, 0.15);
+    --color-warning: #eab308;
+    --color-warning-light: rgba(234, 179, 8, 0.15);
+    --color-error: #ef4444;
+    --color-error-light: rgba(239, 68, 68, 0.15);
+    --color-info: #{color.adjust($brand-accent, $lightness: 10%)};
+    --color-info-light: rgba(0, 136, 145, 0.15);
+
+    // Background colors
+    --bg-page: #121212;
+    --bg-surface: #1e1e1e;
+    --bg-surface-elevated: #2d2d2d;
+    --bg-surface-hover: #333333;
+    --bg-surface-active: #404040;
+    --bg-muted: #262626;
+    --bg-navbar: #1a1a1a;
+    --bg-card: #1e1e1e;
+    --bg-card-secondary: #252525;
+    --bg-input: #2d2d2d;
+    --bg-overlay: rgba(0, 0, 0, 0.7);
+
+    // Text colors
+    --text-primary: #e5e5e5;
+    --text-secondary: #a3a3a3;
+    --text-muted: #737373;
+    --text-inverse: #1e1e1e;
+    --text-on-primary: #ffffff;
+    --text-on-brand: #ffffff;
+    --text-link: #{color.adjust($brand-accent, $lightness: 15%)};
+    --text-link-hover: #{color.adjust($brand-accent, $lightness: 25%)};
+
+    // Border colors
+    --border-default: #404040;
+    --border-light: #333333;
+    --border-focus: #{color.adjust($brand-accent, $lightness: 10%)};
+    --border-error: #ef4444;
+
+    // Shadow colors
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-color-heavy: rgba(0, 0, 0, 0.4);
+    --shadow-primary: rgba(0, 136, 145, 0.3);
+
+    // Gradients
+    --gradient-brand: linear-gradient(
+      135deg,
+      #{color.adjust($brand-primary, $lightness: 5%)} 0%,
+      #{$brand-secondary} 100%
+    );
+    --gradient-brand-accent: linear-gradient(
+      135deg,
+      #{color.adjust($brand-primary, $lightness: 5%)} 0%,
+      #{$brand-accent} 100%
+    );
+    --gradient-page: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
+
+    // Component-specific
+    --card-shadow: 0 4px 24px var(--shadow-color);
+    --card-shadow-elevated:
+      0 25px 50px -12px var(--shadow-color-heavy),
+      0 12px 24px -8px var(--shadow-color);
+    --button-shadow-hover: 0 8px 20px var(--shadow-primary);
+
+    // Spacing scale (same as light theme)
+    --spacing-0: 0;
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-5: 1.25rem;
+    --spacing-6: 1.5rem;
+    --spacing-7: 1.75rem;
+    --spacing-8: 2rem;
+    --spacing-9: 2.25rem;
+    --spacing-10: 2.5rem;
+    --spacing-11: 2.75rem;
+    --spacing-12: 3rem;
+    --spacing-14: 3.5rem;
+    --spacing-16: 4rem;
+    --spacing-20: 5rem;
+    --spacing-24: 6rem;
+    --spacing-28: 7rem;
+    --spacing-32: 8rem;
+    --spacing-36: 9rem;
+    --spacing-40: 10rem;
+    --spacing-44: 11rem;
+    --spacing-48: 12rem;
+    --spacing-52: 13rem;
+    --spacing-56: 14rem;
+    --spacing-60: 15rem;
+    --spacing-64: 16rem;
+    --spacing-72: 18rem;
+    --spacing-80: 20rem;
+    --spacing-96: 24rem;
+
+    // Common spacing aliases
+    --spacing-xs: var(--spacing-2);
+    --spacing-sm: var(--spacing-3);
+    --spacing-md: var(--spacing-4);
+    --spacing-lg: var(--spacing-6);
+    --spacing-xl: var(--spacing-8);
+    --spacing-2xl: var(--spacing-12);
+    --spacing-3xl: var(--spacing-16);
+
+    // Layout-specific spacing
+    --spacing-section: var(--spacing-16);
+    --spacing-container: var(--spacing-6);
+    --spacing-card-padding: var(--spacing-6);
+    --spacing-input-padding: var(--spacing-3);
+    --spacing-button-padding: var(--spacing-4);
+
+    // Legacy variable mappings
+    --primary-color: var(--color-primary);
+    --secondary-color: var(--color-brand-secondary);
+    --tertiary-color: var(--bg-navbar);
+    --fourth-color: var(--color-brand-accent);
+    --fifth-color: var(--color-brand-success);
+    --sixth-color: var(--text-primary);
+  }
+}
+
+// ============================================
+// RESET & BASE STYLES
+// ============================================
 
 // Reset
 * {
@@ -26,13 +454,16 @@ $prim-color-darker: color.adjust(#34626c, $lightness: -2%);
 
 body {
   font-family: 'Roboto', sans-serif;
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.6;
-  background-color: #fafafa;
+  background-color: var(--bg-page);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 tui-dialog .t-content:has(wishare-wish-dialog) {
-  background: #005816 !important;
+  background: var(--color-brand-success) !important;
 }
 
 ul {
@@ -41,7 +472,7 @@ ul {
 
 a {
   text-decoration: none;
-  color: #333;
+  color: var(--text-primary);
 }
 
 h1,
@@ -88,20 +519,54 @@ img {
   background-size: cover;
 }
 
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+// Text colors
 .text-primary {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .text-secondary {
-  color: var(--secondary-color);
+  color: var(--color-brand-secondary);
 }
 
 .text-dark {
-  color: var(--sixth-color);
+  color: var(--text-primary);
 }
 
 .text-light {
-  color: var(--tertiary-color);
+  color: var(--bg-navbar);
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+// Background utilities
+.bg-surface {
+  background-color: var(--bg-surface);
+}
+
+.bg-muted {
+  background-color: var(--bg-muted);
+}
+
+.bg-card {
+  background-color: var(--bg-card);
 }
 
 // Text sizes
@@ -210,4 +675,3 @@ img {
 .p-5 {
   padding: 4rem;
 }
-

@@ -7,6 +7,9 @@
       "label": "Tilmelding"
     }
   },
+  "tagline": "Del dine ønsker med venner og familie",
+  "welcome": "Velkommen tilbage",
+  "subtitle": "Log ind for at fortsætte til din konto",
   "server-error": {
     "invalid-credentials": "Forkert brugernavn eller password!"
   }

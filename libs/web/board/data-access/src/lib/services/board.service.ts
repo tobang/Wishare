@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { from, map, Observable, switchMap } from 'rxjs';
 
@@ -10,13 +10,10 @@ import { Wish, Wishlist } from '@wishare/web/wishlist/data-access';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
-  constructor(
-    @Inject(APPWRITE)
-    private readonly appwrite: {
-      database: Databases;
-      account: Account;
-    },
-  ) {}
+  private readonly appwrite: {
+    database: Databases;
+    account: Account;
+  } = inject(APPWRITE);
 
   getBoard() {
     return this.getWishlists().pipe(

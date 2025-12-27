@@ -7,10 +7,13 @@ import { BoardStateModel } from './board.types';
  * @returns An object containing Signals for the component.
  */
 export const createBoardViewModel = (store: any) => {
-  const wishLists: Signal<BoardStateModel['wishLists']> = store.signal('wishLists');
+  const wishLists: Signal<BoardStateModel['wishLists']> =
+    store.signal('wishLists');
+  const loading: Signal<boolean> = store.signal('loading');
 
   return {
-    wishLists
+    wishLists,
+    loading,
   };
 };
 

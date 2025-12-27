@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { TranslocoModule } from '@ngneat/transloco';
 import { TuiDialogContext } from '@taiga-ui/core';
@@ -20,14 +20,8 @@ import { WishDialogStore } from './store/wish-dialog.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishDialogComponent {
-  constructor(
-    @Inject(POLYMORPHEUS_CONTEXT)
-    private readonly context: TuiDialogContext<
-      WishDialog | null,
-      WishDialogInput
-    >,
-    public readonly adapter: WishDialogStore,
-  ) {}
+  private readonly context = inject<TuiDialogContext<WishDialog | null, WishDialogInput>>(POLYMORPHEUS_CONTEXT);
+  public readonly adapter = inject(WishDialogStore);
 
   closeDialog() {
     this.adapter.closeDialog(this.context);

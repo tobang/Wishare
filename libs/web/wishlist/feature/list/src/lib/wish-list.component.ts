@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
@@ -21,7 +21,7 @@ import { WishlistDialogEffects } from './store/effects';
 })
 export class WishListComponent {
   @Input() wishlist!: WishlistUi;
-  constructor(private adapter: WishlistStore) {}
+  private adapter = inject(WishlistStore);
 
   createWish() {
     this.adapter.createWish();

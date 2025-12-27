@@ -23,18 +23,21 @@ export class AuthStore implements WithInitializer {
   private readonly accountService = inject(AccountService);
   public readonly actions = rxActions<AuthActions>();
 
-  public readonly store = rxState<AuthStateModel>(({ connect }) => {
+  public readonly store = rxState<AuthStateModel>(({ connect, set }) => {
+    // Initialize with undefined to distinguish "not loaded" from "no user"
+    set({ account: undefined as any, session: null });
+
     connect(
       'account',
       this.actions.fetchAccount$.pipe(
         switchMap(() => this.accountService.getAccount()),
-        catchError(() => of(null))
-      )
+        catchError(() => of(null)),
+      ),
     );
 
     connect(this.actions.updateAuthState$, (state, update) => ({
       ...state,
-      ...update
+      ...update,
     }));
   });
 
