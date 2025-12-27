@@ -29,7 +29,6 @@ import type { FieldState, FieldTree } from '@angular/forms/signals';
     .field-error {
       color: var(--tui-status-negative);
       font-size: 0.75rem;
-      margin-top: 0.25rem;
       animation: fadeIn 0.2s ease-in-out;
     }
 

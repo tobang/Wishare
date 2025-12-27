@@ -1,30 +1,34 @@
 <div class="login" *transloco="let t">
   <form (ngSubmit)="onLogin()">
     <div class="controls-container">
-      <tui-textfield [tuiTextfieldCleaner]="true">
-        <label tuiLabel>
-          {{ t('emaillogin.form.email-type')
-          }}<span class="tui-required"></span>
-        </label>
-        <input
-          tuiTextfield
-          type="email"
-          placeholder="mail@mail.dk"
-          [field]="loginForm.email"
-        />
-        <tui-icon [tuiHint]="t('emaillogin.form.email-hint')" />
-      </tui-textfield>
-      <wishare-field-error [field]="loginForm.email" />
+      <div class="field-group">
+        <tui-textfield [tuiTextfieldCleaner]="true">
+          <label tuiLabel>
+            {{ t('emaillogin.form.email-type')
+            }}<span class="tui-required"></span>
+          </label>
+          <input
+            tuiTextfield
+            type="email"
+            placeholder="mail@mail.dk"
+            [field]="loginForm.email"
+          />
+          <tui-icon [tuiHint]="t('emaillogin.form.email-hint')" />
+        </tui-textfield>
+        <wishare-field-error [field]="loginForm.email" />
+      </div>
 
-      <tui-textfield [tuiTextfieldCleaner]="true">
-        <label tuiLabel>
-          {{ t('emaillogin.form.password-type')
-          }}<span class="tui-required"></span>
-        </label>
-        <input tuiTextfield type="password" [field]="loginForm.password" />
-        <tui-icon tuiPassword />
-      </tui-textfield>
-      <wishare-field-error [field]="loginForm.password" />
+      <div class="field-group">
+        <tui-textfield [tuiTextfieldCleaner]="true">
+          <label tuiLabel>
+            {{ t('emaillogin.form.password-type')
+            }}<span class="tui-required"></span>
+          </label>
+          <input tuiTextfield type="password" [field]="loginForm.password" />
+          <tui-icon tuiPassword />
+        </tui-textfield>
+        <wishare-field-error [field]="loginForm.password" />
+      </div>
     </div>
     <div class="action-buttons">
       <button

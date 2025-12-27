@@ -53,11 +53,6 @@
   } @else {
     <!-- Embedded mode - simple card -->
     <div class="embedded-card" tuiCardLarge>
-      <div class="welcome-text-embedded">
-        <h2>{{ t('login.welcome') }}</h2>
-        <p class="subtitle">{{ t('login.subtitle') }}</p>
-      </div>
-
       <tui-tabs [(activeItemIndex)]="activeItemIndex" class="login-tabs">
         <button tuiTab type="button">
           {{ t('login.tabs.tab-0.label') }}
