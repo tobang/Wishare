@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
+  output,
   signal,
 } from '@angular/core';
 import {
@@ -58,7 +57,7 @@ import { signupValidationSuite, SignupFormModel } from './signup.validation';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignupComponent {
-  @Output() signUp = new EventEmitter<{ email: string; password: string }>();
+  readonly signUp = output<{ email: string; password: string }>();
 
   private readonly model = signal<SignupFormModel>({
     email: '',

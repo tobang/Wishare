@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
+  output,
   signal,
 } from '@angular/core';
 import {
@@ -61,8 +60,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailLoginComponent {
-  @Output() login = new EventEmitter<{ email: string; password: string }>();
-  @Output() forgotPassword = new EventEmitter<void>();
+  readonly login = output<{ email: string; password: string }>();
+  readonly forgotPassword = output<void>();
 
   private readonly model = signal<EmailLoginFormModel>({
     email: '',

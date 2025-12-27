@@ -3,7 +3,7 @@ import { Account, Client, Databases } from 'appwrite';
 import { APP_CONFIG } from './../app-config.token';
 
 export const APPWRITE = new InjectionToken<{
-  database: Databases;
+  databases: Databases;
   account: Account;
 }>('appwrite account instance', {
   providedIn: 'root',
@@ -11,10 +11,10 @@ export const APPWRITE = new InjectionToken<{
   factory: () => {
     const env = inject(APP_CONFIG);
     const client = new Client();
-    const database = new Databases(client);
+    const databases = new Databases(client);
     const account = new Account(client);
     client.setEndpoint(env.appwriteEndpoint);
     client.setProject(env.appwriteProject);
-    return { database, account };
+    return { databases, account };
   },
 });

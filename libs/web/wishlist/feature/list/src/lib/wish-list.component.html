@@ -2,7 +2,7 @@
   <header tuiHeader class="card-header">
     <div class="header-left">
       <tui-icon icon="@tui.list" class="wishlist-icon"></tui-icon>
-      <h3 tuiTitle class="card-title">{{ wishlist.title }}</h3>
+      <h3 tuiTitle class="card-title">{{ wishlist().title }}</h3>
     </div>
     <aside tuiAccessories class="drag-handle" cdkDragHandle>
       <tui-icon icon="@tui.grip-vertical" class="handle-icon"></tui-icon>
@@ -10,8 +10,8 @@
   </header>
 
   <section class="wishes-section">
-    @if (wishlist.wishes?.documents?.length) {
-      @for (wish of wishlist.wishes?.documents; track wish; let i = $index) {
+    @if (wishlist().wishes?.documents?.length) {
+      @for (wish of wishlist().wishes?.documents; track wish; let i = $index) {
         <wishare-wish [wish]="wish"></wishare-wish>
       }
     } @else {

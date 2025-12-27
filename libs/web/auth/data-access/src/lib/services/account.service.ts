@@ -7,7 +7,7 @@ import { defer, from, map, Observable, switchMap } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private readonly appwrite: {
-    database: Databases;
+    databases: Databases;
     account: Account;
   } = inject(APPWRITE);
 
@@ -20,7 +20,7 @@ export class AccountService {
     session: Models.Session;
   }> {
     const updatePrefs$ = defer(() =>
-      this.appwrite.account.updatePrefs({ guest: true })
+      this.appwrite.account.updatePrefs({ guest: true }),
     );
 
     return from(this.appwrite.account.createAnonymousSession()).pipe(
@@ -31,11 +31,11 @@ export class AccountService {
               map((account) => ({
                 session,
                 account,
-              }))
-            )
-          )
-        )
-      )
+              })),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

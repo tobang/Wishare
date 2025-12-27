@@ -1,11 +1,11 @@
-<div class="wish-wrap" [class.selected]="selected">
+<div class="wish-wrap" [class.selected]="selected()">
   <div tuiCardLarge class="wish">
     <div class="content-container">
       <div class="wish-image">
-        <!-- <img [src]="wish.downloadUrls[0]" /> -->
+        <!-- <img [src]="wish().downloadUrls[0]" /> -->
       </div>
       <div class="wish-title">
-        {{ wish.title }}
+        {{ wish().title }}
       </div>
     </div>
   </div>

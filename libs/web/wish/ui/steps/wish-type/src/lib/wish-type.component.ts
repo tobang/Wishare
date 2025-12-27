@@ -1,8 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
+  output,
   inject,
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -34,8 +33,8 @@ import { firstValueFrom } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishTypeComponent {
-  @Output() createManual = new EventEmitter<void>();
-  @Output() createAutomatic = new EventEmitter<void>();
+  readonly createManual = output<void>();
+  readonly createAutomatic = output<void>();
 
   onCreateManual() {
     this.createManual.emit();

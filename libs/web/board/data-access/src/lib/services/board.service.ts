@@ -11,14 +11,14 @@ import { Wish, Wishlist } from '@wishare/web/wishlist/data-access';
 @Injectable({ providedIn: 'root' })
 export class BoardService {
   private readonly appwrite: {
-    database: Databases;
+    databases: Databases;
     account: Account;
   } = inject(APPWRITE);
 
   getBoard() {
     return this.getWishlists().pipe(
       map((wishlists) => wishlists as unknown as Record<string, unknown>[]),
-      leftJoin(this.appwrite.database, 'wishare', '$id', 'wlid', 'wishes'),
+      leftJoin(this.appwrite.databases, 'wishare', '$id', 'wlid', 'wishes'),
     );
   }
 
@@ -27,11 +27,9 @@ export class BoardService {
     return account$.pipe(
       switchMap((account) =>
         from(
-          this.appwrite.database.listDocuments({
-            databaseId: 'wishare',
-            collectionId: 'wishlists',
-            queries: [Query.equal('uid', account.$id)],
-          }),
+          this.appwrite.databases.listDocuments('wishare', 'wishlists', [
+            Query.equal('uid', account.$id),
+          ]),
         ).pipe(
           map((docList) =>
             docList.documents.map((doc) => doc as unknown as Wishlist),
@@ -42,11 +40,9 @@ export class BoardService {
   }
   getWishes(wlid: string): Observable<Wish[]> {
     return from(
-      this.appwrite.database.listDocuments({
-        databaseId: 'wishare',
-        collectionId: 'wishes',
-        queries: [Query.equal('wlid', wlid)],
-      }),
+      this.appwrite.databases.listDocuments('wishare', 'wishes', [
+        Query.equal('wlid', wlid),
+      ]),
     ).pipe(map((docList) => docList.documents as unknown as Wish[]));
   }
 
@@ -55,23 +51,23 @@ export class BoardService {
     return account$.pipe(
       switchMap((account) =>
         from(
-          this.appwrite.database.createDocument({
-            databaseId: 'wishare',
-            collectionId: 'wishlists',
-            documentId: ID.unique(),
-            data: {
+          this.appwrite.databases.createDocument(
+            'wishare',
+            'wishlists',
+            ID.unique(),
+            {
               title: 'New Wishlist',
               description: '',
               visibility: 'draft',
               priority: 1,
               uid: account.$id,
             },
-            permissions: [
+            [
               Permission.read(Role.user(account.$id)),
               Permission.update(Role.user(account.$id)),
               Permission.delete(Role.user(account.$id)),
             ],
-          }),
+          ),
         ).pipe(map((doc) => doc as unknown as Wishlist)),
       ),
     );

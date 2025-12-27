@@ -6,7 +6,7 @@ import {
   from,
   map,
   Observable,
-  switchMap
+  switchMap,
 } from 'rxjs';
 
 export const leftJoin = <T extends Record<string, unknown>>(
@@ -14,7 +14,7 @@ export const leftJoin = <T extends Record<string, unknown>>(
   databaseId: string,
   key: string,
   field: string,
-  collection: string
+  collectionId: string,
 ) => {
   return (source$: Observable<T[]>) =>
     // Use defer so variable is not shared for all observers
@@ -35,7 +35,9 @@ export const leftJoin = <T extends Record<string, unknown>>(
               // Setup the query
               const queries = [Query.equal(field, doc[key] as string)];
               reads$.push(
-                from(databases.listDocuments(databaseId, collection, queries))
+                from(
+                  databases.listDocuments(databaseId, collectionId, queries),
+                ),
               );
             } else {
               reads$.push(EMPTY);
@@ -46,9 +48,9 @@ export const leftJoin = <T extends Record<string, unknown>>(
         map((joins) =>
           collectionData.map((v, i) => ({
             ...v,
-            [collection]: joins[i] || null,
-          }))
-        )
+            [collectionId]: joins[i] || null,
+          })),
+        ),
       );
     });
 };

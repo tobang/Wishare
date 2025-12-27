@@ -4,7 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  Input,
+  input,
 } from '@angular/core';
 
 import { TuiAppearance, TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
@@ -35,7 +35,7 @@ import { WishlistDialogEffects } from './store/effects';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishListComponent {
-  @Input() wishlist!: WishlistUi;
+  readonly wishlist = input.required<WishlistUi>();
   private adapter = inject(WishlistStore);
 
   createWish() {

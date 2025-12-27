@@ -1,7 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { rxEffects } from '@rx-angular/state/effects';
-import { catchError, defer, from, map, of, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  defer,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 import { TranslocoService } from '@ngneat/transloco';
 import { TuiAlertService } from '@taiga-ui/core';
@@ -19,23 +28,31 @@ import { AuthStore } from '../auth.store';
  * - Error handling and navigation
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthLoginEffects {
   private readonly router = inject(Router);
-  private readonly appwrite: { database: Databases; account: Account } = inject(APPWRITE);
+  private readonly appwrite: { databases: Databases; account: Account } =
+    inject(APPWRITE);
   private readonly authStore = inject(AuthStore);
   private readonly alertService = inject(TuiAlertService);
   private readonly transloco = inject(TranslocoService);
 
-  register(actions: any) {
-    return rxEffects(({ register }) => {
+  register(actions: {
+    loginWithCredentials$: Observable<[string, string]>;
+    registerWithCredentials$: Observable<[string, string, string]>;
+    loginError$: Observable<unknown>;
+  }): void {
+    rxEffects(({ register }) => {
       register(
-        actions['loginWithCredentials$'].pipe(
+        actions.loginWithCredentials$.pipe(
           switchMap(([email, password]: [string, string]) => {
             console.log('Email', email, password, this.appwrite.account);
             return from(
-              this.appwrite.account.createEmailPasswordSession({ email, password }),
+              this.appwrite.account.createEmailPasswordSession({
+                email,
+                password,
+              }),
             ).pipe(
               switchMap((session) =>
                 from(this.appwrite.account.get()).pipe(
@@ -62,12 +79,12 @@ export class AuthLoginEffects {
               ),
             );
           }),
-        )
+        ),
       );
 
       register(
-        actions['registerWithCredentials$'].pipe(
-          switchMap(([email, name, password]: [string, string, string]) =>
+        actions.registerWithCredentials$.pipe(
+          switchMap(([email, name, password]) =>
             defer(() =>
               this.appwrite.account.create({
                 userId: ID.unique(),
@@ -108,11 +125,11 @@ export class AuthLoginEffects {
               tap(() => this.router.navigate(['/'])),
             ),
           ),
-        )
+        ),
       );
 
       register(
-        actions['loginError$'].pipe(
+        actions.loginError$.pipe(
           switchMap(() =>
             this.transloco.selectTranslate(
               'server-error.invalid-credentials',
@@ -123,7 +140,7 @@ export class AuthLoginEffects {
           switchMap((trans: string) => {
             return this.alertService.open(trans);
           }),
-        )
+        ),
       );
     });
   }

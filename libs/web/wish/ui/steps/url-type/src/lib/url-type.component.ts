@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
+  output,
   signal,
 } from '@angular/core';
 import {
@@ -49,7 +48,7 @@ import { urlValidationSuite, UrlFormModel } from './url-type.validation';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UrlTypeComponent {
-  @Output() getUrl = new EventEmitter<string>();
+  readonly getUrl = output<string>();
 
   private readonly model = signal<UrlFormModel>({
     url: '',
