@@ -13,7 +13,6 @@ import { WishComponent } from '@wishare/web/wish/feature/wish';
 
 import { WishlistUi } from '@wishare/web/wishlist/data-access';
 import { WishlistStore, WishlistEffects } from './store';
-import { WishlistDialogEffects } from './store/effects';
 
 @Component({
   selector: '[wishare-wish-list]',
@@ -29,16 +28,16 @@ import { WishlistDialogEffects } from './store/effects';
     TuiIcon,
     TuiTitle,
   ],
-  providers: [WishlistStore, WishlistEffects, WishlistDialogEffects],
+  providers: [WishlistStore, WishlistEffects],
   templateUrl: './wish-list.component.html',
   styleUrls: ['./wish-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishListComponent {
   readonly wishlist = input.required<WishlistUi>();
-  private adapter = inject(WishlistStore);
+  private store = inject(WishlistStore);
 
   createWish() {
-    this.adapter.createWish();
+    this.store.ui.createWish();
   }
 }

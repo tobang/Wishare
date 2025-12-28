@@ -1,20 +1,89 @@
-import { inject, Injectable } from '@angular/core';
-import { WishlistDialogEffects } from './effects';
+import { inject, Injectable, Injector } from '@angular/core';
+import { rxActions } from '@rx-angular/state/actions';
+import { rxEffects } from '@rx-angular/state/effects';
+import { TuiDialogService } from '@taiga-ui/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { notNullOrUndefined } from '@wishare/web/shared/utils';
+import {
+  WishDialogComponent,
+  WishDialogInput,
+} from '@wishare/web/wish/ui/dialog';
+import { EMPTY, filter, switchMap } from 'rxjs';
+
+import { WishlistDialogUIActions } from './wishlist.types';
 
 /**
- * Main effects orchestrator for wishlist.
+ * Effects for wishlist dialog operations.
  *
- * Coordinates all effect domains:
- * - Dialog operations
+ * Handles:
+ * - Opening create wish dialog
+ * - Opening edit wish dialog
+ * - Handling delete wish confirmation
+ *
+ * @see WishlistStore for the store that coordinates these effects
  */
 @Injectable()
 export class WishlistEffects {
-  private readonly dialogEffects = inject(WishlistDialogEffects);
-  private effectSubscriptions: unknown[] = [];
+  private readonly componentInjector = inject(Injector);
+  private readonly dialogService = inject(TuiDialogService);
 
-  register(actions: any) {
-    this.effectSubscriptions.push(
-      this.dialogEffects.register(actions)
+  // Public actions for UI interactions
+  public readonly actions = rxActions<WishlistDialogUIActions>();
+
+  // Effects registered directly
+  private readonly effects = rxEffects(({ register }) => {
+    // Create wish dialog effect
+    register(
+      this.actions.createWish$.pipe(
+        switchMap(() =>
+          this.dialogService
+            .open<WishDialogInput>(
+              new PolymorpheusComponent(
+                WishDialogComponent,
+                this.componentInjector,
+              ),
+              {
+                dismissible: false,
+                data: { wish: {}, images: [], editMode: false },
+                size: 'l',
+              },
+            )
+            .pipe(
+              filter(notNullOrUndefined),
+              switchMap(() => EMPTY),
+            ),
+        ),
+      ),
     );
-  }
+
+    // Edit wish dialog effect
+    register(
+      this.actions.editWish$.pipe(
+        switchMap((wish) =>
+          this.dialogService
+            .open<WishDialogInput>(
+              new PolymorpheusComponent(
+                WishDialogComponent,
+                this.componentInjector,
+              ),
+              {
+                dismissible: false,
+                data: { wish, images: [], editMode: true },
+                size: 'l',
+              },
+            )
+            .pipe(
+              filter(notNullOrUndefined),
+              switchMap(() => EMPTY),
+            ),
+        ),
+      ),
+    );
+
+    // Delete wish effect - can be extended with confirmation dialog
+    register(this.actions.deleteWish$, (wish) => {
+      // TODO: Add delete confirmation dialog and API call
+      console.log('Delete wish:', wish);
+    });
+  });
 }
