@@ -12,7 +12,7 @@ import { RxState } from '@rx-angular/state';
 import { scopeLoader } from 'scoped-translations';
 
 import { FormsModule } from '@angular/forms';
-import { AccountService, AuthEffects } from '@wishare/web/auth/data-access';
+import { AccountService, AuthStore } from '@wishare/web/auth/data-access';
 import { EmailLoginComponent } from '@wishare/web/auth/ui/email-login';
 import { SignupComponent } from '@wishare/web/auth/ui/signup';
 export interface LoginModel {
@@ -51,7 +51,7 @@ export class LoginComponent {
   embedded = input(false);
 
   private readonly loginState = inject(RxState<LoginModel>);
-  private readonly authEffects = inject(AuthEffects);
+  private readonly authStore = inject(AuthStore);
   private readonly loginService = inject(AccountService);
   activeItemIndex = 0;
 
@@ -60,14 +60,14 @@ export class LoginComponent {
   }
 
   login(credentials: { email: string; password: string }) {
-    this.authEffects.ui.loginWithCredentials([
+    this.authStore.ui.loginWithCredentials([
       credentials.email,
       credentials.password,
     ]);
   }
 
   signup(credentials: { email: string; password: string }) {
-    this.authEffects.ui.registerWithCredentials([
+    this.authStore.ui.registerWithCredentials([
       credentials.email,
       '',
       credentials.password,

@@ -1,5 +1,6 @@
 import { computed, Signal } from '@angular/core';
-import { AuthStateModel } from './auth.types';
+import { AuthStateModel, LoginResult } from './auth.types';
+import { StreamState } from '@wishare/web/shared/utils';
 
 /**
  * Creates and returns view model signals for the Auth feature.
@@ -9,6 +10,11 @@ import { AuthStateModel } from './auth.types';
 export const createAuthViewModel = (store: any) => {
   const session: Signal<AuthStateModel['session']> = store.signal('session');
   const account: Signal<AuthStateModel['account']> = store.signal('account');
+  const loginState: Signal<StreamState<LoginResult>> =
+    store.signal('loginState');
+  const registerState: Signal<StreamState<LoginResult>> =
+    store.signal('registerState');
+  const logoutState: Signal<StreamState<void>> = store.signal('logoutState');
 
   const preferences = computed(() => {
     const acc = account();
@@ -17,15 +23,38 @@ export const createAuthViewModel = (store: any) => {
 
   const isGuest = computed(() => {
     const prefs = preferences();
-    return Object.prototype.hasOwnProperty.call(prefs, 'guest') &&
-      prefs.guest === true;
+    return (
+      Object.prototype.hasOwnProperty.call(prefs, 'guest') &&
+      prefs.guest === true
+    );
+  });
+
+  const isLoading = computed(() => {
+    return (
+      loginState().isLoading ||
+      registerState().isLoading ||
+      logoutState().isLoading
+    );
+  });
+
+  const hasError = computed(() => {
+    return (
+      loginState().hasError ||
+      registerState().hasError ||
+      logoutState().hasError
+    );
   });
 
   return {
     session,
     account,
     preferences,
-    isGuest
+    isGuest,
+    loginState,
+    registerState,
+    logoutState,
+    isLoading,
+    hasError,
   };
 };
 
