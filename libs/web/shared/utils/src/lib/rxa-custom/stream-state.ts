@@ -51,6 +51,17 @@ export const errorStreamState = <T>(error: unknown): StreamState<T> => ({
 });
 
 /**
+ * Creates a reset/idle StreamState (not loading, no value, no error).
+ * Use this to reset state back to its initial idle condition.
+ */
+export const resetStreamState = <T>(): StreamState<T> => ({
+  isLoading: false,
+  hasError: false,
+  hasValue: false,
+  value: null,
+});
+
+/**
  * RxJS operator that transforms a stream into a StreamState stream.
  * Emits loading state first, then success or error state.
  *

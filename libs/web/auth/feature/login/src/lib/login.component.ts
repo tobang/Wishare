@@ -60,17 +60,17 @@ export class LoginComponent {
   }
 
   login(credentials: { email: string; password: string }) {
-    this.authStore.ui.loginWithCredentials([
-      credentials.email,
-      credentials.password,
-    ]);
+    this.authStore.ui.loginWithCredentials({
+      email: credentials.email,
+      password: credentials.password,
+    });
   }
 
-  signup(credentials: { email: string; password: string }) {
-    this.authStore.ui.registerWithCredentials([
-      credentials.email,
-      '',
-      credentials.password,
-    ]);
+  signup(credentials: { email: string; password: string; name?: string }) {
+    this.authStore.ui.registerWithCredentials({
+      email: credentials.email,
+      name: credentials.name ?? '',
+      password: credentials.password,
+    });
   }
 }

@@ -2,19 +2,16 @@ import { inject, Injectable } from '@angular/core';
 import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
 
-import { WithInitializer } from '@wishare/web/shared/utils';
-import { catchError, filter, map, of, switchMap } from 'rxjs';
+import { resetStreamState, WithInitializer } from '@wishare/web/shared/utils';
+import { catchError, filter, map, merge, of, switchMap } from 'rxjs';
 import { AccountService } from '../services/account.service';
 import { createAuthViewModel } from './auth.selectors';
-import { AuthActions, AuthStateModel } from './auth.types';
-import { AuthEffects } from './auth.effects';
-
-const INITIAL_STREAM_STATE = {
-  isLoading: false,
-  hasError: false,
-  hasValue: false,
-  value: null,
-};
+import { AuthActions, AuthStateModel, LoginResult } from './auth.types';
+import {
+  AuthEffects,
+  LoginCredentials,
+  RegisterCredentials,
+} from './auth.effects';
 
 /**
  * Store managing the state for authentication.
@@ -40,9 +37,9 @@ export class AuthStore implements WithInitializer {
 
   // Expose UI actions from effects for external use
   public readonly ui = {
-    loginWithCredentials: (credentials: [string, string]) =>
+    loginWithCredentials: (credentials: LoginCredentials) =>
       this.authEffects.actions.loginWithCredentials(credentials),
-    registerWithCredentials: (credentials: [string, string, string]) =>
+    registerWithCredentials: (credentials: RegisterCredentials) =>
       this.authEffects.actions.registerWithCredentials(credentials),
     loginError: () => this.authEffects.actions.loginError(),
     logout: () => this.authEffects.actions.logout(),
@@ -58,11 +55,11 @@ export class AuthStore implements WithInitializer {
   public readonly store = rxState<AuthStateModel>(({ connect, set }) => {
     // Initialize with undefined to distinguish "not loaded" from "no user"
     set({
-      account: undefined as any,
+      account: undefined,
       session: null,
-      loginState: INITIAL_STREAM_STATE,
-      registerState: INITIAL_STREAM_STATE,
-      logoutState: INITIAL_STREAM_STATE,
+      loginState: resetStreamState<LoginResult>(),
+      registerState: resetStreamState<LoginResult>(),
+      logoutState: resetStreamState<void>(),
     });
 
     connect(
@@ -87,50 +84,47 @@ export class AuthStore implements WithInitializer {
     connect('registerState', this.registerState$);
     connect('logoutState', this.logoutState$);
 
-    // Update account and session from login state when successful
+    /**
+     * Consolidated account/session updates from auth operations.
+     * Updates are triggered when login, register succeeds, or logout completes.
+     */
     connect(
-      this.loginState$.pipe(
-        filter((state) => state.hasValue && state.value !== null),
-        map((state) => ({
-          account: state.value?.account,
-          session: state.value?.session ?? null,
-        })),
-      ),
-    );
-
-    // Update account and session from register state when successful
-    connect(
-      this.registerState$.pipe(
-        filter((state) => state.hasValue && state.value !== null),
-        map((state) => ({
-          account: state.value?.account,
-          session: state.value?.session ?? null,
-        })),
-      ),
-    );
-
-    // Clear account and session on logout
-    connect(
-      this.logoutState$.pipe(
-        filter((state) => state.hasValue),
-        map(() => ({
-          account: null,
-          session: null,
-        })),
+      merge(
+        this.loginState$.pipe(
+          filter((state) => state.hasValue && state.value !== null),
+          map((state) => ({
+            account: state.value?.account,
+            session: state.value?.session ?? null,
+          })),
+        ),
+        this.registerState$.pipe(
+          filter((state) => state.hasValue && state.value !== null),
+          map((state) => ({
+            account: state.value?.account,
+            session: state.value?.session ?? null,
+          })),
+        ),
+        this.logoutState$.pipe(
+          filter((state) => state.hasValue),
+          map(() => ({
+            account: null,
+            session: null,
+          })),
+        ),
       ),
     );
 
     // Reset StreamState properties
     connect(this.actions.resetLoginState$, () => ({
-      loginState: INITIAL_STREAM_STATE,
+      loginState: resetStreamState<LoginResult>(),
     }));
 
     connect(this.actions.resetRegisterState$, () => ({
-      registerState: INITIAL_STREAM_STATE,
+      registerState: resetStreamState<LoginResult>(),
     }));
 
     connect(this.actions.resetLogoutState$, () => ({
-      logoutState: INITIAL_STREAM_STATE,
+      logoutState: resetStreamState<void>(),
     }));
   });
 
