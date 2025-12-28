@@ -1,14 +1,28 @@
 import { Wishlist } from '@wishare/web/wishlist/data-access';
+import { StreamState } from '@wishare/web/shared/utils';
 import { Models } from 'appwrite';
+
+/**
+ * Extended wishlist type with joined document data
+ */
+export type BoardWishlist = Wishlist & {
+  [x: string]: Models.DocumentList<Models.Document>;
+};
+
+/**
+ * Result of a successful wishlist fetch or create operation
+ */
+export interface BoardResult {
+  wishLists: BoardWishlist[];
+}
 
 /**
  * State model for board/wishlists
  */
 export interface BoardStateModel {
-  wishLists: (Wishlist & {
-    [x: string]: Models.DocumentList<Models.Document>;
-  })[];
-  loading: boolean;
+  wishLists: BoardWishlist[];
+  fetchState: StreamState<BoardResult>;
+  createState: StreamState<Wishlist>;
 }
 
 /**
@@ -16,6 +30,15 @@ export interface BoardStateModel {
  */
 export interface BoardActions {
   fetchWishlists: void;
-  fetchBoard: void;
+  updateBoardState: Partial<BoardStateModel>;
+  resetFetchState: void;
+  resetCreateState: void;
+}
+
+/**
+ * UI Actions for board effects (used by components)
+ */
+export interface BoardUIActions {
+  fetchWishlists: void;
   createWishlist: void;
 }
