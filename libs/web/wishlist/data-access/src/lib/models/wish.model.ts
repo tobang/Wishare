@@ -9,7 +9,10 @@ export interface WishData {
   readonly quantity: number;
   readonly priority: number;
   readonly uid: string;
-  readonly wlid: string;
+  /** @deprecated Use wishlist relationship instead */
+  readonly wlid?: string;
+  /** Relationship to parent wishlist (two-way key from wishlists.wishes) */
+  readonly wishlist?: string;
   readonly url?: string;
   readonly price: number;
   readonly files?: string[];
@@ -29,11 +32,14 @@ export interface Wish extends Models.Row {
 export interface WishFlat extends Models.Row, WishData {}
 
 /**
- * Helper to flatten a Wish row for easier access in templates
+ * Helper to flatten a Wish row for easier access in templates.
+ * Handles both TablesDB format (data nested under 'data') and direct format.
  */
 export function flattenWish(row: Wish): WishFlat {
+  // TablesDB may return data at top level or nested under 'data'
+  const data = row.data ?? (row as unknown as WishData);
   return {
     ...row,
-    ...row.data,
+    ...data,
   } as WishFlat;
 }

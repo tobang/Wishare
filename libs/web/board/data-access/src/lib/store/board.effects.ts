@@ -106,9 +106,6 @@ export class BoardEffects {
             // Trigger a refresh of wishlists after creating a new one
             actions.fetchWishlists();
           }
-          if (state.hasError) {
-            console.error('Create wishlist error:', state.error);
-          }
           createState$.next(state);
         },
       );
@@ -151,7 +148,6 @@ export class BoardEffects {
         ),
         (state) => {
           if (state.hasError) {
-            console.error('Reorder wishlists error:', state.error);
             // On error, refresh to get the correct order from the backend
             actions.fetchWishlists();
           }

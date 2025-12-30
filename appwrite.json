@@ -57,14 +57,6 @@
           "default": null
         },
         {
-          "key": "wlid",
-          "type": "string",
-          "size": 255,
-          "required": true,
-          "array": false,
-          "default": null
-        },
-        {
           "key": "url",
           "type": "string",
           "size": 1000,
@@ -110,22 +102,10 @@
       ],
       "indexes": [
         {
-          "key": "wlid_idx",
-          "type": "key",
-          "attributes": ["wlid"],
-          "orders": ["ASC"]
-        },
-        {
           "key": "uid_idx",
           "type": "key",
           "attributes": ["uid"],
           "orders": ["ASC"]
-        },
-        {
-          "key": "priority_wlid_idx",
-          "type": "unique",
-          "attributes": ["priority", "wlid"],
-          "orders": ["ASC", "ASC"]
         }
       ]
     },
@@ -196,6 +176,16 @@
           "required": false,
           "array": false,
           "default": "draft"
+        },
+        {
+          "key": "wishes",
+          "type": "relationship",
+          "relatedCollection": "wishes",
+          "relationType": "oneToMany",
+          "twoWay": true,
+          "twoWayKey": "wishlist",
+          "onDelete": "cascade",
+          "side": "parent"
         }
       ],
       "indexes": [

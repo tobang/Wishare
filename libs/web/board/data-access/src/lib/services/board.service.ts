@@ -2,9 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import {
   catchError,
-  concat,
   from,
-  last,
   map,
   Observable,
   of,
@@ -15,7 +13,6 @@ import {
 import { Account, ID, Permission, Query, Role, TablesDB } from 'appwrite';
 
 import { APPWRITE } from '@wishare/web/shared/app-config';
-import { leftJoin } from '@wishare/web/shared/operators';
 import {
   flattenWish,
   flattenWishlist,
@@ -26,6 +23,11 @@ import {
 } from '@wishare/web/wishlist/data-access';
 import { BoardWishlist } from '../store/board.types';
 
+// Database constants
+const DATABASE_ID = 'wishare';
+const WISHLISTS_TABLE = 'wishlists';
+const WISHES_TABLE = 'wishes';
+
 @Injectable({ providedIn: 'root' })
 export class BoardService {
   private readonly appwrite: {
@@ -33,50 +35,76 @@ export class BoardService {
     account: Account;
   } = inject(APPWRITE);
 
+  /**
+   * Fetches all wishlists with their wishes in a single query
+   * using TablesDB native relationship loading via Query.select()
+   */
   getBoard(): Observable<BoardWishlist[]> {
-    return this.getWishlists().pipe(
-      leftJoin<WishlistFlat, WishFlat, 'wishes'>(
-        this.appwrite.tablesDb,
-        'wishare',
-        '$id',
-        'wlid',
-        'wishes',
+    return from(this.appwrite.account.get()).pipe(
+      switchMap((account) =>
+        from(
+          this.appwrite.tablesDb.listRows({
+            databaseId: DATABASE_ID,
+            tableId: WISHLISTS_TABLE,
+            queries: [
+              Query.equal('uid', account.$id),
+              Query.orderAsc('priority'),
+              Query.select(['*', 'wishes.*']),
+            ],
+          }),
+        ),
+      ),
+      map((result) =>
+        result.rows.map((row) => {
+          const rowData = row as unknown as Record<string, unknown>;
+          const flatWishlist = flattenWishlist(row as unknown as Wishlist);
+          const rawWishes = Array.isArray(rowData['wishes'])
+            ? rowData['wishes']
+            : [];
+          const wishes = rawWishes.map((wish) => flattenWish(wish as Wish));
+
+          return {
+            ...flatWishlist,
+            wishes:
+              wishes.length > 0
+                ? { total: wishes.length, rows: wishes }
+                : undefined,
+          } as BoardWishlist;
+        }),
       ),
     );
   }
 
   getWishlists(): Observable<WishlistFlat[]> {
-    const databaseId = 'wishare';
-    const tableId = 'wishlists';
-
-    const account$ = from(this.appwrite.account.get());
-    return account$.pipe(
-      switchMap((account) => {
-        const queries = [
-          Query.equal('uid', account.$id),
-          Query.orderAsc('priority'),
-        ];
-
-        return from(
+    return from(this.appwrite.account.get()).pipe(
+      switchMap((account) =>
+        from(
           this.appwrite.tablesDb.listRows({
-            databaseId,
-            tableId,
-            queries,
+            databaseId: DATABASE_ID,
+            tableId: WISHLISTS_TABLE,
+            queries: [
+              Query.equal('uid', account.$id),
+              Query.orderAsc('priority'),
+            ],
           }),
-        );
-      }),
+        ),
+      ),
       map((result) =>
         result.rows.map((row) => flattenWishlist(row as unknown as Wishlist)),
       ),
     );
   }
-  getWishes(wlid: string): Observable<WishFlat[]> {
-    const databaseId = 'wishare';
-    const tableId = 'wishes';
-    const queries = [Query.equal('wlid', wlid)];
 
+  /**
+   * Get wishes for a specific wishlist using the native relationship
+   */
+  getWishes(wishlistId: string): Observable<WishFlat[]> {
     return from(
-      this.appwrite.tablesDb.listRows({ databaseId, tableId, queries }),
+      this.appwrite.tablesDb.listRows({
+        databaseId: DATABASE_ID,
+        tableId: WISHES_TABLE,
+        queries: [Query.equal('wishlist', wishlistId)],
+      }),
     ).pipe(
       map((result) =>
         result.rows.map((row) => flattenWish(row as unknown as Wish)),
@@ -88,71 +116,57 @@ export class BoardService {
     title: string;
     description: string;
   }): Observable<WishlistFlat> {
-    const databaseId = 'wishare';
-    const tableId = 'wishlists';
-
-    const account$ = from(this.appwrite.account.get());
-    return account$.pipe(
-      switchMap((account) => {
-        // First fetch existing wishlists to determine the next priority
-        const queries = [
-          Query.equal('uid', account.$id),
-          Query.orderDesc('priority'),
-          Query.limit(1),
-        ];
-
-        return from(
+    return from(this.appwrite.account.get()).pipe(
+      switchMap((account) =>
+        from(
           this.appwrite.tablesDb.listRows({
-            databaseId,
-            tableId,
-            queries,
+            databaseId: DATABASE_ID,
+            tableId: WISHLISTS_TABLE,
+            queries: [
+              Query.equal('uid', account.$id),
+              Query.orderDesc('priority'),
+              Query.limit(1),
+            ],
           }),
         ).pipe(
           switchMap((result) => {
-            // Calculate next priority: highest existing priority + 1, or 1 if none exist
-            const maxPriority =
-              result.rows.length > 0
-                ? (result.rows[0] as unknown as Wishlist).data.priority
-                : 0;
+            const maxPriority = this.extractPriority(result.rows[0]);
             const nextPriority = maxPriority + 1;
-
-            const rowId = ID.unique();
-            const rowData = {
-              title: data.title,
-              description: data.description,
-              visibility: 'draft',
-              priority: nextPriority,
-              uid: account.$id,
-            };
-            const permissions = [
-              Permission.read(Role.user(account.$id)),
-              Permission.update(Role.user(account.$id)),
-              Permission.delete(Role.user(account.$id)),
-            ];
 
             return from(
               this.appwrite.tablesDb.createRow({
-                databaseId,
-                tableId,
-                rowId,
-                data: rowData,
-                permissions,
+                databaseId: DATABASE_ID,
+                tableId: WISHLISTS_TABLE,
+                rowId: ID.unique(),
+                data: {
+                  title: data.title,
+                  description: data.description,
+                  visibility: 'draft',
+                  priority: nextPriority,
+                  uid: account.$id,
+                },
+                permissions: [
+                  Permission.read(Role.user(account.$id)),
+                  Permission.update(Role.user(account.$id)),
+                  Permission.delete(Role.user(account.$id)),
+                ],
               }),
-            ).pipe(map((row) => flattenWishlist(row as unknown as Wishlist)));
+            );
           }),
-        );
-      }),
+        ),
+      ),
+      map((row) => flattenWishlist(row as unknown as Wishlist)),
     );
   }
 
   /**
    * Updates the priority of multiple wishlists.
-   * Uses a two-phase update to avoid violating the unique constraint on (priority, uid):
-   * Phase 1: Move all wishlists to temporary high priorities (500-999 range)
-   * Phase 2: Update to final priorities (1-based)
+   * Uses a two-phase sequential approach to avoid unique constraint violations
+   * on the (priority, uid) index:
+   * Phase 1: Move all to temporary priorities (500-999 range) - sequentially
+   * Phase 2: Set final priorities (starting from 1) - sequentially
    *
-   * @param updates Array of objects containing wishlist ID and new priority
-   * @returns Observable that completes when all updates are done
+   * Note: Priority field has min:1, max:999 constraint
    */
   updateWishlistPriorities(
     updates: Array<{ id: string; priority: number }>,
@@ -161,34 +175,46 @@ export class BoardService {
       return of(undefined);
     }
 
-    const tempPriorityOffset = 500;
+    // Use range 500-999 for temporary values to avoid collision with final values (1-N)
+    const tempOffset = 500;
 
-    const updatePriority$ = (id: string, priority: number): Observable<void> =>
-      from(
-        this.appwrite.tablesDb.updateRow('wishare', 'wishlists', id, {
-          priority,
-        }),
-      ).pipe(
-        map(() => undefined),
-        catchError((error) => {
-          console.error(`Failed to update wishlist ${id} priority:`, error);
-          return throwError(() => error);
-        }),
-      );
+    // Helper to run updates sequentially
+    const runSequentially = async (
+      items: Array<{ id: string; priority: number }>,
+    ) => {
+      for (const item of items) {
+        await this.appwrite.tablesDb.updateRow({
+          databaseId: DATABASE_ID,
+          tableId: WISHLISTS_TABLE,
+          rowId: item.id,
+          data: { priority: item.priority },
+        });
+      }
+    };
 
-    // Phase 1: Move all wishlists to temporary high priorities (500+)
-    const phase1$: Observable<void> = concat(
-      ...updates.map((update, index) =>
-        updatePriority$(update.id, tempPriorityOffset + index),
-      ),
+    // Phase 1: Move to temporary priorities (500+) to avoid conflicts
+    const tempUpdates = updates.map((update, index) => ({
+      id: update.id,
+      priority: tempOffset + index,
+    }));
+
+    // Phase 2: Set final priorities (1-based)
+    const finalUpdates = updates;
+
+    return from(runSequentially(tempUpdates)).pipe(
+      switchMap(() => from(runSequentially(finalUpdates))),
+      map(() => undefined),
+      catchError((error) => throwError(() => error)),
     );
+  }
 
-    // Phase 2: Update to final priorities
-    const phase2$: Observable<void> = concat(
-      ...updates.map((update) => updatePriority$(update.id, update.priority)),
-    );
-
-    // Execute phase 1, then phase 2, return last emission
-    return concat(phase1$, phase2$).pipe(last());
+  /**
+   * Extracts priority from a TablesDB row, handling both nested and flat data structures
+   */
+  private extractPriority(row: unknown): number {
+    if (!row) return 0;
+    const rowData = row as Record<string, unknown>;
+    // TablesDB returns data at top level
+    return (rowData['priority'] as number) ?? 0;
   }
 }

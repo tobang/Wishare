@@ -30,11 +30,14 @@ export type WishlistUi = WishlistFlat & {
 };
 
 /**
- * Helper to flatten a Wishlist row for easier access in templates
+ * Helper to flatten a Wishlist row for easier access in templates.
+ * Handles both TablesDB format (data nested under 'data') and direct format.
  */
 export function flattenWishlist(row: Wishlist): WishlistFlat {
+  // TablesDB may return data at top level or nested under 'data'
+  const data = row.data ?? (row as unknown as WishlistData);
   return {
     ...row,
-    ...row.data,
+    ...data,
   } as WishlistFlat;
 }

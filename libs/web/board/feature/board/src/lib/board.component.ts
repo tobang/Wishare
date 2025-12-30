@@ -8,6 +8,7 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   Injector,
 } from '@angular/core';
@@ -58,7 +59,6 @@ export class BoardComponent {
   public readonly isLoading = this.boardStore.vm.isLoading;
 
   constructor() {
-    console.log('BoardComponent initialized');
     this.boardStore.initialize();
   }
 
