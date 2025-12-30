@@ -38,6 +38,6 @@ export class WishListComponent {
   private store = inject(WishlistStore);
 
   createWish() {
-    this.store.ui.createWish();
+    this.store.actions.createWish();
   }
 }

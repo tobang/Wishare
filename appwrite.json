@@ -143,6 +143,14 @@
         {
           "permission": "read",
           "target": "users"
+        },
+        {
+          "permission": "update",
+          "target": "users"
+        },
+        {
+          "permission": "delete",
+          "target": "users"
         }
       ],
       "attributes": [

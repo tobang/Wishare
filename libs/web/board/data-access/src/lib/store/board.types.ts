@@ -12,51 +12,48 @@ export type BoardWishlist = Wishlist & {
 /**
  * Result of a successful wishlist fetch or create operation
  */
-export interface BoardResult {
+export type BoardResult = {
   wishLists: BoardWishlist[];
-}
+};
 
 /**
  * State model for board/wishlists
  */
-export interface BoardStateModel {
+export type BoardStateModel = {
   wishLists: BoardWishlist[];
   fetchState: StreamState<BoardResult>;
   createState: StreamState<Wishlist>;
   reorderState: StreamState<void>;
-}
-
-/**
- * Actions for board state management
- */
-export interface BoardActions {
-  fetchWishlists: void;
-  updateBoardState: Partial<BoardStateModel>;
-  resetFetchState: void;
-  resetCreateState: void;
-}
+};
 
 /**
  * Data for creating a new wishlist
  */
-export interface CreateWishlistData {
+export type CreateWishlistData = {
   title: string;
   description: string;
-}
+};
 
 /**
  * Data for reordering wishlists
  */
-export interface ReorderWishlistsData {
+export type ReorderWishlistsData = {
   previousIndex: number;
   currentIndex: number;
-}
+};
 
 /**
- * UI Actions for board effects (used by components)
+ * Actions for board state management.
+ * Includes both UI actions (for triggering effects) and internal state actions.
  */
-export interface BoardUIActions {
+export type BoardActions = {
+  // UI Actions - trigger effects
   fetchWishlists: void;
   createWishlist: CreateWishlistData;
   reorderWishlists: ReorderWishlistsData;
-}
+
+  // State Actions - update store state
+  updateBoardState: Partial<BoardStateModel>;
+  resetFetchState: void;
+  resetCreateState: void;
+};

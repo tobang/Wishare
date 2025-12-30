@@ -2,16 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
 
-import { resetStreamState, WithInitializer } from '@wishare/web/shared/utils';
+import { WithInitializer } from '@wishare/web/shared/utils';
 import { catchError, filter, map, merge, of, switchMap } from 'rxjs';
 import { AccountService } from '../services/account.service';
-import { createAuthViewModel } from './auth.selectors';
-import { AuthActions, AuthStateModel, LoginResult } from './auth.types';
-import {
-  AuthEffects,
-  LoginCredentials,
-  RegisterCredentials,
-} from './auth.effects';
+import { createAuthViewModel, AuthViewModel } from './auth.selectors';
+import { AuthActions, AuthStateModel } from './auth.types';
+import { AuthEffects } from './auth.effects';
 
 /**
  * Store managing the state for authentication.
@@ -19,9 +15,7 @@ import {
  * Key responsibilities:
  * - Managing user account and session state
  * - Fetching account information
- * - Providing derived state for preferences and guest status
  * - Coordinating async operations (login, register, logout)
- * - Tracking loading/success/error states of auth operations
  *
  * @see AuthStateModel for the complete state shape
  * @see AuthEffects for authentication side effects
@@ -31,104 +25,56 @@ import {
 })
 export class AuthStore implements WithInitializer {
   private readonly accountService = inject(AccountService);
-  private readonly authEffects = inject(AuthEffects);
+  private readonly effects = inject(AuthEffects);
 
   public readonly actions = rxActions<AuthActions>();
 
-  // Expose UI actions from effects for external use
-  public readonly ui = {
-    loginWithCredentials: (credentials: LoginCredentials) =>
-      this.authEffects.actions.loginWithCredentials(credentials),
-    registerWithCredentials: (credentials: RegisterCredentials) =>
-      this.authEffects.actions.registerWithCredentials(credentials),
-    loginError: () => this.authEffects.actions.loginError(),
-    logout: () => this.authEffects.actions.logout(),
-    loginWithGoogle: () => this.authEffects.actions.loginWithGoogle(),
-  };
+  // Register effects early so streams are available for state connections
+  private readonly _effectsRegistered = this.effects.register(this.actions);
 
-  // Internal state update streams for async operations
-  // These are populated by effects and should not be exposed as public actions
-  readonly loginState$ = this.authEffects.loginState$;
-  readonly registerState$ = this.authEffects.registerState$;
-  readonly logoutState$ = this.authEffects.logoutState$;
+  readonly vm: AuthViewModel;
 
-  public readonly store = rxState<AuthStateModel>(({ connect, set }) => {
+  // #region State
+  private readonly store = rxState<AuthStateModel>(({ connect, set }) => {
     // Initialize with undefined to distinguish "not loaded" from "no user"
     set({
       account: undefined,
-      session: null,
-      loginState: resetStreamState<LoginResult>(),
-      registerState: resetStreamState<LoginResult>(),
-      logoutState: resetStreamState<void>(),
     });
 
+    /**
+     * Account state updates from:
+     * - Initial fetch on app startup
+     * - Direct setAccount action (used by effects before navigation)
+     * - Logout clearing the account
+     */
     connect(
       'account',
-      this.actions.fetchAccount$.pipe(
-        switchMap(() => this.accountService.getAccount()),
-        catchError(() => of(null)),
-      ),
-    );
-
-    connect(this.actions.updateAuthState$, (state, update) => ({
-      ...state,
-      ...update,
-    }));
-
-    /**
-     * Connect StreamState properties from effects.
-     * These track the loading/success/error states of various async operations.
-     * Using StreamState pattern ensures consistent state management across all operations.
-     */
-    connect('loginState', this.loginState$);
-    connect('registerState', this.registerState$);
-    connect('logoutState', this.logoutState$);
-
-    /**
-     * Consolidated account/session updates from auth operations.
-     * Updates are triggered when login, register succeeds, or logout completes.
-     */
-    connect(
       merge(
-        this.loginState$.pipe(
-          filter((state) => state.hasValue && state.value !== null),
-          map((state) => ({
-            account: state.value?.account,
-            session: state.value?.session ?? null,
-          })),
+        // Fetch account on initialization
+        this.actions.fetchAccount$.pipe(
+          switchMap(() =>
+            this.accountService.getAccount().pipe(
+              map((account) => account as AuthStateModel['account']),
+              catchError(() => of(null)),
+            ),
+          ),
         ),
-        this.registerState$.pipe(
-          filter((state) => state.hasValue && state.value !== null),
-          map((state) => ({
-            account: state.value?.account,
-            session: state.value?.session ?? null,
-          })),
-        ),
-        this.logoutState$.pipe(
+        // Direct account update from setAccount action
+        this.actions.setAccount$,
+        // Clear account on logout
+        this.effects.logoutState$.pipe(
           filter((state) => state.hasValue),
-          map(() => ({
-            account: null,
-            session: null,
-          })),
+          map(() => null),
         ),
       ),
     );
-
-    // Reset StreamState properties
-    connect(this.actions.resetLoginState$, () => ({
-      loginState: resetStreamState<LoginResult>(),
-    }));
-
-    connect(this.actions.resetRegisterState$, () => ({
-      registerState: resetStreamState<LoginResult>(),
-    }));
-
-    connect(this.actions.resetLogoutState$, () => ({
-      logoutState: resetStreamState<void>(),
-    }));
   });
+  // #endregion State
 
-  public readonly vm = createAuthViewModel(this.store);
+  constructor() {
+    // Initialize view model
+    this.vm = createAuthViewModel(this.store);
+  }
 
   initialize(): void {
     this.actions.fetchAccount();

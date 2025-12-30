@@ -4,13 +4,13 @@
 
 import { staticSuite, test, enforce } from 'vest';
 
-export interface WishFormModel {
+export type WishFormModel = {
   title: string;
   description: string;
   url: string;
   price: number;
   quantity: number;
-}
+};
 
 export const wishValidationSuite = staticSuite((data: WishFormModel) => {
   test('title', 'Title is required', () => {
@@ -34,7 +34,7 @@ export const wishValidationSuite = staticSuite((data: WishFormModel) => {
   test('url', 'URL format is invalid', () => {
     if (data.url) {
       enforce(data.url).matches(
-        /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/
+        /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
       );
     }
   });

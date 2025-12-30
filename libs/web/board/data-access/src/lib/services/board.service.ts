@@ -97,21 +97,70 @@ export class BoardService {
 
   /**
    * Updates the priority of multiple wishlists.
+   * Uses a two-phase update to avoid violating the unique constraint on (priority, uid):
+   * Phase 1: Move all wishlists to temporary high priorities (500-999 range)
+   * Phase 2: Update to final priorities (1-based)
+   *
    * @param updates Array of objects containing wishlist ID and new priority
    * @returns Observable that completes when all updates are done
    */
   updateWishlistPriorities(
     updates: Array<{ id: string; priority: number }>,
   ): Observable<void> {
-    const updatePromises = updates.map((update) =>
-      this.appwrite.databases.updateDocument(
-        'wishare',
-        'wishlists',
-        update.id,
-        { priority: update.priority },
-      ),
+    if (updates.length === 0) {
+      return from(Promise.resolve(undefined));
+    }
+
+    // Phase 1: Move all wishlists to temporary high priorities (500+)
+    // This ensures we don't have conflicts during the update
+    // Max priority is 999, so we can safely use 500-999 range for temps
+    const tempPriorityOffset = 500;
+
+    // Execute phase 1 sequentially to avoid race conditions
+    const phase1 = updates.reduce<Promise<void>>(
+      (chain, update, index) =>
+        chain.then(() =>
+          this.appwrite.databases
+            .updateDocument('wishare', 'wishlists', update.id, {
+              priority: tempPriorityOffset + index,
+            })
+            .then(() => undefined)
+            .catch((error) => {
+              console.error(
+                `Failed to update wishlist ${update.id} priority:`,
+                error,
+              );
+              throw error;
+            }),
+        ),
+      Promise.resolve(),
     );
 
-    return from(Promise.all(updatePromises)).pipe(map(() => undefined));
+    // Phase 2: Update to final priorities (sequentially)
+    const phase2Observable = from(phase1).pipe(
+      switchMap(() => {
+        const phase2 = updates.reduce<Promise<void>>(
+          (chain, update) =>
+            chain.then(() =>
+              this.appwrite.databases
+                .updateDocument('wishare', 'wishlists', update.id, {
+                  priority: update.priority,
+                })
+                .then(() => undefined)
+                .catch((error) => {
+                  console.error(
+                    `Failed to update wishlist ${update.id} priority:`,
+                    error,
+                  );
+                  throw error;
+                }),
+            ),
+          Promise.resolve(),
+        );
+        return from(phase2);
+      }),
+    );
+
+    return phase2Observable.pipe(map(() => undefined));
   }
 }

@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector } from '@angular/core';
-import { rxActions } from '@rx-angular/state/actions';
+import { RxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
@@ -10,7 +10,7 @@ import {
 } from '@wishare/web/wish/ui/dialog';
 import { EMPTY, filter, switchMap } from 'rxjs';
 
-import { WishlistDialogUIActions } from './wishlist.types';
+import { WishlistActions } from './wishlist.types';
 
 /**
  * Effects for wishlist dialog operations.
@@ -27,63 +27,65 @@ export class WishlistEffects {
   private readonly componentInjector = inject(Injector);
   private readonly dialogService = inject(TuiDialogService);
 
-  // Public actions for UI interactions
-  public readonly actions = rxActions<WishlistDialogUIActions>();
-
-  // Effects registered directly
-  private readonly effects = rxEffects(({ register }) => {
-    // Create wish dialog effect
-    register(
-      this.actions.createWish$.pipe(
-        switchMap(() =>
-          this.dialogService
-            .open<WishDialogInput>(
-              new PolymorpheusComponent(
-                WishDialogComponent,
-                this.componentInjector,
+  /**
+   * Register effects with the store's actions.
+   * This method is called by the store during initialization.
+   */
+  register(actions: RxActions<WishlistActions, object>) {
+    rxEffects(({ register }) => {
+      // Create wish dialog effect
+      register(
+        actions.createWish$.pipe(
+          switchMap(() =>
+            this.dialogService
+              .open<WishDialogInput>(
+                new PolymorpheusComponent(
+                  WishDialogComponent,
+                  this.componentInjector,
+                ),
+                {
+                  dismissible: false,
+                  data: { wish: {}, images: [], editMode: false },
+                  size: 'l',
+                },
+              )
+              .pipe(
+                filter(notNullOrUndefined),
+                switchMap(() => EMPTY),
               ),
-              {
-                dismissible: false,
-                data: { wish: {}, images: [], editMode: false },
-                size: 'l',
-              },
-            )
-            .pipe(
-              filter(notNullOrUndefined),
-              switchMap(() => EMPTY),
-            ),
+          ),
         ),
-      ),
-    );
+      );
 
-    // Edit wish dialog effect
-    register(
-      this.actions.editWish$.pipe(
-        switchMap((wish) =>
-          this.dialogService
-            .open<WishDialogInput>(
-              new PolymorpheusComponent(
-                WishDialogComponent,
-                this.componentInjector,
+      // Edit wish dialog effect
+      register(
+        actions.editWish$.pipe(
+          switchMap((wish) =>
+            this.dialogService
+              .open<WishDialogInput>(
+                new PolymorpheusComponent(
+                  WishDialogComponent,
+                  this.componentInjector,
+                ),
+                {
+                  dismissible: false,
+                  data: { wish, images: [], editMode: true },
+                  size: 'l',
+                },
+              )
+              .pipe(
+                filter(notNullOrUndefined),
+                switchMap(() => EMPTY),
               ),
-              {
-                dismissible: false,
-                data: { wish, images: [], editMode: true },
-                size: 'l',
-              },
-            )
-            .pipe(
-              filter(notNullOrUndefined),
-              switchMap(() => EMPTY),
-            ),
+          ),
         ),
-      ),
-    );
+      );
 
-    // Delete wish effect - can be extended with confirmation dialog
-    register(this.actions.deleteWish$, (wish) => {
-      // TODO: Add delete confirmation dialog and API call
-      console.log('Delete wish:', wish);
+      // Delete wish effect - can be extended with confirmation dialog
+      register(actions.deleteWish$, (wish) => {
+        // TODO: Add delete confirmation dialog and API call
+        console.log('Delete wish:', wish);
+      });
     });
-  });
+  }
 }

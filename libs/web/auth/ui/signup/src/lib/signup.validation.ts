@@ -1,10 +1,10 @@
 import { staticSuite, test, enforce } from 'vest';
 
-export interface SignupFormModel {
+export type SignupFormModel = {
   email: string;
   password: string;
   passwordConfirm: string;
-}
+};
 
 export const signupValidationSuite = staticSuite((data: SignupFormModel) => {
   test('email', 'Email is required', () => {

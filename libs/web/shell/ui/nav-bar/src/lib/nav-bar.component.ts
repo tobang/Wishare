@@ -29,11 +29,11 @@ type Actions = {
   menuOpenToggle: boolean;
 };
 
-interface NavbarModel {
+type NavbarModel = {
   menuOpen: boolean;
   authenticated: boolean;
   userName: string | null;
-}
+};
 
 @Component({
   selector: 'wishare-nav-bar',

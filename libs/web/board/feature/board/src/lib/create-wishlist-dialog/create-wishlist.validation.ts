@@ -3,10 +3,10 @@
  */
 import { staticSuite, test, enforce } from 'vest';
 
-export interface CreateWishlistFormModel {
+export type CreateWishlistFormModel = {
   title: string;
   description: string;
-}
+};
 
 export const createWishlistValidationSuite = staticSuite(
   (data: CreateWishlistFormModel) => {

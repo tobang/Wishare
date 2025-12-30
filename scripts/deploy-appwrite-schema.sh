@@ -52,7 +52,7 @@ fi
 
 echo ""
 echo "🔧 Deploying..."
-appwrite deploy collection
+appwrite push collection
 
 echo ""
 echo -e "${GREEN}✅ Done!${NC}"

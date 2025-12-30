@@ -23,10 +23,10 @@ import {
   createWishlistValidationSuite,
 } from './create-wishlist.validation';
 
-export interface CreateWishlistDialogResult {
+export type CreateWishlistDialogResult = {
   title: string;
   description: string;
-}
+};
 
 @Component({
   selector: 'wishare-create-wishlist-dialog',

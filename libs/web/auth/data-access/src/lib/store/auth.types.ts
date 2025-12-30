@@ -1,37 +1,54 @@
-import { Models } from 'appwrite';
-import { StreamState } from '@wishare/web/shared/utils';
+import type { Models } from 'appwrite';
+
+/**
+ * Credentials for login with email and password
+ */
+export type LoginCredentials = {
+  email: string;
+  password: string;
+};
+
+/**
+ * Credentials for registration with email, name, and password
+ */
+export type RegisterCredentials = {
+  email: string;
+  name: string;
+  password: string;
+};
 
 /**
  * Result of a successful login or registration
  */
-export interface LoginResult {
-  session: Models.Session | null;
+export type LoginResult = {
   account: Models.User<{ guest?: boolean }> | null;
-}
+};
 
 /**
  * State model for authentication
  */
-export interface AuthStateModel {
+export type AuthStateModel = {
   account:
     | Models.User<{
         guest?: boolean;
       }>
     | null
     | undefined;
-  session: Models.Session | null;
-  loginState: StreamState<LoginResult>;
-  registerState: StreamState<LoginResult>;
-  logoutState: StreamState<void>;
-}
+};
 
 /**
- * Actions for authentication state management
+ * Actions for authentication state management.
+ * Includes both UI actions (for triggering effects) and internal state actions.
  */
-export interface AuthActions {
+export type AuthActions = {
+  // UI Actions - trigger effects
+  loginWithCredentials: LoginCredentials;
+  registerWithCredentials: RegisterCredentials;
+  logout: void;
+  loginWithGoogle: void;
+  loginError: void;
+
+  // State Actions - update store state
   fetchAccount: void;
-  updateAuthState: Partial<AuthStateModel>;
-  resetLoginState: void;
-  resetRegisterState: void;
-  resetLogoutState: void;
-}
+  setAccount: AuthStateModel['account'];
+};

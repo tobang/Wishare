@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { rxActions } from '@rx-angular/state/actions';
+import { RxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 
 import { TranslocoService } from '@ngneat/transloco';
@@ -12,42 +12,24 @@ import {
   EMPTY,
   from,
   map,
-  ReplaySubject,
+  Observable,
+  shareReplay,
   switchMap,
   tap,
 } from 'rxjs';
 import { Account, Databases, ID, Models, OAuthProvider } from 'appwrite';
 import { StreamState, toState } from '@wishare/web/shared/utils';
 
-import { LoginResult } from './auth.types';
+import { AuthActions, LoginResult } from './auth.types';
 
 /**
- * Credentials for login with email and password
+ * Maps an Appwrite account to a LoginResult
  */
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-/**
- * Credentials for registration with email, name, and password
- */
-export interface RegisterCredentials {
-  email: string;
-  name: string;
-  password: string;
-}
-
-/**
- * UI Actions for authentication effects
- */
-export interface AuthUIActions {
-  loginWithCredentials: LoginCredentials;
-  registerWithCredentials: RegisterCredentials;
-  logout: void;
-  loginWithGoogle: void;
-  loginError: void;
-}
+const mapAccountToLoginResult = (
+  account: Models.User<Models.Preferences>,
+): LoginResult => ({
+  account: account as Models.User<{ guest?: boolean }>,
+});
 
 /**
  * Effects for authentication actions.
@@ -69,160 +51,151 @@ export class AuthEffects {
   private readonly alertService = inject(TuiAlertService);
   private readonly transloco = inject(TranslocoService);
 
-  // Public actions for UI interactions
-  public readonly actions = rxActions<AuthUIActions>();
+  // State streams - initialized lazily when register() is called
+  private _loginState$!: Observable<StreamState<LoginResult>>;
+  private _registerState$!: Observable<StreamState<LoginResult>>;
+  private _logoutState$!: Observable<StreamState<void>>;
 
-  // Internal state update streams
-  // These are populated by effects and consumed by the store
-  // Using ReplaySubject(1) so late subscribers get the last emitted value
-  private readonly _loginState$ = new ReplaySubject<StreamState<LoginResult>>(
-    1,
-  );
-  private readonly _registerState$ = new ReplaySubject<
-    StreamState<LoginResult>
-  >(1);
-  private readonly _logoutState$ = new ReplaySubject<StreamState<void>>(1);
+  get loginState$(): Observable<StreamState<LoginResult>> {
+    return this._loginState$;
+  }
 
-  readonly loginState$ = this._loginState$.asObservable();
-  readonly registerState$ = this._registerState$.asObservable();
-  readonly logoutState$ = this._logoutState$.asObservable();
+  get registerState$(): Observable<StreamState<LoginResult>> {
+    return this._registerState$;
+  }
 
-  // Effects registered directly
-  private readonly effects = rxEffects(({ register }) => {
-    register(
-      this.actions.loginWithCredentials$.pipe(
-        switchMap(({ email, password }) =>
-          from(
+  get logoutState$(): Observable<StreamState<void>> {
+    return this._logoutState$;
+  }
+
+  /**
+   * Register effects with the store's actions.
+   * This method is called by the store during initialization.
+   */
+  register(actions: RxActions<AuthActions, object>) {
+    // Create shared observables for state streams
+    this._loginState$ = actions.loginWithCredentials$.pipe(
+      switchMap(({ email, password }) =>
+        from(
+          this.appwrite.account.createEmailPasswordSession({
+            email,
+            password,
+          }),
+        ).pipe(
+          switchMap(() => this.appwrite.account.get()),
+          map(mapAccountToLoginResult),
+        ),
+      ),
+      toState(),
+      shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
+    this._registerState$ = actions.registerWithCredentials$.pipe(
+      switchMap(({ email, name, password }) =>
+        from(
+          this.appwrite.account.create({
+            userId: ID.unique(),
+            email,
+            password,
+            name: name ?? undefined,
+          }),
+        ).pipe(
+          switchMap(() =>
             this.appwrite.account.createEmailPasswordSession({
               email,
               password,
             }),
-          ).pipe(
-            switchMap(() => this.appwrite.account.get()),
-            map(
-              (account) =>
-                ({
-                  account: account as Models.User<{ guest?: boolean }>,
-                  session: null,
-                }) as LoginResult,
-            ),
           ),
-        ),
-        toState(),
-      ),
-      (state) => {
-        if (state.hasValue) {
-          this.router.navigate(['/wishlists']);
-        }
-        if (state.hasError) {
-          console.error('Login error:', state.error);
-          this.actions.loginError();
-        }
-        this._loginState$.next(state);
-      },
-    );
-
-    register(
-      this.actions.registerWithCredentials$.pipe(
-        switchMap(({ email, name, password }) =>
-          from(
-            this.appwrite.account.create({
-              userId: ID.unique(),
-              email,
-              password,
-              name: name ?? undefined,
-            }),
-          ).pipe(
-            switchMap(() =>
-              this.appwrite.account.createEmailPasswordSession({
-                email,
-                password,
-              }),
-            ),
-            switchMap(() => this.appwrite.account.get()),
-            map(
-              (account) =>
-                ({
-                  account: account as Models.User<{ guest?: boolean }>,
-                  session: null,
-                }) as LoginResult,
-            ),
-          ),
-        ),
-        toState(),
-      ),
-      (state) => {
-        if (state.hasValue) {
-          this.router.navigate(['/']);
-        }
-        if (state.hasError) {
-          console.error('Registration error:', state.error);
-          this.router.navigate(['/login']);
-        }
-        this._registerState$.next(state);
-      },
-    );
-
-    register(
-      this.actions.loginError$.pipe(
-        switchMap(() =>
-          this.transloco.selectTranslate(
-            'server-error.invalid-credentials',
-            {},
-            'login',
-          ),
-        ),
-        switchMap((trans: string) =>
-          this.alertService.open(trans).pipe(
-            catchError((error) => {
-              console.error('Alert service error:', error);
-              return EMPTY;
-            }),
-          ),
+          switchMap(() => this.appwrite.account.get()),
+          map(mapAccountToLoginResult),
         ),
       ),
+      toState(),
+      shareReplay({ bufferSize: 1, refCount: false }),
     );
 
-    register(
-      this.actions.logout$.pipe(
-        switchMap(() =>
-          from(
-            this.appwrite.account.deleteSession({ sessionId: 'current' }),
-          ).pipe(
-            catchError((error) => {
-              console.error('Logout session deletion error:', error);
-              // Continue with local cleanup even if server logout fails
-              return EMPTY;
-            }),
-          ),
-        ),
-        tap(() => {
-          localStorage.clear();
-          sessionStorage.clear();
-          this.router.navigate(['/']);
-        }),
-      ),
-      () =>
-        this._logoutState$.next({
-          isLoading: false,
-          hasError: false,
-          hasValue: true,
-          value: undefined,
-        }),
-    );
-
-    // Note: OAuth redirects the browser away, so this stream won't complete normally.
-    // The success/failure URLs handle the redirect back to the app.
-    register(
-      this.actions.loginWithGoogle$.pipe(
-        tap(() =>
-          this.appwrite.account.createOAuth2Session({
-            provider: OAuthProvider.Google,
-            success: location.origin,
-            failure: `${location.origin}/login`,
+    this._logoutState$ = actions.logout$.pipe(
+      switchMap(() =>
+        from(
+          this.appwrite.account.deleteSession({ sessionId: 'current' }),
+        ).pipe(
+          map(() => undefined as void),
+          catchError((error) => {
+            console.error('Logout session deletion error:', error);
+            // Continue with local cleanup even if server logout fails
+            return EMPTY;
           }),
         ),
       ),
+      toState(),
+      shareReplay({ bufferSize: 1, refCount: false }),
     );
-  });
+
+    rxEffects(({ register }) => {
+      // Handle login success/error side effects
+      register(this._loginState$, (state) => {
+        if (state.hasError) {
+          actions.loginError();
+        } else if (state.hasValue && state.value?.account) {
+          // Update account in store before navigating to ensure auth guard has access
+          actions.setAccount(state.value.account);
+          this.router.navigate(['/wishlists']);
+        }
+      });
+
+      // Handle register success/error side effects
+      register(this._registerState$, (state) => {
+        if (state.hasError) {
+          console.error('Registration error:', state.error);
+        } else if (state.hasValue && state.value?.account) {
+          // Update account in store before navigating to ensure auth guard has access
+          actions.setAccount(state.value.account);
+          this.router.navigate(['/wishlists']);
+        }
+      });
+
+      // Handle logout side effects
+      register(this._logoutState$, (state) => {
+        if (state.hasValue) {
+          localStorage.clear();
+          sessionStorage.clear();
+          this.router.navigate(['/login']);
+        }
+      });
+
+      register(
+        actions.loginError$.pipe(
+          switchMap(() =>
+            this.transloco.selectTranslate(
+              'server-error.invalid-credentials',
+              {},
+              'login',
+            ),
+          ),
+          switchMap((trans: string) =>
+            this.alertService.open(trans).pipe(
+              catchError((error) => {
+                console.error('Alert service error:', error);
+                return EMPTY;
+              }),
+            ),
+          ),
+        ),
+      );
+
+      // Note: OAuth redirects the browser away, so this stream won't complete normally.
+      // The success/failure URLs handle the redirect back to the app.
+      register(
+        actions.loginWithGoogle$.pipe(
+          tap(() =>
+            this.appwrite.account.createOAuth2Session({
+              provider: OAuthProvider.Google,
+              success: location.origin,
+              failure: `${location.origin}/login`,
+            }),
+          ),
+        ),
+      );
+    });
+  }
 }

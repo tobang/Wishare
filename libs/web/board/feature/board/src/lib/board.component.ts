@@ -3,7 +3,6 @@ import {
   CdkDragPlaceholder,
   CdkDragPreview,
   DragDropModule,
-  moveItemInArray,
 } from '@angular/cdk/drag-drop';
 
 import {
@@ -68,14 +67,9 @@ export class BoardComponent {
       return;
     }
 
-    // Optimistically update the UI by reordering the local array
-    const wishlists = this.wishLists();
-    if (wishlists) {
-      moveItemInArray(wishlists, event.previousIndex, event.currentIndex);
-    }
-
     // Trigger the store action to persist the new order to the backend
-    this.boardStore.ui.reorderWishlists({
+    // The effects will handle the optimistic update and reordering
+    this.boardStore.actions.reorderWishlists({
       previousIndex: event.previousIndex,
       currentIndex: event.currentIndex,
     });
@@ -94,7 +88,7 @@ export class BoardComponent {
       )
       .pipe(filter((result): result is CreateWishlistDialogResult => !!result))
       .subscribe((result) => {
-        this.boardStore.ui.createWishlist({
+        this.boardStore.actions.createWishlist({
           title: result.title,
           description: result.description,
         });

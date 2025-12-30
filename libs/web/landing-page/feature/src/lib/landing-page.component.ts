@@ -7,12 +7,18 @@ import {
 import { TuiButton, TuiLink } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { AuthStore } from '@wishare/web/auth/data-access';
-import { LoginComponent } from '@wishare/web/auth/feature/login';
+import { EmbeddedLoginComponent } from '@wishare/web/auth/feature/login';
 import { scopeLoader } from 'scoped-translations';
 @Component({
   selector: 'wishare-landing-page',
   standalone: true,
-  imports: [TranslocoModule, TuiCardLarge, TuiButton, TuiLink, LoginComponent],
+  imports: [
+    TranslocoModule,
+    TuiCardLarge,
+    TuiButton,
+    TuiLink,
+    EmbeddedLoginComponent,
+  ],
   providers: [
     {
       provide: TRANSLOCO_SCOPE,
@@ -33,6 +39,6 @@ export class LandingPageComponent {
   protected readonly transloco = inject(TranslocoService);
 
   testEffect() {
-    this.authStore.ui.logout();
+    this.authStore.actions.logout();
   }
 }

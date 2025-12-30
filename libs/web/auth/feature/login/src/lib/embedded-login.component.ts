@@ -1,3 +1,4 @@
+import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiTabs } from '@taiga-ui/kit';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
@@ -10,15 +11,16 @@ import { EmailLoginComponent } from '@wishare/web/auth/ui/email-login';
 import { SignupComponent } from '@wishare/web/auth/ui/signup';
 
 /**
- * Standalone login page component.
- * Used for the /login route with full branding panel.
+ * Embedded login component for use within other pages (e.g., landing page).
+ * This is a simplified version without branding panel.
  */
 @Component({
-  selector: 'wishare-login',
+  selector: 'wishare-embedded-login',
   standalone: true,
   imports: [
     FormsModule,
     TranslocoModule,
+    TuiCardLarge,
     TuiTabs,
     EmailLoginComponent,
     SignupComponent,
@@ -34,11 +36,11 @@ import { SignupComponent } from '@wishare/web/auth/ui/signup';
       },
     },
   ],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  templateUrl: './embedded-login.component.html',
+  styleUrls: ['./embedded-login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
+export class EmbeddedLoginComponent {
   private readonly authStore = inject(AuthStore);
   activeItemIndex = 0;
 

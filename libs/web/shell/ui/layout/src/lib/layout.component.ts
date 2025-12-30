@@ -27,6 +27,6 @@ export class LayoutComponent {
   );
 
   logout() {
-    this.authStore.ui.logout();
+    this.authStore.actions.logout();
   }
 }

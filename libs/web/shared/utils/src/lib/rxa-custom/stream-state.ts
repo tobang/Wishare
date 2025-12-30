@@ -11,13 +11,13 @@ import {
  * Represents the state of an async stream operation.
  * Used to track loading, success, and error states.
  */
-export interface StreamState<T> {
+export type StreamState<T> = {
   isLoading: boolean;
   hasError: boolean;
   error?: unknown;
   hasValue: boolean;
   value: T | null;
-}
+};
 
 /**
  * Creates an initial StreamState with isLoading set to true.

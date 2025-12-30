@@ -6,13 +6,19 @@ import {
 } from '@ngneat/transloco';
 import { TuiButton, TuiLink } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { LoginComponent } from '@wishare/web/auth/feature/login';
+import { EmbeddedLoginComponent } from '@wishare/web/auth/feature/login';
 import { scopeLoader } from 'scoped-translations';
 
 @Component({
   selector: 'wishare-landing-page-modern',
   standalone: true,
-  imports: [TranslocoModule, TuiCardLarge, TuiButton, TuiLink, LoginComponent],
+  imports: [
+    TranslocoModule,
+    TuiCardLarge,
+    TuiButton,
+    TuiLink,
+    EmbeddedLoginComponent,
+  ],
   providers: [
     {
       provide: TRANSLOCO_SCOPE,

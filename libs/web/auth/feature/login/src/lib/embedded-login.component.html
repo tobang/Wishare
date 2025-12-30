@@ -1,0 +1,23 @@
+<div class="embedded-login" *transloco="let t">
+  <div class="embedded-card" tuiCardLarge>
+    <tui-tabs [(activeItemIndex)]="activeItemIndex" class="login-tabs">
+      <button tuiTab type="button">
+        {{ t('login.tabs.tab-0.label') }}
+      </button>
+      <button tuiTab type="button">
+        {{ t('login.tabs.tab-1.label') }}
+      </button>
+    </tui-tabs>
+
+    <div class="tab-content">
+      @switch (activeItemIndex) {
+        @case (0) {
+          <wishare-email-login (login)="login($event)"></wishare-email-login>
+        }
+        @case (1) {
+          <wishare-signup (signUp)="signup($event)"></wishare-signup>
+        }
+      }
+    </div>
+  </div>
+</div>

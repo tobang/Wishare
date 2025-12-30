@@ -1,77 +1,51 @@
-<div class="login-page" [class.embedded-mode]="embedded()" *transloco="let t">
-  @if (!embedded()) {
-    <!-- Standalone mode with branding panel -->
-    <div class="login-container">
-      <div class="login-branding">
-        <div class="branding-content">
-          <img
-            src="/assets/images/ws_logo.svg"
-            alt="WishShare Logo"
-            class="logo"
-          />
-          <h1 class="brand-title">WishShare</h1>
-          <p class="brand-tagline">{{ t('login.tagline') }}</p>
-          <div class="decorative-circles">
-            <div class="circle circle-1"></div>
-            <div class="circle circle-2"></div>
-            <div class="circle circle-3"></div>
-          </div>
+<div class="login-page" *transloco="let t">
+  <div class="login-container">
+    <div class="login-branding">
+      <div class="branding-content">
+        <img
+          src="/assets/images/ws_logo.svg"
+          alt="WishShare Logo"
+          class="logo"
+        />
+        <h1 class="brand-title">WishShare</h1>
+        <p class="brand-tagline">{{ t('login.tagline') }}</p>
+        <div class="decorative-circles">
+          <div class="circle circle-1"></div>
+          <div class="circle circle-2"></div>
+          <div class="circle circle-3"></div>
         </div>
       </div>
+    </div>
 
-      <div class="login-form-panel">
-        <div class="form-wrapper">
-          <div class="welcome-text">
-            <h2>{{ t('login.welcome') }}</h2>
-            <p class="subtitle">{{ t('login.subtitle') }}</p>
-          </div>
+    <div class="login-form-panel">
+      <div class="form-wrapper">
+        <div class="welcome-text">
+          <h2>{{ t('login.welcome') }}</h2>
+          <p class="subtitle">{{ t('login.subtitle') }}</p>
+        </div>
 
-          <tui-tabs [(activeItemIndex)]="activeItemIndex" class="login-tabs">
-            <button tuiTab type="button">
-              {{ t('login.tabs.tab-0.label') }}
-            </button>
-            <button tuiTab type="button">
-              {{ t('login.tabs.tab-1.label') }}
-            </button>
-          </tui-tabs>
+        <tui-tabs [(activeItemIndex)]="activeItemIndex" class="login-tabs">
+          <button tuiTab type="button">
+            {{ t('login.tabs.tab-0.label') }}
+          </button>
+          <button tuiTab type="button">
+            {{ t('login.tabs.tab-1.label') }}
+          </button>
+        </tui-tabs>
 
-          <div class="tab-content">
-            @switch (activeItemIndex) {
-              @case (0) {
-                <wishare-email-login
-                  (login)="login($event)"
-                ></wishare-email-login>
-              }
-              @case (1) {
-                <wishare-signup (signUp)="signup($event)"></wishare-signup>
-              }
+        <div class="tab-content">
+          @switch (activeItemIndex) {
+            @case (0) {
+              <wishare-email-login
+                (login)="login($event)"
+              ></wishare-email-login>
             }
-          </div>
+            @case (1) {
+              <wishare-signup (signUp)="signup($event)"></wishare-signup>
+            }
+          }
         </div>
       </div>
     </div>
-  } @else {
-    <!-- Embedded mode - simple card -->
-    <div class="embedded-card" tuiCardLarge>
-      <tui-tabs [(activeItemIndex)]="activeItemIndex" class="login-tabs">
-        <button tuiTab type="button">
-          {{ t('login.tabs.tab-0.label') }}
-        </button>
-        <button tuiTab type="button">
-          {{ t('login.tabs.tab-1.label') }}
-        </button>
-      </tui-tabs>
-
-      <div class="tab-content">
-        @switch (activeItemIndex) {
-          @case (0) {
-            <wishare-email-login (login)="login($event)"></wishare-email-login>
-          }
-          @case (1) {
-            <wishare-signup (signUp)="signup($event)"></wishare-signup>
-          }
-        }
-      </div>
-    </div>
-  }
+  </div>
 </div>

@@ -1,3 +1,3 @@
-export interface WithInitializer {
+export type WithInitializer = {
   initialize: (...args: unknown[]) => void;
-}
+};

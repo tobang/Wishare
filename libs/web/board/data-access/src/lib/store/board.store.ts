@@ -6,14 +6,8 @@ import { resetStreamState, WithInitializer } from '@wishare/web/shared/utils';
 import { Wishlist } from '@wishare/web/wishlist/data-access';
 import { filter, map, merge } from 'rxjs';
 
-import { createBoardViewModel } from './board.selectors';
-import {
-  BoardActions,
-  BoardResult,
-  BoardStateModel,
-  CreateWishlistData,
-  ReorderWishlistsData,
-} from './board.types';
+import { createBoardViewModel, BoardViewModel } from './board.selectors';
+import { BoardActions, BoardResult, BoardStateModel } from './board.types';
 import { BoardEffects } from './board.effects';
 
 /**
@@ -31,25 +25,16 @@ import { BoardEffects } from './board.effects';
   providedIn: 'root',
 })
 export class BoardStore implements WithInitializer {
-  private readonly boardEffects = inject(BoardEffects);
+  private readonly effects = inject(BoardEffects);
 
   public readonly actions = rxActions<BoardActions>();
 
-  // Expose UI actions from effects for external use
-  public readonly ui = {
-    fetchWishlists: () => this.boardEffects.actions.fetchWishlists(),
-    createWishlist: (data: CreateWishlistData) =>
-      this.boardEffects.actions.createWishlist(data),
-    reorderWishlists: (data: ReorderWishlistsData) =>
-      this.boardEffects.actions.reorderWishlists(data),
-  };
+  // Register effects early so streams are available for state connections
+  private readonly _effectsRegistered = this.effects.register(this.actions);
 
-  // Internal state update streams for async operations
-  // These are populated by effects and should not be exposed as public actions
-  readonly fetchState$ = this.boardEffects.fetchState$;
-  readonly createState$ = this.boardEffects.createState$;
-  readonly reorderState$ = this.boardEffects.reorderState$;
+  readonly vm: BoardViewModel;
 
+  // #region State
   private readonly store = rxState<BoardStateModel>(({ connect, set }) => {
     // Initialize with empty state
     set({
@@ -69,20 +54,25 @@ export class BoardStore implements WithInitializer {
      * These track the loading/success/error states of various async operations.
      * Using StreamState pattern ensures consistent state management across all operations.
      */
-    connect('fetchState', this.fetchState$);
-    connect('createState', this.createState$);
-    connect('reorderState', this.reorderState$);
+    connect('fetchState', this.effects.fetchState$);
+    connect('createState', this.effects.createState$);
+    connect('reorderState', this.effects.reorderState$);
 
     /**
      * Consolidated wishLists updates from board operations.
-     * Updates are triggered when fetch succeeds.
+     * Updates are triggered when fetch succeeds or optimistic reorder happens.
      */
     connect(
       merge(
-        this.fetchState$.pipe(
+        this.effects.fetchState$.pipe(
           filter((state) => state.hasValue && state.value !== null),
           map((state) => ({
             wishLists: state.value?.wishLists ?? [],
+          })),
+        ),
+        this.effects.currentWishlists$.pipe(
+          map((wishLists) => ({
+            wishLists,
           })),
         ),
       ),
@@ -97,10 +87,14 @@ export class BoardStore implements WithInitializer {
       createState: resetStreamState<Wishlist>(),
     }));
   });
+  // #endregion State
 
-  public readonly vm = createBoardViewModel(this.store);
+  constructor() {
+    // Initialize view model
+    this.vm = createBoardViewModel(this.store);
+  }
 
   initialize(): void {
-    this.ui.fetchWishlists();
+    this.actions.fetchWishlists();
   }
 }

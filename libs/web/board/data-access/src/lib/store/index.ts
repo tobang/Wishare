@@ -6,7 +6,6 @@ export type {
   BoardActions,
   BoardResult,
   BoardWishlist,
-  BoardUIActions,
   CreateWishlistData,
   ReorderWishlistsData,
 } from './board.types';

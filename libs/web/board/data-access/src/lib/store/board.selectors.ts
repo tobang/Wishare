@@ -7,9 +7,9 @@ import { BoardResult, BoardStateModel, BoardWishlist } from './board.types';
  * Interface for the store object used in view model creation.
  * Matches the shape returned by rxState() from @rx-angular/state.
  */
-interface RxStateStore<T extends object> {
+type RxStateStore<T extends object> = {
   signal<K extends keyof T>(key: K): Signal<T[K]>;
-}
+};
 
 /**
  * Creates and returns view model signals for the Board feature.
