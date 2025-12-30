@@ -23,6 +23,7 @@ export interface BoardStateModel {
   wishLists: BoardWishlist[];
   fetchState: StreamState<BoardResult>;
   createState: StreamState<Wishlist>;
+  reorderState: StreamState<void>;
 }
 
 /**
@@ -36,9 +37,26 @@ export interface BoardActions {
 }
 
 /**
+ * Data for creating a new wishlist
+ */
+export interface CreateWishlistData {
+  title: string;
+  description: string;
+}
+
+/**
+ * Data for reordering wishlists
+ */
+export interface ReorderWishlistsData {
+  previousIndex: number;
+  currentIndex: number;
+}
+
+/**
  * UI Actions for board effects (used by components)
  */
 export interface BoardUIActions {
   fetchWishlists: void;
-  createWishlist: void;
+  createWishlist: CreateWishlistData;
+  reorderWishlists: ReorderWishlistsData;
 }

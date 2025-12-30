@@ -149,6 +149,40 @@ $brand-primary-darker: color.adjust($brand-primary, $lightness: -10%);
   --spacing-input-padding: var(--spacing-3); // 12px
   --spacing-button-padding: var(--spacing-4); // 16px
 
+  // Font size scale (based on 1rem = 16px)
+  --font-size-2xs: 0.625rem; // 10px
+  --font-size-xs: 0.75rem; // 12px
+  --font-size-sm: 0.875rem; // 14px
+  --font-size-base: 1rem; // 16px
+  --font-size-md: 1.05rem; // ~17px
+  --font-size-lg: 1.125rem; // 18px
+  --font-size-xl: 1.25rem; // 20px
+  --font-size-2xl: 1.5rem; // 24px
+  --font-size-3xl: 1.75rem; // 28px
+  --font-size-4xl: 2rem; // 32px
+  --font-size-5xl: 2.25rem; // 36px
+  --font-size-6xl: 2.5rem; // 40px
+  --font-size-7xl: 2.75rem; // 44px
+  --font-size-8xl: 3rem; // 48px
+  --font-size-9xl: 4rem; // 64px
+
+  // Semantic font size aliases
+  --font-size-body: var(--font-size-base); // 16px
+  --font-size-body-sm: var(--font-size-sm); // 14px
+  --font-size-body-lg: var(--font-size-lg); // 18px
+  --font-size-caption: var(--font-size-xs); // 12px
+  --font-size-label: var(--font-size-sm); // 14px
+  --font-size-button: var(--font-size-base); // 16px
+  --font-size-input: var(--font-size-base); // 16px
+
+  // Heading font sizes
+  --font-size-h1: var(--font-size-8xl); // 48px
+  --font-size-h2: var(--font-size-6xl); // 40px
+  --font-size-h3: var(--font-size-4xl); // 32px
+  --font-size-h4: var(--font-size-2xl); // 24px
+  --font-size-h5: var(--font-size-xl); // 20px
+  --font-size-h6: var(--font-size-lg); // 18px
+
   // Taiga UI overrides
   --tui-primary: var(--color-primary) !important;
   --tui-primary-hover: var(--color-primary-light) !important;
@@ -291,6 +325,40 @@ $brand-primary-darker: color.adjust($brand-primary, $lightness: -10%);
   --spacing-card-padding: var(--spacing-6);
   --spacing-input-padding: var(--spacing-3);
   --spacing-button-padding: var(--spacing-4);
+
+  // Font size scale (same as light theme)
+  --font-size-2xs: 0.625rem; // 10px
+  --font-size-xs: 0.75rem; // 12px
+  --font-size-sm: 0.875rem; // 14px
+  --font-size-base: 1rem; // 16px
+  --font-size-md: 1.05rem; // ~17px
+  --font-size-lg: 1.125rem; // 18px
+  --font-size-xl: 1.25rem; // 20px
+  --font-size-2xl: 1.5rem; // 24px
+  --font-size-3xl: 1.75rem; // 28px
+  --font-size-4xl: 2rem; // 32px
+  --font-size-5xl: 2.25rem; // 36px
+  --font-size-6xl: 2.5rem; // 40px
+  --font-size-7xl: 2.75rem; // 44px
+  --font-size-8xl: 3rem; // 48px
+  --font-size-9xl: 4rem; // 64px
+
+  // Semantic font size aliases
+  --font-size-body: var(--font-size-base); // 16px
+  --font-size-body-sm: var(--font-size-sm); // 14px
+  --font-size-body-lg: var(--font-size-lg); // 18px
+  --font-size-caption: var(--font-size-xs); // 12px
+  --font-size-label: var(--font-size-sm); // 14px
+  --font-size-button: var(--font-size-base); // 16px
+  --font-size-input: var(--font-size-base); // 16px
+
+  // Heading font sizes
+  --font-size-h1: var(--font-size-8xl); // 48px
+  --font-size-h2: var(--font-size-6xl); // 40px
+  --font-size-h3: var(--font-size-4xl); // 32px
+  --font-size-h4: var(--font-size-2xl); // 24px
+  --font-size-h5: var(--font-size-xl); // 20px
+  --font-size-h6: var(--font-size-lg); // 18px
 
   // Legacy variable mappings
   --primary-color: var(--color-primary);
@@ -674,4 +742,44 @@ img {
 
 .p-5 {
   padding: 4rem;
+}
+
+// ============================================
+// CDK DRAG AND DROP STYLES
+// ============================================
+.cdk-drag-preview {
+  box-sizing: border-box;
+}
+
+.cdk-drag-preview.wishlist-drag-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 180px;
+  max-width: 280px;
+  background: #ffffff;
+  border: 2px solid #34626c;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  box-shadow:
+    0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  transform: rotate(2deg);
+  font-family: sans-serif;
+
+  tui-icon {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    color: #34626c;
+  }
+
+  span {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

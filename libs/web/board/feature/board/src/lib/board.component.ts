@@ -3,14 +3,32 @@ import {
   CdkDragPlaceholder,
   CdkDragPreview,
   DragDropModule,
+  moveItemInArray,
 } from '@angular/cdk/drag-drop';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TuiAppearance, TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Injector,
+} from '@angular/core';
+import {
+  TuiAppearance,
+  TuiButton,
+  TuiDialogService,
+  TuiIcon,
+  TuiTitle,
+} from '@taiga-ui/core';
 import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { BoardStore, type BoardWishlist } from '@wishare/web/board/data-access';
 import { WishListComponent } from '@wishare/web/wishlist/feature/list';
+import { filter } from 'rxjs';
+import {
+  CreateWishlistDialogComponent,
+  CreateWishlistDialogResult,
+} from './create-wishlist-dialog';
 
 @Component({
   selector: 'wishare-board',
@@ -34,6 +52,9 @@ import { WishListComponent } from '@wishare/web/wishlist/feature/list';
 })
 export class BoardComponent {
   private readonly boardStore = inject(BoardStore);
+  private readonly dialogService = inject(TuiDialogService);
+  private readonly injector = inject(Injector);
+
   public readonly wishLists = this.boardStore.vm.wishLists;
   public readonly isLoading = this.boardStore.vm.isLoading;
 
@@ -42,11 +63,41 @@ export class BoardComponent {
     this.boardStore.initialize();
   }
 
-  drop(wishList: CdkDragDrop<BoardWishlist[]>) {
-    console.log('Dropped', wishList);
+  drop(event: CdkDragDrop<BoardWishlist[]>) {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+
+    // Optimistically update the UI by reordering the local array
+    const wishlists = this.wishLists();
+    if (wishlists) {
+      moveItemInArray(wishlists, event.previousIndex, event.currentIndex);
+    }
+
+    // Trigger the store action to persist the new order to the backend
+    this.boardStore.ui.reorderWishlists({
+      previousIndex: event.previousIndex,
+      currentIndex: event.currentIndex,
+    });
   }
 
   createWishlist() {
-    this.boardStore.ui.createWishlist();
+    this.dialogService
+      .open<CreateWishlistDialogResult | null>(
+        new PolymorpheusComponent(CreateWishlistDialogComponent, this.injector),
+        {
+          label: 'Create New Wishlist',
+          size: 'm',
+          closeable: true,
+          dismissible: true,
+        },
+      )
+      .pipe(filter((result): result is CreateWishlistDialogResult => !!result))
+      .subscribe((result) => {
+        this.boardStore.ui.createWishlist({
+          title: result.title,
+          description: result.description,
+        });
+      });
   }
 }

@@ -9,45 +9,79 @@
       [ngClass]="vm.menuOpen ? 'is-active' : ''"
       id="mobile-menu"
       (click)="toggleMenu()"
-      >
+    >
       <span class="bar"></span>
       <span class="bar"></span>
       <span class="bar"></span>
     </div>
-    <ul class="nav nav-animate" [ngClass]="vm.menuOpen ? 'mobile-nav' : ''">
-      <li class="nav-item">
-        <a href="javascript:void(0)" routerLink="/">{{
-          t('navbar.homepage')
-        }}</a>
-      </li>
-      @if (!vm.authenticated) {
+    <div class="nav-right">
+      <ul class="nav nav-animate" [ngClass]="vm.menuOpen ? 'mobile-nav' : ''">
         <li class="nav-item">
-          <a href="javascript:void(0)" routerLink="/signup">{{
-            t('navbar.signup')
+          <a href="javascript:void(0)" routerLink="/">{{
+            t('navbar.homepage')
           }}</a>
         </li>
+        @if (!vm.authenticated) {
+          <li class="nav-item">
+            <a href="javascript:void(0)" routerLink="/signup">{{
+              t('navbar.signup')
+            }}</a>
+          </li>
+        }
+        @if (!vm.authenticated) {
+          <li class="nav-item">
+            <a href="javascript:void(0)" routerLink="/login">{{
+              t('navbar.login')
+            }}</a>
+          </li>
+        }
+        @if (vm.authenticated) {
+          <li class="nav-item">
+            <a href="javascript:void(0)" routerLink="/wishlists">{{
+              t('navbar.wishlists')
+            }}</a>
+          </li>
+        }
+      </ul>
+      @if (vm.authenticated && vm.userName) {
+        <span
+          (tuiActiveZoneChange)="onAvatarMenuActiveZone($event)"
+          (tuiObscured)="onAvatarMenuObscured($event)"
+        >
+          <tui-avatar
+            class="user-avatar"
+            size="s"
+            [src]="vm.userName | tuiInitials"
+            [tuiDropdown]="avatarDropdown"
+            [tuiDropdownManual]="avatarMenuOpen"
+            (click)="toggleAvatarMenu()"
+          />
+          <ng-template #avatarDropdown>
+            <tui-data-list role="menu">
+              <button
+                tuiOption
+                new
+                type="button"
+                role="menuitem"
+                (click)="onSwitchLanguage()"
+              >
+                <tui-icon icon="@tui.languages" />
+                <span>{{ t('navbar.switchLanguage') }}</span>
+              </button>
+              <button
+                tuiOption
+                new
+                type="button"
+                role="menuitem"
+                (click)="onLogout()"
+              >
+                <tui-icon icon="@tui.log-out" />
+                <span>{{ t('navbar.logout') }}</span>
+              </button>
+            </tui-data-list>
+          </ng-template>
+        </span>
       }
-      @if (!vm.authenticated) {
-        <li class="nav-item">
-          <a href="javascript:void(0)" routerLink="/login">{{
-            t('navbar.login')
-          }}</a>
-        </li>
-      }
-      @if (vm.authenticated) {
-        <li class="nav-item">
-          <a href="javascript:void(0)" routerLink="/wishlists">{{
-            t('navbar.wishlists')
-          }}</a>
-        </li>
-      }
-      @if (vm.authenticated) {
-        <li class="nav-item">
-          <a href="javascript:void(0)" (click)="onLogout()">{{
-            t('navbar.logout')
-          }}</a>
-        </li>
-      }
-    </ul>
+    </div>
   </nav>
 </div>

@@ -22,6 +22,9 @@ export class LayoutComponent {
   private readonly account$ = toObservable(this.authStore.vm.account);
 
   public readonly authenticated$ = this.account$.pipe(map(tuiIsPresent));
+  public readonly userName$ = this.account$.pipe(
+    map((account) => account?.name ?? null),
+  );
 
   logout() {
     this.authStore.ui.logout();

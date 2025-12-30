@@ -63,10 +63,9 @@
           wishare-wish-list
           [wishlist]="wishlist"
         >
-          <div class="drag-preview" *cdkDragPreview>
-            <div tuiCardLarge tuiAppearance="floating" class="preview-card">
-              <span>{{ wishlist.title }}</span>
-            </div>
+          <div class="wishlist-drag-preview" *cdkDragPreview>
+            <tui-icon icon="@tui.gift"></tui-icon>
+            <span>{{ wishlist.title }}</span>
           </div>
           <div class="drag-placeholder" *cdkDragPlaceholder></div>
         </div>

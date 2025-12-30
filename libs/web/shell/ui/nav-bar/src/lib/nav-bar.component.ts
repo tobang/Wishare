@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   input,
   output,
@@ -13,6 +12,14 @@ import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import { RxLet } from '@rx-angular/template/let';
+import { TuiActiveZone, TuiObscured } from '@taiga-ui/cdk';
+import {
+  TuiDataList,
+  TuiDropdown,
+  TuiIcon,
+  TuiInitialsPipe,
+} from '@taiga-ui/core';
+import { TuiAvatar } from '@taiga-ui/kit';
 import { switchMap } from 'rxjs';
 
 import { coerceObservable, RxInputType } from '@wishare/web/shared/utils';
@@ -25,12 +32,25 @@ type Actions = {
 interface NavbarModel {
   menuOpen: boolean;
   authenticated: boolean;
+  userName: string | null;
 }
 
 @Component({
   selector: 'wishare-nav-bar',
   standalone: true,
-  imports: [CommonModule, RxLet, TranslocoModule, RouterLink],
+  imports: [
+    CommonModule,
+    RxLet,
+    TranslocoModule,
+    RouterLink,
+    TuiAvatar,
+    TuiInitialsPipe,
+    TuiDropdown,
+    TuiDataList,
+    TuiActiveZone,
+    TuiObscured,
+    TuiIcon,
+  ],
   providers: [
     RxState,
     {
@@ -54,10 +74,14 @@ export class NavBarComponent {
   readonly ui = this.actionsFactory.create();
   readonly vm$ = this.state.select();
   readonly authenticated = input.required<RxInputType<boolean>>();
+  readonly userName = input<RxInputType<string | null>>(null);
   readonly logout = output<void>();
+  readonly switchLanguage = output<void>();
+
+  avatarMenuOpen = false;
 
   constructor() {
-    this.state.set({ menuOpen: false });
+    this.state.set({ menuOpen: false, userName: null });
     this.state.connect('menuOpen', this.ui.menuOpenToggle$);
     this.state.connect(
       'authenticated',
@@ -65,10 +89,36 @@ export class NavBarComponent {
         switchMap((value) => coerceObservable(value)),
       ),
     );
+    this.state.connect(
+      'userName',
+      toObservable(this.userName).pipe(
+        switchMap((value) => coerceObservable(value)),
+      ),
+    );
   }
 
   onLogout() {
+    this.avatarMenuOpen = false;
     this.logout.emit();
+  }
+
+  onSwitchLanguage() {
+    this.avatarMenuOpen = false;
+    this.switchLanguage.emit();
+  }
+
+  toggleAvatarMenu() {
+    this.avatarMenuOpen = !this.avatarMenuOpen;
+  }
+
+  onAvatarMenuObscured(obscured: boolean) {
+    if (obscured) {
+      this.avatarMenuOpen = false;
+    }
+  }
+
+  onAvatarMenuActiveZone(active: boolean) {
+    this.avatarMenuOpen = active && this.avatarMenuOpen;
   }
 
   toggleMenu() {

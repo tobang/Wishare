@@ -3,5 +3,6 @@
   "signup": "Tilmeld",
   "login": "Log ind",
   "logout": "Log ud",
-  "wishlists": "Ønskesedler"
+  "wishlists": "Ønskesedler",
+  "switchLanguage": "Skift sprog"
 }

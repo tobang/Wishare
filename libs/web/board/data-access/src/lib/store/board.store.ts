@@ -7,7 +7,13 @@ import { Wishlist } from '@wishare/web/wishlist/data-access';
 import { filter, map, merge } from 'rxjs';
 
 import { createBoardViewModel } from './board.selectors';
-import { BoardActions, BoardResult, BoardStateModel } from './board.types';
+import {
+  BoardActions,
+  BoardResult,
+  BoardStateModel,
+  CreateWishlistData,
+  ReorderWishlistsData,
+} from './board.types';
 import { BoardEffects } from './board.effects';
 
 /**
@@ -32,13 +38,17 @@ export class BoardStore implements WithInitializer {
   // Expose UI actions from effects for external use
   public readonly ui = {
     fetchWishlists: () => this.boardEffects.actions.fetchWishlists(),
-    createWishlist: () => this.boardEffects.actions.createWishlist(),
+    createWishlist: (data: CreateWishlistData) =>
+      this.boardEffects.actions.createWishlist(data),
+    reorderWishlists: (data: ReorderWishlistsData) =>
+      this.boardEffects.actions.reorderWishlists(data),
   };
 
   // Internal state update streams for async operations
   // These are populated by effects and should not be exposed as public actions
   readonly fetchState$ = this.boardEffects.fetchState$;
   readonly createState$ = this.boardEffects.createState$;
+  readonly reorderState$ = this.boardEffects.reorderState$;
 
   private readonly store = rxState<BoardStateModel>(({ connect, set }) => {
     // Initialize with empty state
@@ -46,6 +56,7 @@ export class BoardStore implements WithInitializer {
       wishLists: [],
       fetchState: resetStreamState<BoardResult>(),
       createState: resetStreamState<Wishlist>(),
+      reorderState: resetStreamState<void>(),
     });
 
     connect(this.actions.updateBoardState$, (state, update) => ({
@@ -60,6 +71,7 @@ export class BoardStore implements WithInitializer {
      */
     connect('fetchState', this.fetchState$);
     connect('createState', this.createState$);
+    connect('reorderState', this.reorderState$);
 
     /**
      * Consolidated wishLists updates from board operations.

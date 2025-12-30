@@ -1,3 +1,16 @@
 {
-  "title": "Engelsk landing page"
+  "form": {
+    "email": "Email",
+    "email-error": "Not a valid email address!",
+    "email-hint": "Enter your email address",
+    "password": "Password",
+    "password-error": "Password must be at least 6 characters long!",
+    "password-confirm": "Confirm password",
+    "password-confirm-error": "Passwords do not match!",
+    "button-signup": "Sign up",
+    "required": "This field is required!"
+  },
+  "server-error": {
+    "auth/email-already-in-use": "Email address is already in use, log in instead?"
+  }
 }

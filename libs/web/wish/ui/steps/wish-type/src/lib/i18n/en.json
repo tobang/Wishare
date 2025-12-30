@@ -1,12 +1,12 @@
 {
   "step-type": {
     "manual": {
-      "text": "Udfyld selv med link, billede og beskrivelse af dit ønske.",
-      "button": "Jeg gør arbejdet"
+      "text": "Fill in the link, image and description of your wish yourself.",
+      "button": "I'll do the work"
     },
     "auto": {
-      "text": "Giv os linket til dit ønske og vi forsøger at hente billede og beskrivelse.",
-      "button": "I gør arbejdet"
+      "text": "Give us the link to your wish and we'll try to fetch the image and description.",
+      "button": "You do the work"
     }
   }
 }

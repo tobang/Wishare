@@ -1,0 +1,50 @@
+<form tuiForm="m" (submit)="submit(); $event.preventDefault()">
+  <div class="form-field">
+    <label tuiLabel>
+      Title<span class="tui-required"></span>
+      <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="true">
+        <input
+          tuiTextfield
+          placeholder="Enter wishlist title"
+          [field]="wishlistForm.title"
+        />
+      </tui-textfield>
+    </label>
+    <wishare-field-error [field]="wishlistForm.title" />
+  </div>
+
+  <div class="form-field">
+    <label tuiLabel>
+      Description
+      <tui-textfield tuiTextfieldSize="m">
+        <textarea
+          tuiTextarea
+          placeholder="Enter a description (optional)"
+          [field]="wishlistForm.description"
+        ></textarea>
+      </tui-textfield>
+    </label>
+    <wishare-field-error [field]="wishlistForm.description" />
+  </div>
+
+  <footer class="dialog-actions">
+    <button
+      tuiButton
+      type="button"
+      appearance="secondary"
+      size="m"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
+      tuiButton
+      type="submit"
+      appearance="primary"
+      size="m"
+      [disabled]="!wishlistForm().valid()"
+    >
+      Create Wishlist
+    </button>
+  </footer>
+</form>

@@ -1,3 +1,42 @@
 {
-  "title": "Engelsk landing page"
+  "header": {
+    "sub-title": "WishShare - Your wishlist in the cloud",
+    "title": "Sign up now and get started for free",
+    "text": "Share your wishes with friends and family - Keep track of the gifts you've given - Easy and clear",
+    "button": "Get started"
+  },
+  "signup": {
+    "title": "Share your wishes quickly and easily",
+    "text": "WishShare is your personal wishlist in the cloud. It gives you an overview of your wishes and makes it easy to share them with family and friends",
+    "form": {
+      "title": "Sign up",
+      "name": "Name",
+      "name-error": "You must enter a name!",
+      "email": "Email",
+      "email-error": "Email address is not valid!",
+      "password": "Password",
+      "password-error": "Password must be at least 6 characters long!",
+      "password-confirm": "Confirm password",
+      "password-confirm-error": "Passwords do not match!"
+    }
+  },
+  "services": {
+    "title-1": "Clean and intuitive design,",
+    "title-2": "with many innovative features!",
+    "cards": {
+      "card-1": {
+        "title": "Wishlist",
+        "text": "Create your wishes quickly and easily. Share with friends and family. Option to copy both wishes and wishlists."
+      },
+      "card-2": {
+        "title": "Wish overview",
+        "text": "You know the feeling. It's Christmas and there are many wishlists and gifts to keep track of. With the wish overview you always have control of the gifts."
+      },
+      "card-3": {
+        "title": "Wish splitter",
+        "text": "You're going to a party and the host wants an expensive gift that's out of your budget. No problem. In WishShare you can split the wish."
+      }
+    },
+    "more": "See more"
+  }
 }

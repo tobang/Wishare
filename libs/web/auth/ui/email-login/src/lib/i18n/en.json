@@ -1,3 +1,16 @@
 {
-  "title": "Engelsk landing page"
+  "form": {
+    "email": "Email",
+    "email-error": "Not a valid email address!",
+    "email-type": "Enter your email",
+    "email-hint": "Use your email to log in",
+    "password": "Password",
+    "password-type": "Enter password",
+    "password-error": "Password must be at least 6 characters long!",
+    "button-login": "Login",
+    "button-reset": "Reset password",
+    "button-forgot": "Forgot password",
+    "reset-text": "Enter your email below and we will send you an email with information on how to change your password.",
+    "required": "This field is required!"
+  }
 }
