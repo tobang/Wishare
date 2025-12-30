@@ -3,7 +3,7 @@ import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
 
 import { resetStreamState, WithInitializer } from '@wishare/web/shared/utils';
-import { Wishlist } from '@wishare/web/wishlist/data-access';
+import { WishlistFlat } from '@wishare/web/wishlist/data-access';
 import { filter, map, merge } from 'rxjs';
 
 import { createBoardViewModel, BoardViewModel } from './board.selectors';
@@ -40,7 +40,7 @@ export class BoardStore implements WithInitializer {
     set({
       wishLists: [],
       fetchState: resetStreamState<BoardResult>(),
-      createState: resetStreamState<Wishlist>(),
+      createState: resetStreamState<WishlistFlat>(),
       reorderState: resetStreamState<void>(),
     });
 
@@ -84,7 +84,7 @@ export class BoardStore implements WithInitializer {
     }));
 
     connect(this.actions.resetCreateState$, () => ({
-      createState: resetStreamState<Wishlist>(),
+      createState: resetStreamState<WishlistFlat>(),
     }));
   });
   // #endregion State

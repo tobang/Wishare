@@ -1,6 +1,6 @@
 import { computed, Signal } from '@angular/core';
 import { StreamState } from '@wishare/web/shared/utils';
-import { Wishlist } from '@wishare/web/wishlist/data-access';
+import { WishlistFlat } from '@wishare/web/wishlist/data-access';
 import { BoardResult, BoardStateModel, BoardWishlist } from './board.types';
 
 /**
@@ -20,7 +20,7 @@ export const createBoardViewModel = (store: RxStateStore<BoardStateModel>) => {
   const wishLists: Signal<BoardWishlist[]> = store.signal('wishLists');
   const fetchState: Signal<StreamState<BoardResult>> =
     store.signal('fetchState');
-  const createState: Signal<StreamState<Wishlist>> =
+  const createState: Signal<StreamState<WishlistFlat>> =
     store.signal('createState');
 
   /**

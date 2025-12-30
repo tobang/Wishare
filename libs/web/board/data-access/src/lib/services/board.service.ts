@@ -1,97 +1,147 @@
 import { inject, Injectable } from '@angular/core';
 
-import { from, map, Observable, switchMap } from 'rxjs';
+import {
+  catchError,
+  concat,
+  from,
+  last,
+  map,
+  Observable,
+  of,
+  switchMap,
+  throwError,
+} from 'rxjs';
 
-import { Account, Databases, ID, Permission, Query, Role } from 'appwrite';
+import { Account, ID, Permission, Query, Role, TablesDB } from 'appwrite';
 
 import { APPWRITE } from '@wishare/web/shared/app-config';
 import { leftJoin } from '@wishare/web/shared/operators';
-import { Wish, Wishlist } from '@wishare/web/wishlist/data-access';
+import {
+  flattenWish,
+  flattenWishlist,
+  Wish,
+  WishFlat,
+  Wishlist,
+  WishlistFlat,
+} from '@wishare/web/wishlist/data-access';
+import { BoardWishlist } from '../store/board.types';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
   private readonly appwrite: {
-    databases: Databases;
+    tablesDb: TablesDB;
     account: Account;
   } = inject(APPWRITE);
 
-  getBoard() {
+  getBoard(): Observable<BoardWishlist[]> {
     return this.getWishlists().pipe(
-      map((wishlists) => wishlists as unknown as Record<string, unknown>[]),
-      leftJoin(this.appwrite.databases, 'wishare', '$id', 'wlid', 'wishes'),
-    );
-  }
-
-  getWishlists(): Observable<Wishlist[]> {
-    const account$ = from(this.appwrite.account.get());
-    return account$.pipe(
-      switchMap((account) =>
-        from(
-          this.appwrite.databases.listDocuments('wishare', 'wishlists', [
-            Query.equal('uid', account.$id),
-            Query.orderAsc('priority'),
-          ]),
-        ).pipe(
-          map((docList) =>
-            docList.documents.map((doc) => doc as unknown as Wishlist),
-          ),
-        ),
+      leftJoin<WishlistFlat, WishFlat, 'wishes'>(
+        this.appwrite.tablesDb,
+        'wishare',
+        '$id',
+        'wlid',
+        'wishes',
       ),
     );
   }
-  getWishes(wlid: string): Observable<Wish[]> {
+
+  getWishlists(): Observable<WishlistFlat[]> {
+    const databaseId = 'wishare';
+    const tableId = 'wishlists';
+
+    const account$ = from(this.appwrite.account.get());
+    return account$.pipe(
+      switchMap((account) => {
+        const queries = [
+          Query.equal('uid', account.$id),
+          Query.orderAsc('priority'),
+        ];
+
+        return from(
+          this.appwrite.tablesDb.listRows({
+            databaseId,
+            tableId,
+            queries,
+          }),
+        );
+      }),
+      map((result) =>
+        result.rows.map((row) => flattenWishlist(row as unknown as Wishlist)),
+      ),
+    );
+  }
+  getWishes(wlid: string): Observable<WishFlat[]> {
+    const databaseId = 'wishare';
+    const tableId = 'wishes';
+    const queries = [Query.equal('wlid', wlid)];
+
     return from(
-      this.appwrite.databases.listDocuments('wishare', 'wishes', [
-        Query.equal('wlid', wlid),
-      ]),
-    ).pipe(map((docList) => docList.documents as unknown as Wish[]));
+      this.appwrite.tablesDb.listRows({ databaseId, tableId, queries }),
+    ).pipe(
+      map((result) =>
+        result.rows.map((row) => flattenWish(row as unknown as Wish)),
+      ),
+    );
   }
 
   createWishlist(data: {
     title: string;
     description: string;
-  }): Observable<Wishlist> {
+  }): Observable<WishlistFlat> {
+    const databaseId = 'wishare';
+    const tableId = 'wishlists';
+
     const account$ = from(this.appwrite.account.get());
     return account$.pipe(
-      switchMap((account) =>
+      switchMap((account) => {
         // First fetch existing wishlists to determine the next priority
-        from(
-          this.appwrite.databases.listDocuments('wishare', 'wishlists', [
-            Query.equal('uid', account.$id),
-            Query.orderDesc('priority'),
-            Query.limit(1),
-          ]),
+        const queries = [
+          Query.equal('uid', account.$id),
+          Query.orderDesc('priority'),
+          Query.limit(1),
+        ];
+
+        return from(
+          this.appwrite.tablesDb.listRows({
+            databaseId,
+            tableId,
+            queries,
+          }),
         ).pipe(
-          switchMap((docList) => {
+          switchMap((result) => {
             // Calculate next priority: highest existing priority + 1, or 1 if none exist
             const maxPriority =
-              docList.documents.length > 0
-                ? (docList.documents[0] as unknown as Wishlist).priority
+              result.rows.length > 0
+                ? (result.rows[0] as unknown as Wishlist).data.priority
                 : 0;
             const nextPriority = maxPriority + 1;
 
+            const rowId = ID.unique();
+            const rowData = {
+              title: data.title,
+              description: data.description,
+              visibility: 'draft',
+              priority: nextPriority,
+              uid: account.$id,
+            };
+            const permissions = [
+              Permission.read(Role.user(account.$id)),
+              Permission.update(Role.user(account.$id)),
+              Permission.delete(Role.user(account.$id)),
+            ];
+
             return from(
-              this.appwrite.databases.createDocument(
-                'wishare',
-                'wishlists',
-                ID.unique(),
-                {
-                  title: data.title,
-                  description: data.description,
-                  visibility: 'draft',
-                  priority: nextPriority,
-                  uid: account.$id,
-                },
-                [
-                  Permission.read(Role.user(account.$id)),
-                  Permission.update(Role.user(account.$id)),
-                  Permission.delete(Role.user(account.$id)),
-                ],
-              ),
-            ).pipe(map((doc) => doc as unknown as Wishlist));
+              this.appwrite.tablesDb.createRow({
+                databaseId,
+                tableId,
+                rowId,
+                data: rowData,
+                permissions,
+              }),
+            ).pipe(map((row) => flattenWishlist(row as unknown as Wishlist)));
           }),
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -108,59 +158,37 @@ export class BoardService {
     updates: Array<{ id: string; priority: number }>,
   ): Observable<void> {
     if (updates.length === 0) {
-      return from(Promise.resolve(undefined));
+      return of(undefined);
     }
 
-    // Phase 1: Move all wishlists to temporary high priorities (500+)
-    // This ensures we don't have conflicts during the update
-    // Max priority is 999, so we can safely use 500-999 range for temps
     const tempPriorityOffset = 500;
 
-    // Execute phase 1 sequentially to avoid race conditions
-    const phase1 = updates.reduce<Promise<void>>(
-      (chain, update, index) =>
-        chain.then(() =>
-          this.appwrite.databases
-            .updateDocument('wishare', 'wishlists', update.id, {
-              priority: tempPriorityOffset + index,
-            })
-            .then(() => undefined)
-            .catch((error) => {
-              console.error(
-                `Failed to update wishlist ${update.id} priority:`,
-                error,
-              );
-              throw error;
-            }),
-        ),
-      Promise.resolve(),
+    const updatePriority$ = (id: string, priority: number): Observable<void> =>
+      from(
+        this.appwrite.tablesDb.updateRow('wishare', 'wishlists', id, {
+          priority,
+        }),
+      ).pipe(
+        map(() => undefined),
+        catchError((error) => {
+          console.error(`Failed to update wishlist ${id} priority:`, error);
+          return throwError(() => error);
+        }),
+      );
+
+    // Phase 1: Move all wishlists to temporary high priorities (500+)
+    const phase1$: Observable<void> = concat(
+      ...updates.map((update, index) =>
+        updatePriority$(update.id, tempPriorityOffset + index),
+      ),
     );
 
-    // Phase 2: Update to final priorities (sequentially)
-    const phase2Observable = from(phase1).pipe(
-      switchMap(() => {
-        const phase2 = updates.reduce<Promise<void>>(
-          (chain, update) =>
-            chain.then(() =>
-              this.appwrite.databases
-                .updateDocument('wishare', 'wishlists', update.id, {
-                  priority: update.priority,
-                })
-                .then(() => undefined)
-                .catch((error) => {
-                  console.error(
-                    `Failed to update wishlist ${update.id} priority:`,
-                    error,
-                  );
-                  throw error;
-                }),
-            ),
-          Promise.resolve(),
-        );
-        return from(phase2);
-      }),
+    // Phase 2: Update to final priorities
+    const phase2$: Observable<void> = concat(
+      ...updates.map((update) => updatePriority$(update.id, update.priority)),
     );
 
-    return phase2Observable.pipe(map(() => undefined));
+    // Execute phase 1, then phase 2, return last emission
+    return concat(phase1$, phase2$).pipe(last());
   }
 }

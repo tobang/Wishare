@@ -10,8 +10,8 @@
   </header>
 
   <section class="wishes-section">
-    @if (wishlist().wishes?.documents?.length) {
-      @for (wish of wishlist().wishes?.documents; track wish; let i = $index) {
+    @if (wishlist().wishes?.rows?.length) {
+      @for (wish of wishlist().wishes?.rows; track wish; let i = $index) {
         <wishare-wish [wish]="wish"></wishare-wish>
       }
     } @else {

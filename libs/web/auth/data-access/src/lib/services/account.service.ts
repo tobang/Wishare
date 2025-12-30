@@ -1,13 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { APPWRITE } from '@wishare/web/shared/app-config';
 
-import { Account, Databases, Models } from 'appwrite';
+import { Account, Models, TablesDB } from 'appwrite';
 import { defer, from, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private readonly appwrite: {
-    databases: Databases;
+    tablesDb: TablesDB;
     account: Account;
   } = inject(APPWRITE);
 

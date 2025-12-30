@@ -1,9 +1,9 @@
 import { inject, InjectionToken } from '@angular/core';
-import { Account, Client, Databases } from 'appwrite';
+import { Account, Client, TablesDB } from 'appwrite';
 import { APP_CONFIG } from './../app-config.token';
 
 export const APPWRITE = new InjectionToken<{
-  databases: Databases;
+  tablesDb: TablesDB;
   account: Account;
 }>('appwrite account instance', {
   providedIn: 'root',
@@ -11,10 +11,10 @@ export const APPWRITE = new InjectionToken<{
   factory: () => {
     const env = inject(APP_CONFIG);
     const client = new Client();
-    const databases = new Databases(client);
+    const tablesDb = new TablesDB(client);
     const account = new Account(client);
     client.setEndpoint(env.appwriteEndpoint);
     client.setProject(env.appwriteProject);
-    return { databases, account };
+    return { tablesDb, account };
   },
 });

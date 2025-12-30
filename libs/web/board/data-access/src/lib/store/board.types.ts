@@ -1,12 +1,12 @@
-import { Wishlist } from '@wishare/web/wishlist/data-access';
+import { WishFlat, WishlistFlat } from '@wishare/web/wishlist/data-access';
 import { StreamState } from '@wishare/web/shared/utils';
 import { Models } from 'appwrite';
 
 /**
- * Extended wishlist type with joined document data
+ * Extended wishlist type with joined wishes data
  */
-export type BoardWishlist = Wishlist & {
-  [x: string]: Models.DocumentList<Models.Document>;
+export type BoardWishlist = WishlistFlat & {
+  wishes?: Models.RowList<WishFlat>;
 };
 
 /**
@@ -22,7 +22,7 @@ export type BoardResult = {
 export type BoardStateModel = {
   wishLists: BoardWishlist[];
   fetchState: StreamState<BoardResult>;
-  createState: StreamState<Wishlist>;
+  createState: StreamState<WishlistFlat>;
   reorderState: StreamState<void>;
 };
 

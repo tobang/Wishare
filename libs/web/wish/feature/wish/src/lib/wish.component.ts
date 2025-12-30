@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { Wish } from '@wishare/web/wishlist/data-access';
+import { WishFlat } from '@wishare/web/wishlist/data-access';
 
 @Component({
   selector: 'wishare-wish',
@@ -11,6 +11,6 @@ import { Wish } from '@wishare/web/wishlist/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishComponent {
-  readonly wish = input.required<Wish>();
+  readonly wish = input.required<WishFlat>();
   readonly selected = input(false);
 }

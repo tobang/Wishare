@@ -11,7 +11,7 @@ import {
   withLatestFrom,
 } from 'rxjs';
 import { StreamState, toState } from '@wishare/web/shared/utils';
-import { Wishlist } from '@wishare/web/wishlist/data-access';
+import { WishlistFlat } from '@wishare/web/wishlist/data-access';
 
 import { BoardService } from '../services/board.service';
 import { BoardActions, BoardResult, BoardWishlist } from './board.types';
@@ -33,7 +33,7 @@ export class BoardEffects {
 
   // State streams - initialized lazily when register() is called
   private _fetchState$!: Observable<StreamState<BoardResult>>;
-  private _createState$!: Observable<StreamState<Wishlist>>;
+  private _createState$!: Observable<StreamState<WishlistFlat>>;
   private _reorderState$!: Observable<StreamState<void>>;
   private _currentWishlists$!: ReplaySubject<BoardWishlist[]>;
 
@@ -41,7 +41,7 @@ export class BoardEffects {
     return this._fetchState$;
   }
 
-  get createState$(): Observable<StreamState<Wishlist>> {
+  get createState$(): Observable<StreamState<WishlistFlat>> {
     return this._createState$;
   }
 
@@ -70,7 +70,7 @@ export class BoardEffects {
 
     // Create shared observables for state streams
     const fetchState$ = new ReplaySubject<StreamState<BoardResult>>(1);
-    const createState$ = new ReplaySubject<StreamState<Wishlist>>(1);
+    const createState$ = new ReplaySubject<StreamState<WishlistFlat>>(1);
     const reorderState$ = new ReplaySubject<StreamState<void>>(1);
 
     this._fetchState$ = fetchState$.asObservable();

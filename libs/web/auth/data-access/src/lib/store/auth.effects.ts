@@ -17,7 +17,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { Account, Databases, ID, Models, OAuthProvider } from 'appwrite';
+import { Account, ID, Models, OAuthProvider, TablesDB } from 'appwrite';
 import { StreamState, toState } from '@wishare/web/shared/utils';
 
 import { AuthActions, LoginResult } from './auth.types';
@@ -46,7 +46,7 @@ const mapAccountToLoginResult = (
 })
 export class AuthEffects {
   private readonly router = inject(Router);
-  private readonly appwrite: { databases: Databases; account: Account } =
+  private readonly appwrite: { tablesDb: TablesDB; account: Account } =
     inject(APPWRITE);
   private readonly alertService = inject(TuiAlertService);
   private readonly transloco = inject(TranslocoService);
