@@ -37,9 +37,9 @@ import { urlValidationSuite, UrlFormModel } from './url-type.validation';
       provide: TRANSLOCO_SCOPE,
       useValue: {
         scope: 'wishurl',
-        loader: scopeLoader(
-          (lang: string, root: string) => import(`./${root}/${lang}.json`),
-        ),
+        loader: scopeLoader((lang: string, root: string) => {
+          return import(`./i18n/${lang}.json`);
+        }),
       },
     },
   ],
