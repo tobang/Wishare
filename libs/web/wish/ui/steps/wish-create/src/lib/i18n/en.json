@@ -1,0 +1,33 @@
+{
+  "header": {
+    "title": "Add a New Wish",
+    "subtitle": "Fill in the details of your wish"
+  },
+  "form": {
+    "title": {
+      "label": "Title",
+      "placeholder": "What do you wish for?"
+    },
+    "url": {
+      "label": "Link to Product",
+      "placeholder": "https://example.com/product",
+      "hint": "Paste a URL where this item can be purchased"
+    },
+    "price": {
+      "label": "Price",
+      "placeholder": "0.00"
+    },
+    "quantity": {
+      "label": "Quantity",
+      "placeholder": "1"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Add notes, size, color preferences or other details..."
+    }
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "submit": "Add Wish"
+  }
+}

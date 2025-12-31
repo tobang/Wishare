@@ -4,10 +4,9 @@ import {
   output,
   inject,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { TuiButton } from '@taiga-ui/core';
-import { firstValueFrom } from 'rxjs';
+import { scopeLoader } from 'scoped-translations';
 
 @Component({
   selector: 'wishare-wish-type',
@@ -16,15 +15,11 @@ import { firstValueFrom } from 'rxjs';
   providers: [
     {
       provide: TRANSLOCO_SCOPE,
-      useFactory: () => {
-        const http = inject(HttpClient);
-        return {
-          scope: 'wishtype',
-          loader: {
-            da: () => firstValueFrom(http.get('/assets/i18n/wishtype/da.json')),
-            en: () => firstValueFrom(http.get('/assets/i18n/wishtype/en.json')),
-          },
-        };
+      useValue: {
+        scope: 'wishtype',
+        loader: scopeLoader(
+          (lang: string, root: string) => import(`./${root}/${lang}.json`),
+        ),
       },
     },
   ],

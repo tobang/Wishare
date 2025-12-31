@@ -6,6 +6,8 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { scopeLoader } from 'scoped-translations';
 
 import { TuiAppearance, TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
@@ -27,8 +29,21 @@ import { WishlistStore, WishlistEffects } from './store';
     TuiHeader,
     TuiIcon,
     TuiTitle,
+    TranslocoModule,
   ],
-  providers: [WishlistStore, WishlistEffects],
+  providers: [
+    WishlistStore,
+    WishlistEffects,
+    {
+      provide: TRANSLOCO_SCOPE,
+      useValue: {
+        scope: 'wishlist',
+        loader: scopeLoader(
+          (lang: string, root: string) => import(`./${root}/${lang}.json`),
+        ),
+      },
+    },
+  ],
   templateUrl: './wish-list.component.html',
   styleUrls: ['./wish-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -163,20 +163,64 @@ export class BoardService {
    * Updates the priority of multiple wishlists.
    * Uses a two-phase sequential approach to avoid unique constraint violations
    * on the (priority, uid) index:
-   * Phase 1: Move all to temporary priorities (500-999 range) - sequentially
+   * Phase 1: Move all to temporary priorities (safe range) - sequentially
    * Phase 2: Set final priorities (starting from 1) - sequentially
    *
    * Note: Priority field has min:1, max:999 constraint
    */
   updateWishlistPriorities(
-    updates: Array<{ id: string; priority: number }>,
+    updates: Array<{ id: string; priority: number; oldPriority?: number }>,
   ): Observable<void> {
     if (updates.length === 0) {
       return of(undefined);
     }
 
-    // Use range 500-999 for temporary values to avoid collision with final values (1-N)
-    const tempOffset = 500;
+    // Find a safe temp range
+    // We need a range of size updates.length that doesn't overlap with any oldPriority
+    // and fits within 1..999.
+    // We prefer high numbers (500+) to avoid conflicts with stable items (usually 1..N).
+    const occupied = new Set(
+      updates
+        .map((u) => u.oldPriority)
+        .filter((p): p is number => p !== undefined),
+    );
+    const count = updates.length;
+    let tempOffset = 500;
+    let found = false;
+
+    // Strategy: Try to find a gap in 500..999
+    for (let start = 500; start <= 999 - count + 1; start++) {
+      let safe = true;
+      for (let i = 0; i < count; i++) {
+        if (occupied.has(start + i)) {
+          safe = false;
+          break;
+        }
+      }
+      if (safe) {
+        tempOffset = start;
+        found = true;
+        break;
+      }
+    }
+
+    // Fallback: Try 100..500 if 500+ is full/fragmented
+    if (!found) {
+      for (let start = 100; start <= 500 - count + 1; start++) {
+        let safe = true;
+        for (let i = 0; i < count; i++) {
+          if (occupied.has(start + i)) {
+            safe = false;
+            break;
+          }
+        }
+        if (safe) {
+          tempOffset = start;
+          found = true;
+          break;
+        }
+      }
+    }
 
     // Helper to run updates sequentially
     const runSequentially = async (
@@ -192,14 +236,17 @@ export class BoardService {
       }
     };
 
-    // Phase 1: Move to temporary priorities (500+) to avoid conflicts
+    // Phase 1: Move to temporary priorities to avoid conflicts
     const tempUpdates = updates.map((update, index) => ({
       id: update.id,
       priority: tempOffset + index,
     }));
 
     // Phase 2: Set final priorities (1-based)
-    const finalUpdates = updates;
+    const finalUpdates = updates.map((u) => ({
+      id: u.id,
+      priority: u.priority,
+    }));
 
     return from(runSequentially(tempUpdates)).pipe(
       switchMap(() => from(runSequentially(finalUpdates))),

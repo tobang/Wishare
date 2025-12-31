@@ -1,11 +1,16 @@
-<form tuiForm="m" (submit)="submit(); $event.preventDefault()">
+<form
+  tuiForm="m"
+  (submit)="submit(); $event.preventDefault()"
+  *transloco="let t"
+>
   <div class="form-field">
     <label tuiLabel>
-      Title<span class="tui-required"></span>
+      {{ t('board.create-dialog.title.label')
+      }}<span class="tui-required"></span>
       <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="true">
         <input
           tuiTextfield
-          placeholder="Enter wishlist title"
+          [placeholder]="t('board.create-dialog.title.placeholder')"
           [field]="wishlistForm.title"
         />
       </tui-textfield>
@@ -15,11 +20,11 @@
 
   <div class="form-field">
     <label tuiLabel>
-      Description
+      {{ t('board.create-dialog.description.label') }}
       <tui-textfield tuiTextfieldSize="m">
         <textarea
           tuiTextarea
-          placeholder="Enter a description (optional)"
+          [placeholder]="t('board.create-dialog.description.placeholder')"
           [field]="wishlistForm.description"
         ></textarea>
       </tui-textfield>
@@ -35,7 +40,7 @@
       size="m"
       (click)="cancel()"
     >
-      Cancel
+      {{ t('board.create-dialog.cancel') }}
     </button>
     <button
       tuiButton
@@ -44,7 +49,7 @@
       size="m"
       [disabled]="!wishlistForm().valid()"
     >
-      Create Wishlist
+      {{ t('board.create-dialog.submit') }}
     </button>
   </footer>
 </form>

@@ -1,15 +1,15 @@
-<div class="select-url grid" *transloco="let t">
+<div class="select-url grid" *transloco="let t; read: 'wishurl'">
   <div class="select-url-image">
     <img class="auto-img" src="/assets/images/automatic_wish_1.svg" alt="" />
   </div>
   <div class="center-column"></div>
   <div class="url-title lead text-light">
-    {{ t('wishurl.step-url.text') }}
+    {{ t('step-url.text') }}
   </div>
   <div class="url-input wish-input">
     <form (ngSubmit)="submitUrl()">
       <tui-textfield>
-        <label tuiLabel>Indtast url</label>
+        <label tuiLabel>{{ t('step-url.label') }}</label>
         <input tuiTextfield type="url" [field]="frmUrl.url" />
       </tui-textfield>
       <wishare-field-error [field]="frmUrl.url" />
@@ -22,7 +22,7 @@
       [appearance]="'secondary'"
       [disabled]="!frmUrl().valid()"
     >
-      {{ t('wishurl.step-url.button') }}
+      {{ t('step-url.button') }}
     </button>
   </div>
 </div>

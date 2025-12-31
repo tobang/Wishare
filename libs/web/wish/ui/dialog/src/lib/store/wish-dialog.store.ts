@@ -3,14 +3,14 @@ import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { WishDialog, WishDialogInput } from '../models/wish-dialog.model';
+import { WishDialogResult, WishDialogInput } from '../models/wish-dialog.model';
 import { createWishDialogViewModel } from './wish-dialog.selectors';
 import { WishDialogActions, WishDialogModel } from './wish-dialog.types';
 
 @Injectable()
 export class WishDialogStore {
   public readonly commands = rxActions<WishDialogActions>();
-  
+
   public readonly store = rxState<WishDialogModel>(({ set }) => {
     set({ activeItemIndex: 0 });
   });
@@ -20,16 +20,18 @@ export class WishDialogStore {
   constructor() {
     rxEffects(({ register }) => {
       register(this.commands.closeDialog$, (context) =>
-        context.completeWith(null)
+        context.completeWith(null),
       );
 
       register(this.commands.updateActiveIndex$, (index) =>
-        this.store.set({ activeItemIndex: index })
+        this.store.set({ activeItemIndex: index }),
       );
     });
   }
 
-  closeDialog(context: TuiDialogContext<WishDialog | null, WishDialogInput>) {
+  closeDialog(
+    context: TuiDialogContext<WishDialogResult | null, WishDialogInput>,
+  ) {
     this.commands.closeDialog(context);
   }
 

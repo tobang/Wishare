@@ -1,0 +1,25 @@
+{
+  "header": {
+    "title": "My Wishlists",
+    "list": "list",
+    "lists": "lists",
+    "new-button": "New Wishlist"
+  },
+  "empty": {
+    "title": "No wishlists yet",
+    "text": "Create your first wishlist to start organizing your wishes and share them with friends and family.",
+    "button": "Create Your First Wishlist"
+  },
+  "create-dialog": {
+    "title": {
+      "label": "Title",
+      "placeholder": "Enter wishlist title"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Enter a description (optional)"
+    },
+    "cancel": "Cancel",
+    "submit": "Create Wishlist"
+  }
+}

@@ -1,10 +1,9 @@
-import { Client, Databases, ID } from 'node-appwrite';
 import { load } from 'cheerio';
 import { fetch } from 'undici';
 
 /**
  * Appwrite Function to scrape meta tags from a URL
- * 
+ *
  * @param {object} context - Appwrite function context
  * @param {object} context.req - Request object
  * @param {object} context.res - Response object
@@ -23,10 +22,13 @@ export default async ({ req, res, log, error }) => {
     // Validate URL
     if (!url) {
       error('No URL provided in payload');
-      return res.json({
-        success: false,
-        message: 'URL is required in the request payload',
-      }, 400);
+      return res.json(
+        {
+          success: false,
+          message: 'URL is required in the request payload',
+        },
+        400,
+      );
     }
 
     log(`Scraping URL: ${url}`);
@@ -34,14 +36,17 @@ export default async ({ req, res, log, error }) => {
     // Fetch the URL content
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; WishareBot/2.0; +https://wishare.app)',
+        'User-Agent':
+          'Mozilla/5.0 (compatible; WishareBot/2.0; +https://wishare.app)',
       },
       redirect: 'follow',
       timeout: 10000, // 10 seconds timeout
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch URL: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch URL: ${response.status} ${response.statusText}`,
+      );
     }
 
     const html = await response.text();
@@ -71,7 +76,7 @@ export default async ({ req, res, log, error }) => {
         }
 
         log(`Fetching image: ${imageUrl}`);
-        
+
         // Fetch and encode image
         const imageResponse = await fetch(imageUrl, {
           timeout: 5000,
@@ -83,11 +88,11 @@ export default async ({ req, res, log, error }) => {
         if (imageResponse.ok) {
           const imageBuffer = await imageResponse.arrayBuffer();
           const buffer = Buffer.from(imageBuffer);
-          
+
           // Determine image type from URL or default to jpg
-          const imageMatch = imageUrl.match(/\.([^\./\?\#]+)($|\?|\#)/);
+          const imageMatch = imageUrl.match(/\.([^./?#]+)($|\?|#)/);
           const imageType = imageMatch?.[1] || 'jpg';
-          
+
           imageEncoded = `data:image/${imageType};base64,${buffer.toString('base64')}`;
           log('Image successfully encoded');
         } else {
@@ -103,13 +108,17 @@ export default async ({ req, res, log, error }) => {
     const scrapedData = {
       url,
       title: $('title').first().text()?.trim() || '',
-      favicon: $('link[rel="shortcut icon"]').attr('href') || 
-               $('link[rel="icon"]').attr('href') || '',
+      favicon:
+        $('link[rel="shortcut icon"]').attr('href') ||
+        $('link[rel="icon"]').attr('href') ||
+        '',
       description: getMetaTag('description'),
       image: imageUrl,
       imageEncoded,
-      price: getMetaTag('price') || 
-             $('meta[property="product:price:amount"]').attr('content') || '',
+      price:
+        getMetaTag('price') ||
+        $('meta[property="product:price:amount"]').attr('content') ||
+        '',
       author: getMetaTag('author'),
       siteName: getMetaTag('site_name'),
       type: getMetaTag('type'),
@@ -121,14 +130,19 @@ export default async ({ req, res, log, error }) => {
       success: true,
       payload: scrapedData,
     });
-
   } catch (err) {
     error(`Error in scrape function: ${err.message}`);
-    
-    return res.json({
-      success: false,
-      message: err.message || 'Failed to scrape URL',
-      error: process.env.APPWRITE_FUNCTION_ENV === 'development' ? err.stack : undefined,
-    }, 500);
+
+    return res.json(
+      {
+        success: false,
+        message: err.message || 'Failed to scrape URL',
+        error:
+          process.env.APPWRITE_FUNCTION_ENV === 'development'
+            ? err.stack
+            : undefined,
+      },
+      500,
+    );
   }
 };

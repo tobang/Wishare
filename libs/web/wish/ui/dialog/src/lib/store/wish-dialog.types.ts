@@ -1,11 +1,11 @@
 import { TuiDialogContext } from '@taiga-ui/core';
-import { WishDialog, WishDialogInput } from '../models/wish-dialog.model';
+import { WishDialogResult, WishDialogInput } from '../models/wish-dialog.model';
 
 export type WishDialogModel = {
   activeItemIndex: number;
 };
 
 export type WishDialogActions = {
-  closeDialog: TuiDialogContext<WishDialog | null, WishDialogInput>;
+  closeDialog: TuiDialogContext<WishDialogResult | null, WishDialogInput>;
   updateActiveIndex: number;
 };

@@ -1,6 +1,7 @@
 {
   "step-url": {
     "text": "Paste or type URL",
+    "label": "Enter URL",
     "errors": {
       "invalid": "URL is not valid",
       "required": "This field is required!"

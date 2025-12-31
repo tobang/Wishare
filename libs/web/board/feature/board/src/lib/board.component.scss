@@ -53,26 +53,31 @@
   border-radius: 9999px;
 }
 
-.wishlist-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-4);
-  align-items: start;
+%grid-item-width {
+  width: 100%;
 
   @media (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
+    width: calc((100% - var(--spacing-4)) / 2);
   }
 
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
+    width: calc((100% - 2 * var(--spacing-4)) / 3);
   }
 
   @media (min-width: 1400px) {
-    grid-template-columns: repeat(4, 1fr);
+    width: calc((100% - 3 * var(--spacing-4)) / 4);
   }
 }
 
+.wishlist-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  align-items: start;
+}
+
 .wishlist-item {
+  @extend %grid-item-width;
   cursor: grab;
 
   &:active {
@@ -82,6 +87,7 @@
 
 // Skeleton loading styles
 .skeleton-card {
+  @extend %grid-item-width;
   min-height: 280px;
   display: flex;
   flex-direction: column;
@@ -153,6 +159,7 @@
 
 // Drag and drop styles
 .drag-placeholder {
+  @extend %grid-item-width;
   background: var(--bg-surface-hover);
   border: 2px dashed var(--border-default);
   border-radius: 1.5rem;

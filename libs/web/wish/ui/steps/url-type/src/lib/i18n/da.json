@@ -1,6 +1,7 @@
 {
   "step-url": {
     "text": "Paste eller skriv url",
+    "label": "Indtast url",
     "errors": {
       "invalid": "Url er ikke valid",
       "required": "Feltet skal udfyldes!"

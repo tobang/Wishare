@@ -1,1 +1,133 @@
-<p>wish-create works!</p>
+@let formState = wishForm();
+
+<ng-container *transloco="let t; read: 'wishcreate'">
+  <div class="wish-create-container">
+    <div class="wish-create-header">
+      <div class="header-icon">
+        <tui-icon icon="@tui.gift"></tui-icon>
+      </div>
+      <h2 class="header-title">{{ t('header.title') }}</h2>
+      <p class="header-subtitle">{{ t('header.subtitle') }}</p>
+    </div>
+
+    <form
+      tuiForm="m"
+      class="wish-form"
+      (submit)="submit(); $event.preventDefault()"
+    >
+      <!-- Title Field -->
+      <div class="form-field">
+        <label tuiLabel>
+          {{ t('form.title.label') }}<span class="tui-required"></span>
+          <tui-textfield
+            tuiTextfieldSize="m"
+            [tuiTextfieldCleaner]="true"
+            iconStart="@tui.tag"
+          >
+            <input
+              tuiTextfield
+              [placeholder]="t('form.title.placeholder')"
+              [field]="wishForm.title"
+            />
+          </tui-textfield>
+        </label>
+        <wishare-field-error [field]="wishForm.title" />
+      </div>
+
+      <!-- URL Field -->
+      <div class="form-field">
+        <label tuiLabel>
+          {{ t('form.url.label') }}
+          <span class="field-hint" [tuiHint]="t('form.url.hint')">
+            <tui-icon icon="@tui.info"></tui-icon>
+          </span>
+          <tui-textfield
+            tuiTextfieldSize="m"
+            [tuiTextfieldCleaner]="true"
+            iconStart="@tui.link"
+          >
+            <input
+              tuiTextfield
+              type="url"
+              [placeholder]="t('form.url.placeholder')"
+              [field]="wishForm.url"
+            />
+          </tui-textfield>
+        </label>
+        <wishare-field-error [field]="wishForm.url" />
+      </div>
+
+      <!-- Price and Quantity Row -->
+      <div class="form-row">
+        <div class="form-field form-field--half">
+          <label tuiLabel>
+            {{ t('form.price.label') }}
+            <tui-textfield tuiTextfieldSize="m" iconStart="@tui.dollar-sign">
+              <input
+                tuiInputNumber
+                [placeholder]="t('form.price.placeholder')"
+                [field]="wishForm.price"
+                [tuiNumberFormat]="{ precision: 2 }"
+              />
+            </tui-textfield>
+          </label>
+          <wishare-field-error [field]="wishForm.price" />
+        </div>
+
+        <div class="form-field form-field--half">
+          <label tuiLabel>
+            {{ t('form.quantity.label') }}
+            <tui-textfield tuiTextfieldSize="m" iconStart="@tui.hash">
+              <input
+                tuiInputNumber
+                [placeholder]="t('form.quantity.placeholder')"
+                [field]="wishForm.quantity"
+                [tuiNumberFormat]="{ precision: 0 }"
+              />
+            </tui-textfield>
+          </label>
+          <wishare-field-error [field]="wishForm.quantity" />
+        </div>
+      </div>
+
+      <!-- Description Field -->
+      <div class="form-field">
+        <label tuiLabel>
+          {{ t('form.description.label') }}
+          <tui-textfield tuiTextfieldSize="m">
+            <textarea
+              tuiTextarea
+              [placeholder]="t('form.description.placeholder')"
+              [field]="wishForm.description"
+              rows="3"
+            ></textarea>
+          </tui-textfield>
+        </label>
+        <wishare-field-error [field]="wishForm.description" />
+      </div>
+
+      <!-- Action Buttons -->
+      <footer class="dialog-actions">
+        <button
+          tuiButton
+          type="button"
+          appearance="flat"
+          size="m"
+          (click)="cancel()"
+        >
+          {{ t('actions.cancel') }}
+        </button>
+        <button
+          tuiButton
+          type="submit"
+          appearance="primary"
+          size="m"
+          iconStart="@tui.plus"
+          [disabled]="!formState.valid()"
+        >
+          {{ t('actions.submit') }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</ng-container>

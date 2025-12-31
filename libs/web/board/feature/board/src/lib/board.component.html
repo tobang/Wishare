@@ -1,14 +1,18 @@
 @let wishlists = wishLists();
 @let loading = isLoading();
 
-<div class="board-wrapper">
+<div class="board-wrapper" *transloco="let t">
   <header class="board-header">
     <div class="header-content">
-      <h1 class="board-title">My Wishlists</h1>
+      <h1 class="board-title">{{ t('board.header.title') }}</h1>
       @if (wishlists && wishlists.length > 0) {
         <span class="wishlist-count"
           >{{ wishlists.length }}
-          {{ wishlists.length === 1 ? 'list' : 'lists' }}</span
+          {{
+            wishlists.length === 1
+              ? t('board.header.list')
+              : t('board.header.lists')
+          }}</span
         >
       }
     </div>
@@ -21,7 +25,7 @@
         iconStart="@tui.plus"
         (click)="createWishlist()"
       >
-        New Wishlist
+        {{ t('board.header.new-button') }}
       </button>
     }
   </header>
@@ -49,7 +53,7 @@
   } @else if (wishlists && wishlists.length > 0) {
     <div
       class="wishlist-grid"
-      cdkDropListOrientation="horizontal"
+      cdkDropListOrientation="mixed"
       cdkDropList
       [cdkDropListData]="wishlists"
       (cdkDropListDropped)="drop($event)"
@@ -76,10 +80,9 @@
       <div class="empty-state-icon">
         <tui-icon icon="@tui.gift"></tui-icon>
       </div>
-      <h2>No wishlists yet</h2>
+      <h2>{{ t('board.empty.title') }}</h2>
       <p>
-        Create your first wishlist to start organizing your wishes and share
-        them with friends and family.
+        {{ t('board.empty.text') }}
       </p>
       <button
         tuiButton
@@ -89,7 +92,7 @@
         iconStart="@tui.plus"
         (click)="createWishlist()"
       >
-        Create Your First Wishlist
+        {{ t('board.empty.button') }}
       </button>
     </div>
   }

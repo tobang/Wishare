@@ -1,4 +1,9 @@
-<div tuiCardLarge tuiAppearance="floating" class="wishlist-card">
+<div
+  tuiCardLarge
+  tuiAppearance="floating"
+  class="wishlist-card"
+  *transloco="let t"
+>
   <header tuiHeader class="card-header">
     <div class="header-left">
       <tui-icon icon="@tui.list" class="wishlist-icon"></tui-icon>
@@ -16,7 +21,7 @@
       }
     } @else {
       <div class="no-wishes">
-        <span class="no-wishes-text">No wishes yet</span>
+        <span class="no-wishes-text">{{ t('wishlist.no-wishes') }}</span>
       </div>
     }
   </section>
@@ -30,7 +35,7 @@
       iconStart="@tui.plus"
       (click)="createWish()"
     >
-      Add wish
+      {{ t('wishlist.add-wish') }}
     </button>
     <div class="footer-actions">
       <button

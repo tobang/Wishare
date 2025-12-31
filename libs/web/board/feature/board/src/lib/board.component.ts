@@ -12,6 +12,8 @@ import {
   inject,
   Injector,
 } from '@angular/core';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { scopeLoader } from 'scoped-translations';
 import {
   TuiAppearance,
   TuiButton,
@@ -45,6 +47,18 @@ import {
     TuiSkeleton,
     TuiTitle,
     WishListComponent,
+    TranslocoModule,
+  ],
+  providers: [
+    {
+      provide: TRANSLOCO_SCOPE,
+      useValue: {
+        scope: 'board',
+        loader: scopeLoader(
+          (lang: string, root: string) => import(`./${root}/${lang}.json`),
+        ),
+      },
+    },
   ],
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],

@@ -1,0 +1,33 @@
+{
+  "header": {
+    "title": "Tilføj et Nyt Ønske",
+    "subtitle": "Udfyld detaljerne for dit ønske"
+  },
+  "form": {
+    "title": {
+      "label": "Titel",
+      "placeholder": "Hvad ønsker du dig?"
+    },
+    "url": {
+      "label": "Link til Produkt",
+      "placeholder": "https://eksempel.dk/produkt",
+      "hint": "Indsæt en URL hvor denne vare kan købes"
+    },
+    "price": {
+      "label": "Pris",
+      "placeholder": "0,00"
+    },
+    "quantity": {
+      "label": "Antal",
+      "placeholder": "1"
+    },
+    "description": {
+      "label": "Beskrivelse",
+      "placeholder": "Tilføj noter, størrelse, farvepræferencer eller andre detaljer..."
+    }
+  },
+  "actions": {
+    "cancel": "Annuller",
+    "submit": "Tilføj Ønske"
+  }
+}

@@ -4,6 +4,8 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { scopeLoader } from 'scoped-translations';
 import {
   Field,
   SchemaPath,
@@ -39,6 +41,16 @@ export type CreateWishlistDialogResult = {
     TuiTextarea,
     TuiForm,
     FieldErrorComponent,
+    TranslocoModule,
+  ],
+  providers: [
+    {
+      provide: TRANSLOCO_SCOPE,
+      useValue: {
+        scope: 'board',
+        loader: scopeLoader((lang: string) => import(`../i18n/${lang}.json`)),
+      },
+    },
   ],
   templateUrl: './create-wishlist-dialog.component.html',
   styleUrls: ['./create-wishlist-dialog.component.scss'],

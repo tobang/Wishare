@@ -7,20 +7,33 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
 import { UrlTypeComponent } from '@wishare/web/wish/ui/steps/url-type';
 import { WishTypeComponent } from '@wishare/web/wish/ui/steps/wish-type';
-import { WishDialog, WishDialogInput } from './models/wish-dialog.model';
+import {
+  WishCreateComponent,
+  CreateWishFormModel,
+} from '@wishare/web/wish/ui/steps/wish-create';
+import { WishDialogResult, WishDialogInput } from './models/wish-dialog.model';
 import { WishDialogStore } from './store/wish-dialog.store';
 
 @Component({
   selector: 'wishare-wish-dialog',
   standalone: true,
-  imports: [TuiStepper, TranslocoModule, WishTypeComponent, UrlTypeComponent],
+  imports: [
+    TuiStepper,
+    TranslocoModule,
+    WishTypeComponent,
+    UrlTypeComponent,
+    WishCreateComponent,
+  ],
   providers: [WishDialogStore],
   templateUrl: './wish-dialog.component.html',
   styleUrls: ['./wish-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishDialogComponent {
-  private readonly context = inject<TuiDialogContext<WishDialog | null, WishDialogInput>>(POLYMORPHEUS_CONTEXT);
+  private readonly context =
+    inject<TuiDialogContext<WishDialogResult | null, WishDialogInput>>(
+      POLYMORPHEUS_CONTEXT,
+    );
   public readonly adapter = inject(WishDialogStore);
 
   closeDialog() {
@@ -37,5 +50,16 @@ export class WishDialogComponent {
 
   createAutomatic() {
     this.setActiveItemIndex(1);
+  }
+
+  onWishCreated(result: CreateWishFormModel) {
+    const wishData = {
+      title: result.title,
+      description: result.description,
+      url: result.url,
+      price: result.price,
+      quantity: result.quantity,
+    };
+    this.context.completeWith({ wishData });
   }
 }

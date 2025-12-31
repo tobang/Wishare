@@ -135,6 +135,7 @@ export class BoardEffects {
               .map((update) => ({
                 id: update.id,
                 priority: update.newPriority,
+                oldPriority: update.oldPriority,
               }));
 
             // If no updates needed, return early
