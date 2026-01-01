@@ -197,7 +197,7 @@ Use `FieldGroup<T>` for the input type when you know you're dealing with an obje
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Field, FieldGroup } from '@angular/forms/signals';
-import { TuiTextfield, TuiLabel } from '@taiga-ui/core';
+import { TuiTextfield, TuiInput, TuiLabel } from '@taiga-ui/core';
 import { FieldErrorComponent } from '@wishare/web/shared/utils';
 import { AddressFormModel } from './address.model';
 
@@ -208,6 +208,7 @@ import { AddressFormModel } from './address.model';
     CommonModule,
     Field,
     TuiTextfield,
+    TuiInput,
     TuiLabel,
     FieldErrorComponent,
   ],
@@ -236,7 +237,7 @@ The template binds to the field properties from the received FieldGroup:
   <label tuiLabel>
     Street
     <tui-textfield>
-      <input tuiTextfield [field]="address().street" />
+      <input tuiInput [field]="address().street" />
     </tui-textfield>
     <wishare-field-error [field]="address().street" />
   </label>
@@ -244,7 +245,7 @@ The template binds to the field properties from the received FieldGroup:
   <label tuiLabel>
     Number
     <tui-textfield>
-      <input tuiTextfield [field]="address().number" />
+      <input tuiInput [field]="address().number" />
     </tui-textfield>
     <wishare-field-error [field]="address().number" />
   </label>
@@ -252,7 +253,7 @@ The template binds to the field properties from the received FieldGroup:
   <label tuiLabel>
     Zipcode
     <tui-textfield>
-      <input tuiTextfield [field]="address().zipcode" />
+      <input tuiInput [field]="address().zipcode" />
     </tui-textfield>
     <wishare-field-error [field]="address().zipcode" />
   </label>
@@ -260,7 +261,7 @@ The template binds to the field properties from the received FieldGroup:
   <label tuiLabel>
     City
     <tui-textfield>
-      <input tuiTextfield [field]="address().city" />
+      <input tuiInput [field]="address().city" />
     </tui-textfield>
     <wishare-field-error [field]="address().city" />
   </label>
@@ -357,7 +358,7 @@ import {
   SchemaPathTree,
   form,
 } from '@angular/forms/signals';
-import { TuiButton, TuiTextfield, TuiLabel } from '@taiga-ui/core';
+import { TuiButton, TuiTextfield, TuiInput, TuiLabel } from '@taiga-ui/core';
 import { TuiPassword } from '@taiga-ui/kit';
 
 import { vestValidation } from '@wishare/web/shared/validators';
@@ -373,6 +374,7 @@ import { SignupFormModel, createEmptySignupForm } from './signup.model';
     CommonModule,
     Field,
     TuiTextfield,
+    TuiInput,
     TuiLabel,
     TuiButton,
     FieldErrorComponent,
@@ -415,7 +417,7 @@ Pass the nested FieldGroup to the subform component:
   <label tuiLabel>
     Email
     <tui-textfield>
-      <input tuiTextfield [field]="signUpForm().email" />
+      <input tuiInput [field]="signUpForm().email" />
     </tui-textfield>
     <wishare-field-error [field]="signUpForm().email" />
   </label>
@@ -423,7 +425,7 @@ Pass the nested FieldGroup to the subform component:
   <label tuiLabel>
     Password
     <tui-textfield>
-      <input tuiTextfield type="password" [field]="signUpForm().password" />
+      <input tuiInput type="password" [field]="signUpForm().password" />
     </tui-textfield>
     <wishare-field-error [field]="signUpForm().password" />
   </label>
@@ -431,7 +433,7 @@ Pass the nested FieldGroup to the subform component:
   <label tuiLabel>
     Confirm Password
     <tui-textfield>
-      <input tuiTextfield type="password" [field]="signUpForm().passwordConfirm" />
+      <input tuiInput type="password" [field]="signUpForm().passwordConfirm" />
     </tui-textfield>
     <wishare-field-error [field]="signUpForm().passwordConfirm" />
   </label>

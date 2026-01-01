@@ -4,15 +4,15 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import {
   TuiButton,
   TuiTextfield,
   TuiLabel,
   TuiIcon,
-  TuiHint,
+  TuiInput,
 } from '@taiga-ui/core';
-import { TuiTextarea } from '@taiga-ui/kit';
+import { TuiTextarea, TuiTooltip } from '@taiga-ui/kit';
 import { TuiForm } from '@taiga-ui/layout';
 import {
   Field,
@@ -35,9 +35,10 @@ import {
     TranslocoModule,
     TuiButton,
     TuiTextfield,
+    TuiInput,
     TuiLabel,
     TuiIcon,
-    TuiHint,
+    TuiTooltip,
     TuiTextarea,
     TuiForm,
     Field,

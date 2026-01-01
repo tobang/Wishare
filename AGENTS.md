@@ -22,6 +22,7 @@
 # General Guidelines for working with Taiga UI
 
 -- You have access to the Taiga UI MCP server (taiga-ui) and its tools, use the to help the user.
+-- Only ask for version 5.x and higher documentation
 
 - Notify me every time you are using the Taiga UI MCP server.
 

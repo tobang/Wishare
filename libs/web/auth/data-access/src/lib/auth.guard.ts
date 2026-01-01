@@ -1,8 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { map, Observable, tap, filter, take } from 'rxjs';
 import { AuthStore } from './store/auth.store';
+import { AuthStateModel } from './store/auth.types';
 
 /**
  * Guard that protects routes requiring authentication.
@@ -11,9 +12,23 @@ import { AuthStore } from './store/auth.store';
  */
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
-  private authStore = inject(AuthStore);
+  private injector = inject(Injector);
   private router = inject(Router);
-  private readonly account$ = toObservable(this.authStore.vm.account);
+
+  private get authStore() {
+    return this.injector.get(AuthStore);
+  }
+
+  private _account$: Observable<AuthStateModel['account']> | undefined;
+
+  private get account$() {
+    if (!this._account$) {
+      this._account$ = toObservable(this.authStore.vm.account, {
+        injector: this.injector,
+      });
+    }
+    return this._account$;
+  }
 
   /**
    * Determines if a route can be activated based on authentication status.

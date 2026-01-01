@@ -11,15 +11,15 @@ import {
   SchemaPathTree,
   form,
 } from '@angular/forms/signals';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import {
   TuiButton,
-  TuiHint,
   TuiTextfield,
+  TuiInput,
   TuiLabel,
   TuiIcon,
 } from '@taiga-ui/core';
-import { TuiPassword } from '@taiga-ui/kit';
+import { TuiPassword, TuiTooltip } from '@taiga-ui/kit';
 import { scopeLoader } from 'scoped-translations';
 
 import { vestValidation } from '@wishare/web/shared/validators';
@@ -34,10 +34,11 @@ import { signupValidationSuite, SignupFormModel } from './signup.validation';
     TranslocoModule,
     Field,
     TuiTextfield,
+    TuiInput,
     TuiLabel,
     TuiIcon,
     TuiButton,
-    TuiHint,
+    TuiTooltip,
     FieldErrorComponent,
     TuiPassword,
   ],

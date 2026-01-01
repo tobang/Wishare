@@ -4,7 +4,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { scopeLoader } from 'scoped-translations';
 import {
   Field,
@@ -12,7 +12,7 @@ import {
   SchemaPathTree,
   form,
 } from '@angular/forms/signals';
-import { TuiButton, TuiTextfield, TuiLabel } from '@taiga-ui/core';
+import { TuiButton, TuiTextfield, TuiInput, TuiLabel } from '@taiga-ui/core';
 import { TuiTextarea } from '@taiga-ui/kit';
 import { TuiForm } from '@taiga-ui/layout';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
@@ -37,6 +37,7 @@ export type CreateWishlistDialogResult = {
     Field,
     TuiButton,
     TuiTextfield,
+    TuiInput,
     TuiLabel,
     TuiTextarea,
     TuiForm,

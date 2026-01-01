@@ -12,8 +12,8 @@ import {
   form,
 } from '@angular/forms/signals';
 
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
-import { TuiButton, TuiTextfield, TuiLabel, TuiIcon } from '@taiga-ui/core';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
+import { TuiButton, TuiTextfield, TuiLabel, TuiIcon, TuiInput } from '@taiga-ui/core';
 import { scopeLoader } from 'scoped-translations';
 
 import { vestValidation } from '@wishare/web/shared/validators';
@@ -29,6 +29,7 @@ import { urlValidationSuite, UrlFormModel } from './url-type.validation';
     TuiButton,
     FieldErrorComponent,
     TuiTextfield,
+    TuiInput,
     TuiLabel,
     TuiIcon,
     TranslocoModule,

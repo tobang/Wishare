@@ -6,12 +6,12 @@
           {{ t('signup.form.email') }}<span class="tui-required"></span>
         </label>
         <input
-          tuiTextfield
+          tuiInput
           type="email"
           placeholder="mail@mail.dk"
           [field]="signUpForm.email"
         />
-        <tui-icon [tuiHint]="t('signup.form.email-hint')" />
+        <tui-icon [tuiTooltip]="t('signup.form.email-hint')" />
       </tui-textfield>
       <wishare-field-error [field]="signUpForm.email" />
 
@@ -19,7 +19,7 @@
         <label tuiLabel>
           {{ t('signup.form.password') }}<span class="tui-required"></span>
         </label>
-        <input tuiTextfield type="password" [field]="signUpForm.password" />
+        <input tuiInput type="password" [field]="signUpForm.password" />
         <tui-icon tuiPassword />
       </tui-textfield>
       <wishare-field-error [field]="signUpForm.password" />
@@ -30,7 +30,7 @@
           }}<span class="tui-required"></span>
         </label>
         <input
-          tuiTextfield
+          tuiInput
           type="password"
           [field]="signUpForm.passwordConfirm"
         />

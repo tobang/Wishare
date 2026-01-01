@@ -8,12 +8,12 @@
             }}<span class="tui-required"></span>
           </label>
           <input
-            tuiTextfield
+            tuiInput
             type="email"
             placeholder="mail@mail.dk"
             [field]="loginForm.email"
           />
-          <tui-icon [tuiHint]="t('emaillogin.form.email-hint')" />
+          <tui-icon [tuiTooltip]="t('emaillogin.form.email-hint')" />
         </tui-textfield>
         <wishare-field-error [field]="loginForm.email" />
       </div>
@@ -24,7 +24,7 @@
             {{ t('emaillogin.form.password-type')
             }}<span class="tui-required"></span>
           </label>
-          <input tuiTextfield type="password" [field]="loginForm.password" />
+          <input tuiInput type="password" [field]="loginForm.password" />
           <tui-icon tuiPassword />
         </tui-textfield>
         <wishare-field-error [field]="loginForm.password" />

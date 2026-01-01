@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
 
@@ -24,15 +24,25 @@ import { AuthEffects } from './auth.effects';
   providedIn: 'root',
 })
 export class AuthStore implements WithInitializer {
+  private readonly injector = inject(Injector);
   private readonly accountService = inject(AccountService);
-  private readonly effects = inject(AuthEffects);
+
+  // Lazy injection of AuthEffects to break circular dependency:
+  // LayoutComponent -> AuthStore -> AuthEffects -> rxEffects (needs DestroyRef)
+  private _effects: AuthEffects | null = null;
+  private get effects(): AuthEffects {
+    if (!this._effects) {
+      this._effects = this.injector.get(AuthEffects);
+    }
+    return this._effects;
+  }
 
   public readonly actions = rxActions<AuthActions>();
 
-  // Register effects early so streams are available for state connections
-  private readonly _effectsRegistered = this.effects.register(this.actions);
-
   readonly vm: AuthViewModel;
+
+  // Track if effects have been registered
+  private _effectsRegistered = false;
 
   // #region State
   private readonly store = rxState<AuthStateModel>(({ connect, set }) => {
@@ -45,7 +55,6 @@ export class AuthStore implements WithInitializer {
      * Account state updates from:
      * - Initial fetch on app startup
      * - Direct setAccount action (used by effects before navigation)
-     * - Logout clearing the account
      */
     connect(
       'account',
@@ -61,11 +70,6 @@ export class AuthStore implements WithInitializer {
         ),
         // Direct account update from setAccount action
         this.actions.setAccount$,
-        // Clear account on logout
-        this.effects.logoutState$.pipe(
-          filter((state) => state.hasValue),
-          map(() => null),
-        ),
       ),
     );
   });
@@ -76,7 +80,27 @@ export class AuthStore implements WithInitializer {
     this.vm = createAuthViewModel(this.store);
   }
 
+  /**
+   * Initialize the store - registers effects and connects logout state.
+   * This is called during APP_INITIALIZER, after all services are constructed.
+   */
   initialize(): void {
+    // Register effects if not already done
+    if (!this._effectsRegistered) {
+      this.effects.register(this.actions);
+      this._effectsRegistered = true;
+
+      // Connect logout state after effects are registered
+      // This must be done here to avoid circular dependency during construction
+      this.store.connect(
+        'account',
+        this.effects.logoutState$.pipe(
+          filter((state) => state.hasValue),
+          map(() => null),
+        ),
+      );
+    }
+
     this.actions.fetchAccount();
   }
 }

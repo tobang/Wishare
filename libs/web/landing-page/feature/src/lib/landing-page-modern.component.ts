@@ -3,7 +3,7 @@ import {
   TranslocoModule,
   TranslocoService,
   TRANSLOCO_SCOPE,
-} from '@ngneat/transloco';
+} from '@jsverse/transloco';
 import { TuiButton, TuiLink } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { EmbeddedLoginComponent } from '@wishare/web/auth/feature/login';

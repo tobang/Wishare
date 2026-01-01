@@ -4,7 +4,7 @@ import {
   output,
   inject,
 } from '@angular/core';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { TuiIcon } from '@taiga-ui/core';
 import { scopeLoader } from 'scoped-translations';
 

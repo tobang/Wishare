@@ -1,7 +1,7 @@
 import { TuiRoot } from '@taiga-ui/core';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TranslocoModule } from '@ngneat/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-wishare-root',

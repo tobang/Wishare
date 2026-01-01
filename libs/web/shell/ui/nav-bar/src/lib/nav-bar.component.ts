@@ -8,18 +8,13 @@ import {
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import { RxLet } from '@rx-angular/template/let';
 import { TuiActiveZone, TuiObscured } from '@taiga-ui/cdk';
-import {
-  TuiDataList,
-  TuiDropdown,
-  TuiIcon,
-  TuiInitialsPipe,
-} from '@taiga-ui/core';
-import { TuiAvatar } from '@taiga-ui/kit';
+import { TuiDataList, TuiDropdown, TuiIcon } from '@taiga-ui/core';
+import { TuiAvatar, TuiInitialsPipe } from '@taiga-ui/kit';
 import { switchMap } from 'rxjs';
 
 import { coerceObservable, RxInputType } from '@wishare/web/shared/utils';

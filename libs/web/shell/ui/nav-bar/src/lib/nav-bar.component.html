@@ -48,14 +48,14 @@
           (tuiActiveZoneChange)="onAvatarMenuActiveZone($event)"
           (tuiObscured)="onAvatarMenuObscured($event)"
         >
-          <tui-avatar
+          <div
             class="user-avatar"
             size="s"
-            [src]="vm.userName | tuiInitials"
+            [tuiAvatar]="vm.userName | tuiInitials"
             [tuiDropdown]="avatarDropdown"
             [tuiDropdownManual]="avatarMenuOpen"
             (click)="toggleAvatarMenu()"
-          />
+          ></div>
           <ng-template #avatarDropdown>
             <tui-data-list role="menu">
               <button

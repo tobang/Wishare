@@ -1,7 +1,7 @@
 import { TuiTabs } from '@taiga-ui/kit';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { scopeLoader } from 'scoped-translations';
 
 import { FormsModule } from '@angular/forms';

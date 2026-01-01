@@ -6,10 +6,10 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { scopeLoader } from 'scoped-translations';
 
-import { TuiAppearance, TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { WishComponent } from '@wishare/web/wish/feature/wish';
 
@@ -23,7 +23,6 @@ import { WishlistStore, WishlistEffects } from './store';
     WishComponent,
     DragDropModule,
     CdkDragHandle,
-    TuiAppearance,
     TuiButton,
     TuiCardLarge,
     TuiHeader,

@@ -46,7 +46,7 @@ export class WishlistEffects {
                 {
                   dismissible: true,
                   data: { wish: {}, images: [], editMode: false },
-                  size: 'auto',
+                  size: 'l',
                 },
               )
               .pipe(
@@ -70,7 +70,7 @@ export class WishlistEffects {
                 {
                   dismissible: true,
                   data: { wish, images: [], editMode: true },
-                  size: 'auto',
+                  size: 'l',
                 },
               )
               .pipe(

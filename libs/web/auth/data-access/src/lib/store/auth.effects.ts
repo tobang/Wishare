@@ -1,9 +1,14 @@
-import { inject, Injectable } from '@angular/core';
+import {
+  inject,
+  Injectable,
+  Injector,
+  runInInjectionContext,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { RxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { TuiAlertService } from '@taiga-ui/core';
 import { APPWRITE } from '@wishare/web/shared/app-config';
 
@@ -45,11 +50,37 @@ const mapAccountToLoginResult = (
   providedIn: 'root',
 })
 export class AuthEffects {
-  private readonly router = inject(Router);
+  private readonly injector = inject(Injector);
   private readonly appwrite: { tablesDb: TablesDB; account: Account } =
     inject(APPWRITE);
-  private readonly alertService = inject(TuiAlertService);
-  private readonly transloco = inject(TranslocoService);
+
+  // TuiAlertService and TranslocoService are injected lazily because
+  // AuthEffects is instantiated during APP_INITIALIZER before TuiRoot is available
+  private _alertService: TuiAlertService<unknown> | null = null;
+  private get alertService(): TuiAlertService<unknown> {
+    if (!this._alertService) {
+      this._alertService = this.injector.get(TuiAlertService);
+    }
+    return this._alertService;
+  }
+
+  private _transloco: TranslocoService | null = null;
+  private get transloco(): TranslocoService {
+    if (!this._transloco) {
+      this._transloco = this.injector.get(TranslocoService);
+    }
+    return this._transloco;
+  }
+
+  // Router is injected lazily to avoid circular dependency:
+  // Router -> LayoutComponent -> AuthStore -> AuthEffects -> Router
+  private _router: Router | null = null;
+  private get router(): Router {
+    if (!this._router) {
+      this._router = this.injector.get(Router);
+    }
+    return this._router;
+  }
 
   // State streams - initialized lazily when register() is called
   private _loginState$!: Observable<StreamState<LoginResult>>;
@@ -131,71 +162,77 @@ export class AuthEffects {
       shareReplay({ bufferSize: 1, refCount: false }),
     );
 
-    rxEffects(({ register }) => {
-      // Handle login success/error side effects
-      register(this._loginState$, (state) => {
-        if (state.hasError) {
-          actions.loginError();
-        } else if (state.hasValue && state.value?.account) {
-          // Update account in store before navigating to ensure auth guard has access
-          actions.setAccount(state.value.account);
-          this.router.navigate(['/wishlists']);
-        }
-      });
+    // Pass injector to rxEffects to provide injection context
+    // This is needed because register() is called during field initialization
+    // runInInjectionContext ensures rxEffects gets DestroyRef from AuthEffects' context
+    // rather than from the calling component's context, avoiding circular dependency
+    runInInjectionContext(this.injector, () => {
+      rxEffects(({ register }) => {
+        // Handle login success/error side effects
+        register(this._loginState$, (state) => {
+          if (state.hasError) {
+            actions.loginError();
+          } else if (state.hasValue && state.value?.account) {
+            // Update account in store before navigating to ensure auth guard has access
+            actions.setAccount(state.value.account);
+            this.router.navigate(['/wishlists']);
+          }
+        });
 
-      // Handle register success/error side effects
-      register(this._registerState$, (state) => {
-        if (state.hasError) {
-          console.error('Registration error:', state.error);
-        } else if (state.hasValue && state.value?.account) {
-          // Update account in store before navigating to ensure auth guard has access
-          actions.setAccount(state.value.account);
-          this.router.navigate(['/wishlists']);
-        }
-      });
+        // Handle register success/error side effects
+        register(this._registerState$, (state) => {
+          if (state.hasError) {
+            console.error('Registration error:', state.error);
+          } else if (state.hasValue && state.value?.account) {
+            // Update account in store before navigating to ensure auth guard has access
+            actions.setAccount(state.value.account);
+            this.router.navigate(['/wishlists']);
+          }
+        });
 
-      // Handle logout side effects
-      register(this._logoutState$, (state) => {
-        if (state.hasValue) {
-          localStorage.clear();
-          sessionStorage.clear();
-          this.router.navigate(['/login']);
-        }
-      });
+        // Handle logout side effects
+        register(this._logoutState$, (state) => {
+          if (state.hasValue) {
+            localStorage.clear();
+            sessionStorage.clear();
+            this.router.navigate(['/login']);
+          }
+        });
 
-      register(
-        actions.loginError$.pipe(
-          switchMap(() =>
-            this.transloco.selectTranslate(
-              'server-error.invalid-credentials',
-              {},
-              'login',
+        register(
+          actions.loginError$.pipe(
+            switchMap(() =>
+              this.transloco.selectTranslate(
+                'server-error.invalid-credentials',
+                {},
+                'login',
+              ),
+            ),
+            switchMap((trans: string) =>
+              this.alertService.open(trans).pipe(
+                catchError((error) => {
+                  console.error('Alert service error:', error);
+                  return EMPTY;
+                }),
+              ),
             ),
           ),
-          switchMap((trans: string) =>
-            this.alertService.open(trans).pipe(
-              catchError((error) => {
-                console.error('Alert service error:', error);
-                return EMPTY;
+        );
+
+        // Note: OAuth redirects the browser away, so this stream won't complete normally.
+        // The success/failure URLs handle the redirect back to the app.
+        register(
+          actions.loginWithGoogle$.pipe(
+            tap(() =>
+              this.appwrite.account.createOAuth2Session({
+                provider: OAuthProvider.Google,
+                success: location.origin,
+                failure: `${location.origin}/login`,
               }),
             ),
           ),
-        ),
-      );
-
-      // Note: OAuth redirects the browser away, so this stream won't complete normally.
-      // The success/failure URLs handle the redirect back to the app.
-      register(
-        actions.loginWithGoogle$.pipe(
-          tap(() =>
-            this.appwrite.account.createOAuth2Session({
-              provider: OAuthProvider.Google,
-              success: location.origin,
-              failure: `${location.origin}/login`,
-            }),
-          ),
-        ),
-      );
+        );
+      });
     });
   }
 }

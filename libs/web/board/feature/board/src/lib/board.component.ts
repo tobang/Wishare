@@ -12,15 +12,9 @@ import {
   inject,
   Injector,
 } from '@angular/core';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { scopeLoader } from 'scoped-translations';
-import {
-  TuiAppearance,
-  TuiButton,
-  TuiDialogService,
-  TuiIcon,
-  TuiTitle,
-} from '@taiga-ui/core';
+import { TuiButton, TuiDialogService, TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
@@ -39,7 +33,6 @@ import {
     DragDropModule,
     CdkDragPreview,
     CdkDragPlaceholder,
-    TuiAppearance,
     TuiButton,
     TuiCardLarge,
     TuiHeader,
@@ -96,7 +89,7 @@ export class BoardComponent {
         {
           label: 'Create New Wishlist',
           size: 'm',
-          closeable: true,
+          closable: true,
           dismissible: true,
         },
       )
