@@ -1,11 +1,16 @@
 {
+  "header": {
+    "title": "Import from URL",
+    "subtitle": "Paste a product link and we'll fetch the details automatically"
+  },
   "step-url": {
     "text": "Paste or type URL",
-    "label": "Enter URL",
+    "label": "Product URL",
+    "placeholder": "https://example.com/product",
     "errors": {
       "invalid": "URL is not valid",
       "required": "This field is required!"
     },
-    "button": "Fetch wish"
+    "button": "Fetch Details"
   }
 }

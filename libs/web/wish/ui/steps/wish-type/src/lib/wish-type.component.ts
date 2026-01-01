@@ -5,13 +5,13 @@ import {
   inject,
 } from '@angular/core';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
-import { TuiButton } from '@taiga-ui/core';
+import { TuiIcon } from '@taiga-ui/core';
 import { scopeLoader } from 'scoped-translations';
 
 @Component({
   selector: 'wishare-wish-type',
   standalone: true,
-  imports: [TranslocoModule, TuiButton],
+  imports: [TranslocoModule, TuiIcon],
   providers: [
     {
       provide: TRANSLOCO_SCOPE,

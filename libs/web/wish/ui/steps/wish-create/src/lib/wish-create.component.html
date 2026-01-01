@@ -23,6 +23,7 @@
             tuiTextfieldSize="m"
             [tuiTextfieldCleaner]="true"
             iconStart="@tui.tag"
+            class="small-icon"
           >
             <input
               tuiTextfield
@@ -45,6 +46,7 @@
             tuiTextfieldSize="m"
             [tuiTextfieldCleaner]="true"
             iconStart="@tui.link"
+            class="small-icon"
           >
             <input
               tuiTextfield
@@ -62,12 +64,13 @@
         <div class="form-field form-field--half">
           <label tuiLabel>
             {{ t('form.price.label') }}
-            <tui-textfield tuiTextfieldSize="m" iconStart="@tui.dollar-sign">
+            <tui-textfield tuiTextfieldSize="m">
               <input
-                tuiInputNumber
+                tuiTextfield
+                type="number"
+                step="0.01"
                 [placeholder]="t('form.price.placeholder')"
                 [field]="wishForm.price"
-                [tuiNumberFormat]="{ precision: 2 }"
               />
             </tui-textfield>
           </label>
@@ -77,12 +80,13 @@
         <div class="form-field form-field--half">
           <label tuiLabel>
             {{ t('form.quantity.label') }}
-            <tui-textfield tuiTextfieldSize="m" iconStart="@tui.hash">
+            <tui-textfield tuiTextfieldSize="m">
               <input
-                tuiInputNumber
+                tuiTextfield
+                type="number"
+                step="1"
                 [placeholder]="t('form.quantity.placeholder')"
                 [field]="wishForm.quantity"
-                [tuiNumberFormat]="{ precision: 0 }"
               />
             </tui-textfield>
           </label>

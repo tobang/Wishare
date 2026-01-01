@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { TranslocoModule } from '@ngneat/transloco';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { TuiStepper } from '@taiga-ui/kit';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
 import { UrlTypeComponent } from '@wishare/web/wish/ui/steps/url-type';
@@ -18,7 +17,6 @@ import { WishDialogStore } from './store/wish-dialog.store';
   selector: 'wishare-wish-dialog',
   standalone: true,
   imports: [
-    TuiStepper,
     TranslocoModule,
     WishTypeComponent,
     UrlTypeComponent,
@@ -50,6 +48,12 @@ export class WishDialogComponent {
 
   createAutomatic() {
     this.setActiveItemIndex(1);
+  }
+
+  onUrlSubmit(url: string) {
+    // TODO: Implement URL fetching logic
+    // For now, just move to the create step with the URL pre-filled
+    this.setActiveItemIndex(3);
   }
 
   onWishCreated(result: CreateWishFormModel) {

@@ -1,28 +1,43 @@
-<div class="select-url grid" *transloco="let t; read: 'wishurl'">
-  <div class="select-url-image">
-    <img class="auto-img" src="/assets/images/automatic_wish_1.svg" alt="" />
-  </div>
-  <div class="center-column"></div>
-  <div class="url-title lead text-light">
-    {{ t('step-url.text') }}
-  </div>
-  <div class="url-input wish-input">
-    <form (ngSubmit)="submitUrl()">
-      <tui-textfield>
-        <label tuiLabel>{{ t('step-url.label') }}</label>
-        <input tuiTextfield type="url" [field]="frmUrl.url" />
-      </tui-textfield>
+<div class="url-type-container" *transloco="let t; read: 'wishurl'">
+  <header class="wizard-header">
+    <div class="header-icon">
+      <tui-icon icon="@tui.link"></tui-icon>
+    </div>
+    <h2 class="header-title">{{ t('header.title') }}</h2>
+    <p class="header-subtitle">{{ t('header.subtitle') }}</p>
+  </header>
+
+  <form class="url-form" (ngSubmit)="submitUrl()">
+    <div class="form-field">
+      <label tuiLabel>
+        {{ t('step-url.label') }}<span class="tui-required"></span>
+        <tui-textfield
+          tuiTextfieldSize="m"
+          [tuiTextfieldCleaner]="true"
+          iconStart="@tui.globe"
+        >
+          <input
+            tuiTextfield
+            type="url"
+            [placeholder]="t('step-url.placeholder')"
+            [field]="frmUrl.url"
+          />
+        </tui-textfield>
+      </label>
       <wishare-field-error [field]="frmUrl.url" />
-    </form>
-  </div>
-  <div class="url-button">
-    <button
-      tuiButton
-      type="submit"
-      [appearance]="'secondary'"
-      [disabled]="!frmUrl().valid()"
-    >
-      {{ t('step-url.button') }}
-    </button>
-  </div>
+    </div>
+
+    <footer class="dialog-actions">
+      <button
+        tuiButton
+        type="submit"
+        appearance="primary"
+        size="m"
+        iconStart="@tui.download"
+        [disabled]="!frmUrl().valid()"
+      >
+        {{ t('step-url.button') }}
+      </button>
+    </footer>
+  </form>
 </div>

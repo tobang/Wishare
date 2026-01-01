@@ -1,63 +1,113 @@
-.select-type {
-  // max-width: 750px;
-  margin-top: var(--spacing-8);
-  justify-items: center;
-  padding-bottom: var(--spacing-5);
-  &.grid {
-    grid-template-columns: repeat(3, auto);
-    grid-template-rows: repeat(3, auto);
-    grid-template-areas:
-      'auto-wish center-column manual-wish'
-      'auto-text center-column manual-text'
-      'auto-button center-column manual-button';
-  }
-  .manual-wish,
-  .auto-wish {
-    display: flex;
-    justify-content: center;
-    width: 300px;
-    img {
-      max-width: 200px;
-    }
-  }
-  .auto-text,
-  .manual-text {
-    color: var(--text-primary);
-    width: 200px;
-    text-align: center;
+:host {
+  display: block;
+}
+
+.wish-type-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.welcome-text {
+  margin-bottom: var(--spacing-2);
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--tui-text-primary);
+    margin: 0 0 var(--spacing-2);
   }
 
-  .center-column {
-    background: repeating-linear-gradient(
-        to bottom,
-        transparent 0 4px,
-        var(--border-default) 4px 8px
-      )
-      80%/2px 100% no-repeat;
-    background-position: center center;
-    height: 100%;
-    width: 65px;
+  .subtitle {
+    color: var(--tui-text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
   }
 }
 
-.auto-wish {
-  grid-area: auto-wish;
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
 }
-.manual-wish {
-  grid-area: manual-wish;
+
+.option-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  cursor: pointer;
+  border: 1px solid var(--tui-border-normal);
+  border-radius: 12px;
+  background: var(--tui-background-base);
+  text-align: left;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--tui-background-accent-1);
+    background: var(--tui-background-neutral-1-hover);
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tui-background-accent-1);
+    outline-offset: 2px;
+  }
 }
-.auto-text {
-  grid-area: auto-text;
+
+.option-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10px;
+  flex-shrink: 0;
+
+  tui-icon {
+    font-size: 1.25rem;
+    color: #ffffff;
+  }
+
+  &.auto-icon {
+    background: linear-gradient(
+      135deg,
+      var(--color-brand-accent, #008891) 0%,
+      #00b4a0 100%
+    );
+  }
+
+  &.manual-icon {
+    background: linear-gradient(
+      135deg,
+      var(--color-brand-primary, #34626c) 0%,
+      var(--color-brand-secondary, #0f3057) 100%
+    );
+  }
 }
-.manual-text {
-  grid-area: manual-text;
+
+.option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
 }
-.auto-button {
-  grid-area: auto-button;
+
+.option-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--tui-text-primary);
 }
-.manual-button {
-  grid-area: manual-button;
+
+.option-description {
+  font-size: 0.8125rem;
+  color: var(--tui-text-secondary);
+  line-height: 1.4;
 }
-.center-column {
-  grid-area: center-column;
+
+.chevron {
+  color: var(--tui-text-tertiary);
+  flex-shrink: 0;
 }

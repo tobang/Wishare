@@ -1,11 +1,17 @@
 {
+  "header": {
+    "title": "Tilføj et nyt ønske",
+    "subtitle": "Hvordan vil du tilføje dit ønske?"
+  },
   "step-type": {
     "manual": {
-      "text": "Udfyld selv med link, billede og beskrivelse af dit ønske.",
+      "title": "Opret manuelt",
+      "text": "Udfyld selv detaljerne med link, billede og beskrivelse.",
       "button": "Jeg gør arbejdet"
     },
     "auto": {
-      "text": "Giv os linket til dit ønske og vi forsøger at hente billede og beskrivelse.",
+      "title": "Importer fra URL",
+      "text": "Indsæt et produktlink og vi henter automatisk billede og detaljer.",
       "button": "I gør arbejdet"
     }
   }

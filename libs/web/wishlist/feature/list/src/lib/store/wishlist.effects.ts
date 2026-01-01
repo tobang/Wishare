@@ -44,9 +44,9 @@ export class WishlistEffects {
                   this.componentInjector,
                 ),
                 {
-                  dismissible: false,
+                  dismissible: true,
                   data: { wish: {}, images: [], editMode: false },
-                  size: 'l',
+                  size: 'auto',
                 },
               )
               .pipe(
@@ -68,9 +68,9 @@ export class WishlistEffects {
                   this.componentInjector,
                 ),
                 {
-                  dismissible: false,
+                  dismissible: true,
                   data: { wish, images: [], editMode: true },
-                  size: 'l',
+                  size: 'auto',
                 },
               )
               .pipe(

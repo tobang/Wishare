@@ -11,9 +11,8 @@ import {
   TuiLabel,
   TuiIcon,
   TuiHint,
-  TuiNumberFormat,
 } from '@taiga-ui/core';
-import { TuiInputNumber, TuiTextarea } from '@taiga-ui/kit';
+import { TuiTextarea } from '@taiga-ui/kit';
 import { TuiForm } from '@taiga-ui/layout';
 import {
   Field,
@@ -39,10 +38,8 @@ import {
     TuiLabel,
     TuiIcon,
     TuiHint,
-    TuiInputNumber,
     TuiTextarea,
     TuiForm,
-    TuiNumberFormat,
     Field,
     FieldErrorComponent,
   ],
@@ -69,7 +66,7 @@ export class WishCreateComponent {
     title: '',
     description: '',
     url: '',
-    price: null,
+    price: 0,
     quantity: 1,
   });
 

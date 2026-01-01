@@ -7,7 +7,7 @@ export type CreateWishFormModel = {
   title: string;
   description: string;
   url: string;
-  price: number | null;
+  price: number;
   quantity: number;
 };
 
@@ -46,7 +46,7 @@ export const createWishValidationSuite = staticSuite(
     });
 
     test('price', 'Price must be a positive number', () => {
-      if (data.price !== null && data.price !== undefined) {
+      if (data.price > 0) {
         enforce(data.price).greaterThanOrEquals(0);
       }
     });

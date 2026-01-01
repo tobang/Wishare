@@ -1,27 +1,30 @@
-<div class="select-type grid" *transloco="let t; read: 'wishtype'">
-  <div class="manual-wish">
-    <img class="auto-img" src="/assets/images/manual_wish_1.svg" alt="" />
+<div class="wish-type-container" *transloco="let t; read: 'wishtype'">
+  <div class="welcome-text">
+    <h2>{{ t('header.title') }}</h2>
+    <p class="subtitle">{{ t('header.subtitle') }}</p>
   </div>
-  <div class="auto-wish">
-    <img class="auto-img" src="/assets/images/automatic_wish_1.svg" alt="" />
-  </div>
-  <div class="manual-text">
-    <p>{{ t('step-type.manual.text') }}</p>
-  </div>
-  <div class="auto-text">
-    <p>
-      {{ t('step-type.auto.text') }}
-    </p>
-  </div>
-  <div class="auto-button">
-    <button tuiButton [appearance]="'secondary'" (click)="onCreateAutomatic()">
-      {{ t('step-type.auto.button') }}
+
+  <div class="options-list">
+    <button type="button" class="option-button" (click)="onCreateAutomatic()">
+      <div class="option-icon auto-icon">
+        <tui-icon icon="@tui.link"></tui-icon>
+      </div>
+      <div class="option-text">
+        <span class="option-title">{{ t('step-type.auto.title') }}</span>
+        <span class="option-description">{{ t('step-type.auto.text') }}</span>
+      </div>
+      <tui-icon icon="@tui.chevron-right" class="chevron"></tui-icon>
+    </button>
+
+    <button type="button" class="option-button" (click)="onCreateManual()">
+      <div class="option-icon manual-icon">
+        <tui-icon icon="@tui.pencil"></tui-icon>
+      </div>
+      <div class="option-text">
+        <span class="option-title">{{ t('step-type.manual.title') }}</span>
+        <span class="option-description">{{ t('step-type.manual.text') }}</span>
+      </div>
+      <tui-icon icon="@tui.chevron-right" class="chevron"></tui-icon>
     </button>
   </div>
-  <div class="manual-button">
-    <button tuiButton [appearance]="'secondary'" (click)="onCreateManual()">
-      {{ t('step-type.manual.button') }}
-    </button>
-  </div>
-  <div class="center-column"></div>
 </div>

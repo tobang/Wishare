@@ -1,22 +1,21 @@
 @let activeItemIndex = adapter.vm.activeItemIndex();
-<tui-stepper
-  [activeItemIndex]="activeItemIndex"
-  (activeItemIndexChange)="setActiveItemIndex($event)"
-></tui-stepper>
-@switch (activeItemIndex) {
-  @case (0) {
-    <wishare-wish-type
-      (createAutomatic)="createAutomatic()"
-      (createManual)="createManual()"
-    ></wishare-wish-type>
+
+<div class="wish-dialog-container">
+  @switch (activeItemIndex) {
+    @case (0) {
+      <wishare-wish-type
+        (createAutomatic)="createAutomatic()"
+        (createManual)="createManual()"
+      ></wishare-wish-type>
+    }
+    @case (1) {
+      <wishare-url-type (getUrl)="onUrlSubmit($event)"></wishare-url-type>
+    }
+    @case (3) {
+      <wishare-wish-create
+        (wishCreated)="onWishCreated($event)"
+        (cancelled)="closeDialog()"
+      ></wishare-wish-create>
+    }
   }
-  @case (1) {
-    <wishare-url-type></wishare-url-type>
-  }
-  @case (3) {
-    <wishare-wish-create
-      (wishCreated)="onWishCreated($event)"
-      (cancelled)="closeDialog()"
-    ></wishare-wish-create>
-  }
-}
+</div>

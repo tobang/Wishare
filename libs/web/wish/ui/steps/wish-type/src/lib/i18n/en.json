@@ -1,11 +1,17 @@
 {
+  "header": {
+    "title": "Add a New Wish",
+    "subtitle": "How would you like to add your wish?"
+  },
   "step-type": {
     "manual": {
-      "text": "Fill in the link, image and description of your wish yourself.",
+      "title": "Create Manually",
+      "text": "Fill in the details yourself including the link, image and description.",
       "button": "I'll do the work"
     },
     "auto": {
-      "text": "Give us the link to your wish and we'll try to fetch the image and description.",
+      "title": "Import from URL",
+      "text": "Paste a product link and we'll automatically fetch the image and details.",
       "button": "You do the work"
     }
   }

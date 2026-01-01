@@ -1,11 +1,16 @@
 {
+  "header": {
+    "title": "Importer fra URL",
+    "subtitle": "Indsæt et produktlink og vi henter detaljerne automatisk"
+  },
   "step-url": {
     "text": "Paste eller skriv url",
-    "label": "Indtast url",
+    "label": "Produkt URL",
+    "placeholder": "https://example.com/product",
     "errors": {
       "invalid": "Url er ikke valid",
       "required": "Feltet skal udfyldes!"
     },
-    "button": "Hent ønske"
+    "button": "Hent detaljer"
   }
 }
