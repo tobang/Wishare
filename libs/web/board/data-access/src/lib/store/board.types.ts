@@ -23,6 +23,7 @@ export type BoardStateModel = {
   wishLists: BoardWishlist[];
   fetchState: StreamState<BoardResult>;
   createState: StreamState<WishlistFlat>;
+  editState: StreamState<WishlistFlat>;
   reorderState: StreamState<void>;
 };
 
@@ -43,6 +44,15 @@ export type ReorderWishlistsData = {
 };
 
 /**
+ * Data for editing a wishlist
+ */
+export type EditWishlistData = {
+  wishlistId: string;
+  title: string;
+  description: string;
+};
+
+/**
  * Actions for board state management.
  * Includes both UI actions (for triggering effects) and internal state actions.
  */
@@ -50,6 +60,7 @@ export type BoardActions = {
   // UI Actions - trigger effects
   fetchWishlists: void;
   createWishlist: CreateWishlistData;
+  editWishlist: EditWishlistData;
   reorderWishlists: ReorderWishlistsData;
 
   // State Actions - update store state

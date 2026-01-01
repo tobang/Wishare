@@ -34,6 +34,7 @@ export class BoardEffects {
   // State streams - initialized lazily when register() is called
   private _fetchState$!: Observable<StreamState<BoardResult>>;
   private _createState$!: Observable<StreamState<WishlistFlat>>;
+  private _editState$!: Observable<StreamState<WishlistFlat>>;
   private _reorderState$!: Observable<StreamState<void>>;
   private _currentWishlists$!: ReplaySubject<BoardWishlist[]>;
 
@@ -43,6 +44,10 @@ export class BoardEffects {
 
   get createState$(): Observable<StreamState<WishlistFlat>> {
     return this._createState$;
+  }
+
+  get editState$(): Observable<StreamState<WishlistFlat>> {
+    return this._editState$;
   }
 
   get reorderState$(): Observable<StreamState<void>> {
@@ -71,10 +76,12 @@ export class BoardEffects {
     // Create shared observables for state streams
     const fetchState$ = new ReplaySubject<StreamState<BoardResult>>(1);
     const createState$ = new ReplaySubject<StreamState<WishlistFlat>>(1);
+    const editState$ = new ReplaySubject<StreamState<WishlistFlat>>(1);
     const reorderState$ = new ReplaySubject<StreamState<void>>(1);
 
     this._fetchState$ = fetchState$.asObservable();
     this._createState$ = createState$.asObservable();
+    this._editState$ = editState$.asObservable();
     this._reorderState$ = reorderState$.asObservable();
 
     rxEffects(({ register }) => {
@@ -107,6 +114,26 @@ export class BoardEffects {
             actions.fetchWishlists();
           }
           createState$.next(state);
+        },
+      );
+
+      // Edit wishlist effect
+      register(
+        actions.editWishlist$.pipe(
+          switchMap(({ wishlistId, title, description }) =>
+            this.boardService.updateWishlist(wishlistId, {
+              title,
+              description,
+            }),
+          ),
+          toState(),
+        ),
+        (state) => {
+          if (state.hasValue && state.value) {
+            // Trigger a refresh of wishlists after editing
+            actions.fetchWishlists();
+          }
+          editState$.next(state);
         },
       );
 

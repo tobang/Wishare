@@ -21,5 +21,8 @@
     },
     "cancel": "Annuller",
     "submit": "Opret ønskeliste"
+  },
+  "edit-dialog": {
+    "submit": "Gem ændringer"
   }
 }

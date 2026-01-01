@@ -66,6 +66,7 @@
           cdkDrag
           wishare-wish-list
           [wishlist]="wishlist"
+          (editWishlistClick)="editWishlist($event)"
         >
           <div class="wishlist-drag-preview" *cdkDragPreview>
             <tui-icon icon="@tui.gift"></tui-icon>

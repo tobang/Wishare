@@ -256,6 +256,29 @@ export class BoardService {
   }
 
   /**
+   * Updates a wishlist's title and description
+   */
+  updateWishlist(
+    wishlistId: string,
+    data: {
+      title: string;
+      description: string;
+    },
+  ): Observable<WishlistFlat> {
+    return from(
+      this.appwrite.tablesDb.updateRow({
+        databaseId: DATABASE_ID,
+        tableId: WISHLISTS_TABLE,
+        rowId: wishlistId,
+        data: {
+          title: data.title,
+          description: data.description,
+        },
+      }),
+    ).pipe(map((row) => flattenWishlist(row as unknown as Wishlist)));
+  }
+
+  /**
    * Deletes a wishlist by its ID.
    * This will also delete all wishes associated with the wishlist due to cascade delete.
    */

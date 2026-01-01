@@ -49,7 +49,11 @@
       size="m"
       [disabled]="!wishlistForm().valid()"
     >
-      {{ t('board.create-dialog.submit') }}
+      {{
+        editMode
+          ? t('board.edit-dialog.submit')
+          : t('board.create-dialog.submit')
+      }}
     </button>
   </footer>
 </form>

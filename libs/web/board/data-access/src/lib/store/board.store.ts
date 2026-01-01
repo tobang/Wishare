@@ -41,6 +41,7 @@ export class BoardStore implements WithInitializer {
       wishLists: [],
       fetchState: resetStreamState<BoardResult>(),
       createState: resetStreamState<WishlistFlat>(),
+      editState: resetStreamState<WishlistFlat>(),
       reorderState: resetStreamState<void>(),
     });
 
@@ -56,6 +57,7 @@ export class BoardStore implements WithInitializer {
      */
     connect('fetchState', this.effects.fetchState$);
     connect('createState', this.effects.createState$);
+    connect('editState', this.effects.editState$);
     connect('reorderState', this.effects.reorderState$);
 
     /**

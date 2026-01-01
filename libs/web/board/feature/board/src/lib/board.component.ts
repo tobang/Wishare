@@ -23,8 +23,10 @@ import { WishListComponent } from '@wishare/web/wishlist/feature/list';
 import { filter } from 'rxjs';
 import {
   CreateWishlistDialogComponent,
+  CreateWishlistDialogInput,
   CreateWishlistDialogResult,
 } from './create-wishlist-dialog';
+import { WishlistUi } from '@wishare/web/wishlist/data-access';
 
 @Component({
   selector: 'wishare-board',
@@ -96,6 +98,34 @@ export class BoardComponent {
       .pipe(filter((result): result is CreateWishlistDialogResult => !!result))
       .subscribe((result) => {
         this.boardStore.actions.createWishlist({
+          title: result.title,
+          description: result.description,
+        });
+      });
+  }
+
+  editWishlist(wishlist: WishlistUi) {
+    const dialogInput: CreateWishlistDialogInput = {
+      title: wishlist.title,
+      description: wishlist.description,
+      editMode: true,
+    };
+
+    this.dialogService
+      .open<CreateWishlistDialogResult | null>(
+        new PolymorpheusComponent(CreateWishlistDialogComponent, this.injector),
+        {
+          label: 'Edit Wishlist',
+          size: 'm',
+          closable: true,
+          dismissible: true,
+          data: dialogInput,
+        },
+      )
+      .pipe(filter((result): result is CreateWishlistDialogResult => !!result))
+      .subscribe((result) => {
+        this.boardStore.actions.editWishlist({
+          wishlistId: wishlist.$id,
           title: result.title,
           description: result.description,
         });

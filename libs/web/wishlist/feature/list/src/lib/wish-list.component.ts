@@ -5,6 +5,7 @@ import {
   Component,
   inject,
   input,
+  output,
 } from '@angular/core';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { scopeLoader } from 'scoped-translations';
@@ -49,11 +50,17 @@ import { WishlistStore, WishlistEffects } from './store';
 })
 export class WishListComponent {
   readonly wishlist = input.required<WishlistUi>();
+  readonly editWishlistClick = output<WishlistUi>();
+
   private store = inject(WishlistStore);
   private effects = inject(WishlistEffects);
 
   createWish() {
     this.store.actions.createWish();
+  }
+
+  editWishlist() {
+    this.editWishlistClick.emit(this.wishlist());
   }
 
   deleteWishlist() {

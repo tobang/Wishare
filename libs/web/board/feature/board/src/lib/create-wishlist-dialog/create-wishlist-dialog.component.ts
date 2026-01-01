@@ -30,6 +30,12 @@ export type CreateWishlistDialogResult = {
   description: string;
 };
 
+export type CreateWishlistDialogInput = {
+  title?: string;
+  description?: string;
+  editMode?: boolean;
+};
+
 @Component({
   selector: 'wishare-create-wishlist-dialog',
   standalone: true,
@@ -59,13 +65,18 @@ export type CreateWishlistDialogResult = {
 })
 export class CreateWishlistDialogComponent {
   private readonly context =
-    inject<TuiDialogContext<CreateWishlistDialogResult | null>>(
-      POLYMORPHEUS_CONTEXT,
-    );
+    inject<
+      TuiDialogContext<
+        CreateWishlistDialogResult | null,
+        CreateWishlistDialogInput
+      >
+    >(POLYMORPHEUS_CONTEXT);
+
+  protected readonly editMode = this.context.data?.editMode ?? false;
 
   private readonly model = signal<CreateWishlistFormModel>({
-    title: '',
-    description: '',
+    title: this.context.data?.title ?? '',
+    description: this.context.data?.description ?? '',
   });
 
   protected readonly wishlistForm = form(
