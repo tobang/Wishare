@@ -1,8 +1,24 @@
 :host {
   display: block;
+  width: 100%;
+  height: 100%;
 }
 
-.wish-dialog-container {
+.wish-dialog-layout {
   display: flex;
-  flex-direction: column;
+  height: 100%;
+  gap: 1.5rem;
+}
+
+.wish-dialog-stepper {
+  flex: 0 0 auto;
+  min-width: 200px;
+  border-right: 1px solid var(--tui-border-normal);
+  padding: 1rem 1rem 1rem 0;
+}
+
+.wish-dialog-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
 }

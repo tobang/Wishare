@@ -1,9 +1,9 @@
 {
   "header": {
-    "sub-title": "WishShare - Ønskesedlen i skyen",
-    "title": "Tilmeld dig nu og kom igang helt gratis",
-    "text": "Del dine ønsker med venner og familie - Hold styr på de gaver du har givet - Nemt og overskueligt",
-    "button": "Kom igang"
+    "sub-title": "WishShare - ønskesedlen i skyen",
+    "title": "Tilmeld dig nu og kom i gang helt gratis",
+    "text": "Del dine ønsker med venner og familie - hold styr på de gaver du har givet - nemt og overskueligt",
+    "button": "Kom i gang"
   },
   "signup": {
     "title": "Del dine ønsker nemt og hurtigt",
@@ -26,7 +26,7 @@
     "cards": {
       "card-1": {
         "title": "Ønskeseddel",
-        "text": "Opret dine ønsker hurtigt og nemt. Del med venner og familie. Mulighed for at kopiere både ønsker og ønske lister."
+        "text": "Opret dine ønsker hurtigt og nemt. Del med venner og familie. Mulighed for at kopiere både ønsker og ønskelister."
       },
       "card-2": {
         "title": "Ønskeoverblik",
@@ -34,7 +34,7 @@
       },
       "card-3": {
         "title": "Ønskedeler",
-        "text": "Du skal til fest og værten ønsker sig en dyr gave som er uden for dit budget. Ikke noget problem. I Wishshare kan du dele ønsket."
+        "text": "Du skal til fest og værten ønsker sig en dyr gave som er uden for dit budget. Ikke noget problem. I WishShare kan du dele ønsket."
       }
     },
     "more": "Se mere"

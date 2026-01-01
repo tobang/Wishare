@@ -1,7 +1,7 @@
 {
   "form": {
     "email": "Email",
-    "email-error": "Ikke en gyldig email adresse!",
+    "email-error": "Ikke en gyldig emailadresse!",
     "email-type": "Indtast din email",
     "email-hint": "Brug din email til at logge ind",
     "password": "Password",
@@ -10,7 +10,7 @@
     "button-login": "Login",
     "button-reset": "Nulstil password",
     "button-forgot": "Glemt password",
-    "reset-text": "Skriv din email herunder og vi sender dig en mail med information om hvordan du ændrer dit password.",
+    "reset-text": "Skriv din email herunder, og vi sender dig en mail med information om, hvordan du ændrer dit password.",
     "required": "Feltet skal udfyldes!"
   }
 }

@@ -1,14 +1,14 @@
 {
   "header": {
-    "title": "Mine Ønskelister",
+    "title": "Mine ønskelister",
     "list": "liste",
     "lists": "lister",
-    "new-button": "Ny Ønskeliste"
+    "new-button": "Ny ønskeliste"
   },
   "empty": {
     "title": "Ingen ønskelister endnu",
     "text": "Opret din første ønskeliste for at begynde at organisere dine ønsker og dele dem med venner og familie.",
-    "button": "Opret Din Første Ønskeliste"
+    "button": "Opret din første ønskeliste"
   },
   "create-dialog": {
     "title": {
@@ -20,6 +20,6 @@
       "placeholder": "Indtast en beskrivelse (valgfrit)"
     },
     "cancel": "Annuller",
-    "submit": "Opret Ønskeliste"
+    "submit": "Opret ønskeliste"
   }
 }

@@ -1,8 +1,8 @@
 {
   "form": {
     "email": "Email",
-    "email-error": "Ikke en gyldig email adresse!",
-    "email-hint": "Indtast din email adresse",
+    "email-error": "Ikke en gyldig emailadresse!",
+    "email-hint": "Indtast din emailadresse",
     "password": "Password",
     "password-error": "Password skal mindst være 6 karakterer langt!",
     "password-confirm": "Gentag password",
@@ -11,6 +11,6 @@
     "required": "Feltet skal udfyldes!"
   },
   "server-error": {
-    "auth/email-already-in-use": "Email adressen er allerede i brug, log ind i stedet?"
+    "auth/email-already-in-use": "Emailadressen er allerede i brug, log ind i stedet?"
   }
 }

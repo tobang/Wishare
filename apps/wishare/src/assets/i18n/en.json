@@ -1,3 +1,12 @@
 {
-  "title": "English title"
+  "title": "English title",
+  "wish": {
+    "dialog": {
+      "steps": {
+        "type": "Type",
+        "link": "Link",
+        "details": "Details"
+      }
+    }
+  }
 }

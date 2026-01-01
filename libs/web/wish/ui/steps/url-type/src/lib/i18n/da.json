@@ -4,11 +4,11 @@
     "subtitle": "Indsæt et produktlink og vi henter detaljerne automatisk"
   },
   "step-url": {
-    "text": "Paste eller skriv url",
-    "label": "Produkt URL",
+    "text": "Indsæt eller skriv URL",
+    "label": "Produkt-URL",
     "placeholder": "https://example.com/product",
     "errors": {
-      "invalid": "Url er ikke valid",
+      "invalid": "URL er ikke gyldig",
       "required": "Feltet skal udfyldes!"
     },
     "button": "Hent detaljer"

@@ -1,6 +1,6 @@
 {
   "header": {
-    "title": "Tilføj et Nyt Ønske",
+    "title": "Tilføj et nyt ønske",
     "subtitle": "Udfyld detaljerne for dit ønske"
   },
   "form": {
@@ -9,7 +9,7 @@
       "placeholder": "Hvad ønsker du dig?"
     },
     "url": {
-      "label": "Link til Produkt",
+      "label": "Link til produkt",
       "placeholder": "https://eksempel.dk/produkt",
       "hint": "Indsæt en URL hvor denne vare kan købes"
     },
@@ -28,6 +28,6 @@
   },
   "actions": {
     "cancel": "Annuller",
-    "submit": "Tilføj Ønske"
+    "submit": "Tilføj ønske"
   }
 }

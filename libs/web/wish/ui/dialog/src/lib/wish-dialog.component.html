@@ -1,21 +1,42 @@
 @let activeItemIndex = adapter.vm.activeItemIndex();
 
-<div class="wish-dialog-container">
-  @switch (activeItemIndex) {
-    @case (0) {
-      <wishare-wish-type
-        (createAutomatic)="createAutomatic()"
-        (createManual)="createManual()"
-      ></wishare-wish-type>
+<div class="wish-dialog-layout">
+  <div class="wish-dialog-stepper">
+    <tui-stepper
+      orientation="vertical"
+      tuiConnected
+      [activeItemIndex]="activeItemIndex"
+      (activeItemIndexChange)="setActiveItemIndex($event)"
+    >
+      <button tuiStep icon="@tui.circle-help">
+        {{ 'wish.dialog.steps.type' | transloco }}
+      </button>
+      <button tuiStep icon="@tui.link">
+        {{ 'wish.dialog.steps.link' | transloco }}
+      </button>
+      <button tuiStep icon="@tui.pencil">
+        {{ 'wish.dialog.steps.details' | transloco }}
+      </button>
+    </tui-stepper>
+  </div>
+
+  <div class="wish-dialog-content">
+    @switch (activeItemIndex) {
+      @case (0) {
+        <wishare-wish-type
+          (createAutomatic)="createAutomatic()"
+          (createManual)="createManual()"
+        ></wishare-wish-type>
+      }
+      @case (1) {
+        <wishare-url-type (getUrl)="onUrlSubmit($event)"></wishare-url-type>
+      }
+      @case (2) {
+        <wishare-wish-create
+          (wishCreated)="onWishCreated($event)"
+          (cancelled)="closeDialog()"
+        ></wishare-wish-create>
+      }
     }
-    @case (1) {
-      <wishare-url-type (getUrl)="onUrlSubmit($event)"></wishare-url-type>
-    }
-    @case (3) {
-      <wishare-wish-create
-        (wishCreated)="onWishCreated($event)"
-        (cancelled)="closeDialog()"
-      ></wishare-wish-create>
-    }
-  }
+  </div>
 </div>
