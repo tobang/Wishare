@@ -15,31 +15,70 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@wishare/web/shared/app-config": ["libs/web/shared/app-config/src/index.ts"],
-      "@wishare/web/shared/operators": ["libs/web/shared/operators/src/index.ts"],
+      "@wishare/web/shared/app-config": [
+        "libs/web/shared/app-config/src/index.ts"
+      ],
+      "@wishare/web/shared/operators": [
+        "libs/web/shared/operators/src/index.ts"
+      ],
       "@wishare/web/shared/services": ["libs/web/shared/services/src/index.ts"],
+      "@wishare/web/shared/ui/confirmation-dialog": [
+        "libs/web/shared/ui/confirmation-dialog/src/index.ts"
+      ],
       "@wishare/web/shared/utils": ["libs/web/shared/utils/src/index.ts"],
-      "@wishare/web/shared/validators": ["libs/web/shared/validators/src/index.ts"],
-      "@wishare/web/auth/data-access": ["libs/web/auth/data-access/src/index.ts"],
-      "@wishare/web/auth/feature/login": ["libs/web/auth/feature/login/src/index.ts"],
-      "@wishare/web/auth/ui/email-login": ["libs/web/auth/ui/email-login/src/index.ts"],
+      "@wishare/web/shared/validators": [
+        "libs/web/shared/validators/src/index.ts"
+      ],
+      "@wishare/web/auth/data-access": [
+        "libs/web/auth/data-access/src/index.ts"
+      ],
+      "@wishare/web/auth/feature/login": [
+        "libs/web/auth/feature/login/src/index.ts"
+      ],
+      "@wishare/web/auth/ui/email-login": [
+        "libs/web/auth/ui/email-login/src/index.ts"
+      ],
       "@wishare/web/auth/ui/signup": ["libs/web/auth/ui/signup/src/index.ts"],
       "@wishare/web/auth/utils": ["libs/web/auth/utils/src/index.ts"],
-      "@wishare/web/board/data-access": ["libs/web/board/data-access/src/index.ts"],
-      "@wishare/web/board/feature/board": ["libs/web/board/feature/board/src/index.ts"],
-      "@wishare/web/landing-page/feature": ["libs/web/landing-page/feature/src/index.ts"],
+      "@wishare/web/board/data-access": [
+        "libs/web/board/data-access/src/index.ts"
+      ],
+      "@wishare/web/board/feature/board": [
+        "libs/web/board/feature/board/src/index.ts"
+      ],
+      "@wishare/web/landing-page/feature": [
+        "libs/web/landing-page/feature/src/index.ts"
+      ],
       "@wishare/web/shell/feature": ["libs/web/shell/feature/src/index.ts"],
       "@wishare/web/shell/ui/layout": ["libs/web/shell/ui/layout/src/index.ts"],
-      "@wishare/web/shell/ui/main-view": ["libs/web/shell/ui/main-view/src/index.ts"],
-      "@wishare/web/shell/ui/nav-bar": ["libs/web/shell/ui/nav-bar/src/index.ts"],
-      "@wishare/web/wish/feature/wish": ["libs/web/wish/feature/wish/src/index.ts"],
+      "@wishare/web/shell/ui/main-view": [
+        "libs/web/shell/ui/main-view/src/index.ts"
+      ],
+      "@wishare/web/shell/ui/nav-bar": [
+        "libs/web/shell/ui/nav-bar/src/index.ts"
+      ],
+      "@wishare/web/wish/feature/wish": [
+        "libs/web/wish/feature/wish/src/index.ts"
+      ],
       "@wishare/web/wish/ui/dialog": ["libs/web/wish/ui/dialog/src/index.ts"],
-      "@wishare/web/wish/ui/steps/url-type": ["libs/web/wish/ui/steps/url-type/src/index.ts"],
-      "@wishare/web/wish/ui/steps/wish-create": ["libs/web/wish/ui/steps/wish-create/src/index.ts"],
-      "@wishare/web/wish/ui/steps/wish-spinner": ["libs/web/wish/ui/steps/wish-spinner/src/index.ts"],
-      "@wishare/web/wish/ui/steps/wish-type": ["libs/web/wish/ui/steps/wish-type/src/index.ts"],
-      "@wishare/web/wishlist/data-access": ["libs/web/wishlist/data-access/src/index.ts"],
-      "@wishare/web/wishlist/feature/list": ["libs/web/wishlist/feature/list/src/index.ts"]
+      "@wishare/web/wish/ui/steps/url-type": [
+        "libs/web/wish/ui/steps/url-type/src/index.ts"
+      ],
+      "@wishare/web/wish/ui/steps/wish-create": [
+        "libs/web/wish/ui/steps/wish-create/src/index.ts"
+      ],
+      "@wishare/web/wish/ui/steps/wish-spinner": [
+        "libs/web/wish/ui/steps/wish-spinner/src/index.ts"
+      ],
+      "@wishare/web/wish/ui/steps/wish-type": [
+        "libs/web/wish/ui/steps/wish-type/src/index.ts"
+      ],
+      "@wishare/web/wishlist/data-access": [
+        "libs/web/wishlist/data-access/src/index.ts"
+      ],
+      "@wishare/web/wishlist/feature/list": [
+        "libs/web/wishlist/feature/list/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

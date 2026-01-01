@@ -1,4 +1,8 @@
 {
   "no-wishes": "No wishes yet",
-  "add-wish": "Add wish"
+  "add-wish": "Add wish",
+  "delete-confirm-title": "Delete Wishlist",
+  "delete-confirm-message": "Are you sure you want to delete \"{{title}}\"?",
+  "delete-confirm-yes": "Delete",
+  "delete-confirm-no": "Cancel"
 }

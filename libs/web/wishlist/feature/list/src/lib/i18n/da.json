@@ -1,4 +1,8 @@
 {
   "no-wishes": "Ingen ønsker endnu",
-  "add-wish": "Tilføj ønske"
+  "add-wish": "Tilføj ønske",
+  "delete-confirm-title": "Slet ønskeliste",
+  "delete-confirm-message": "Er du sikker på at du vil slette \"{{title}}\"?",
+  "delete-confirm-yes": "Slet",
+  "delete-confirm-no": "Annuller"
 }

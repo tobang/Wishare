@@ -15,4 +15,5 @@ export type WishlistActions = {
   createWish: void;
   editWish: Wish;
   deleteWish: Wish;
+  deleteWishlist: void;
 };

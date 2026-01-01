@@ -256,6 +256,20 @@ export class BoardService {
   }
 
   /**
+   * Deletes a wishlist by its ID.
+   * This will also delete all wishes associated with the wishlist due to cascade delete.
+   */
+  deleteWishlist(wishlistId: string): Observable<void> {
+    return from(
+      this.appwrite.tablesDb.deleteRow({
+        databaseId: DATABASE_ID,
+        tableId: WISHLISTS_TABLE,
+        rowId: wishlistId,
+      }),
+    ).pipe(map(() => undefined));
+  }
+
+  /**
    * Extracts priority from a TablesDB row, handling both nested and flat data structures
    */
   private extractPriority(row: unknown): number {

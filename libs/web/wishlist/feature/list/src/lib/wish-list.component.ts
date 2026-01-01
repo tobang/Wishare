@@ -50,8 +50,16 @@ import { WishlistStore, WishlistEffects } from './store';
 export class WishListComponent {
   readonly wishlist = input.required<WishlistUi>();
   private store = inject(WishlistStore);
+  private effects = inject(WishlistEffects);
 
   createWish() {
     this.store.actions.createWish();
+  }
+
+  deleteWishlist() {
+    // Set the wishlist to delete in the effects
+    this.effects.wishlistToDelete = this.wishlist();
+    // Trigger the delete action
+    this.store.actions.deleteWishlist();
   }
 }
