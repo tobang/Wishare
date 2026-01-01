@@ -8,11 +8,14 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   Injector,
 } from '@angular/core';
-import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
+import {
+  TranslocoModule,
+  TRANSLOCO_SCOPE,
+  TranslocoService,
+} from '@jsverse/transloco';
 import { scopeLoader } from 'scoped-translations';
 import { TuiButton, TuiDialogService, TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiSkeleton } from '@taiga-ui/kit';
@@ -27,6 +30,11 @@ import {
   CreateWishlistDialogResult,
 } from './create-wishlist-dialog';
 import { WishlistUi } from '@wishare/web/wishlist/data-access';
+import {
+  WishDialogComponent,
+  WishDialogResult,
+} from '@wishare/web/wish/ui/dialog';
+import { ConfirmationDialogComponent } from '@wishare/web/shared/ui/confirmation-dialog';
 
 @Component({
   selector: 'wishare-board',
@@ -63,6 +71,7 @@ export class BoardComponent {
   private readonly boardStore = inject(BoardStore);
   private readonly dialogService = inject(TuiDialogService);
   private readonly injector = inject(Injector);
+  private readonly transloco = inject(TranslocoService);
 
   public readonly wishLists = this.boardStore.vm.wishLists;
   public readonly isLoading = this.boardStore.vm.isLoading;
@@ -129,6 +138,51 @@ export class BoardComponent {
           title: result.title,
           description: result.description,
         });
+      });
+  }
+
+  createWish(wishlistId: string) {
+    this.dialogService
+      .open<WishDialogResult | null>(
+        new PolymorpheusComponent(WishDialogComponent, this.injector),
+        {
+          label: this.transloco.translate('board.wish.create-title'),
+          size: 'l',
+          closable: true,
+          dismissible: true,
+          data: { wishlistId },
+        },
+      )
+      .pipe(filter((result): result is WishDialogResult => !!result))
+      .subscribe((result) => {
+        // TODO: Handle wish creation through store
+        console.log('Wish created:', result);
+      });
+  }
+
+  deleteWishlist(wishlistId: string) {
+    this.dialogService
+      .open<boolean>(
+        new PolymorpheusComponent(ConfirmationDialogComponent, this.injector),
+        {
+          label: this.transloco.translate('board.wishlist.delete-title'),
+          size: 's',
+          data: {
+            message: this.transloco.translate(
+              'board.wishlist.delete-confirmation',
+            ),
+            confirmText: this.transloco.translate(
+              'board.wishlist.delete-confirm',
+            ),
+            cancelText: this.transloco.translate(
+              'board.wishlist.delete-cancel',
+            ),
+          },
+        },
+      )
+      .pipe(filter((confirmed) => !!confirmed))
+      .subscribe(() => {
+        this.boardStore.actions.deleteWishlist(wishlistId);
       });
   }
 }

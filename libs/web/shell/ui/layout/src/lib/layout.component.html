@@ -1,7 +1,7 @@
 <div class="page-wrapper">
   <wishare-nav-bar
-    [authenticated]="authenticated$"
-    [userName]="userName$"
+    [authenticated]="authenticated()"
+    [userName]="userName()"
     (logout)="logout()"
   ></wishare-nav-bar>
   <wishare-main-view></wishare-main-view>

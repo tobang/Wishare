@@ -3,7 +3,6 @@ import { CdkDragHandle, DragDropModule } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
   input,
   output,
 } from '@angular/core';
@@ -15,7 +14,6 @@ import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { WishComponent } from '@wishare/web/wish/feature/wish';
 
 import { WishlistUi } from '@wishare/web/wishlist/data-access';
-import { WishlistStore, WishlistEffects } from './store';
 
 @Component({
   selector: '[wishare-wish-list]',
@@ -32,8 +30,6 @@ import { WishlistStore, WishlistEffects } from './store';
     TranslocoModule,
   ],
   providers: [
-    WishlistStore,
-    WishlistEffects,
     {
       provide: TRANSLOCO_SCOPE,
       useValue: {
@@ -49,14 +45,16 @@ import { WishlistStore, WishlistEffects } from './store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishListComponent {
+  // Inputs - receive data from parent
   readonly wishlist = input.required<WishlistUi>();
-  readonly editWishlistClick = output<WishlistUi>();
 
-  private store = inject(WishlistStore);
-  private effects = inject(WishlistEffects);
+  // Outputs - emit actions to parent
+  readonly createWishClick = output<string>();
+  readonly editWishlistClick = output<WishlistUi>();
+  readonly deleteWishlistClick = output<string>();
 
   createWish() {
-    this.store.actions.createWish();
+    this.createWishClick.emit(this.wishlist().$id);
   }
 
   editWishlist() {
@@ -64,9 +62,6 @@ export class WishListComponent {
   }
 
   deleteWishlist() {
-    // Set the wishlist to delete in the effects
-    this.effects.wishlistToDelete = this.wishlist();
-    // Trigger the delete action
-    this.store.actions.deleteWishlist();
+    this.deleteWishlistClick.emit(this.wishlist().$id);
   }
 }

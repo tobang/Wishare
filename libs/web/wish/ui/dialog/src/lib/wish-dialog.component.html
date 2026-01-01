@@ -33,8 +33,9 @@
       }
       @case (2) {
         <wishare-wish-create
-          (wishCreated)="onWishCreated($event)"
-          (cancelled)="closeDialog()"
+          [wishForm]="wishForm"
+          (submit)="onWishSubmit()"
+          (cancel)="onWishCancel()"
         ></wishare-wish-create>
       }
     }

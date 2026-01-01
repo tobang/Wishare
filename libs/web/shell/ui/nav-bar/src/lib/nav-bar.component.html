@@ -1,4 +1,4 @@
-<div class="nav-wrapper" *rxLet="vm$; let vm">
+<div class="nav-wrapper">
   <div class="grad-bar"></div>
   <nav class="navbar" *transloco="let t">
     <span class="logo" routerLink="/"
@@ -6,7 +6,7 @@
     /></span>
     <div
       class="menu-toggle"
-      [ngClass]="vm.menuOpen ? 'is-active' : ''"
+      [ngClass]="menuOpen ? 'is-active' : ''"
       id="mobile-menu"
       (click)="toggleMenu()"
     >
@@ -15,27 +15,27 @@
       <span class="bar"></span>
     </div>
     <div class="nav-right">
-      <ul class="nav nav-animate" [ngClass]="vm.menuOpen ? 'mobile-nav' : ''">
+      <ul class="nav nav-animate" [ngClass]="menuOpen ? 'mobile-nav' : ''">
         <li class="nav-item">
           <a href="javascript:void(0)" routerLink="/">{{
             t('navbar.homepage')
           }}</a>
         </li>
-        @if (!vm.authenticated) {
+        @if (!authenticated()) {
           <li class="nav-item">
             <a href="javascript:void(0)" routerLink="/signup">{{
               t('navbar.signup')
             }}</a>
           </li>
         }
-        @if (!vm.authenticated) {
+        @if (!authenticated()) {
           <li class="nav-item">
             <a href="javascript:void(0)" routerLink="/login">{{
               t('navbar.login')
             }}</a>
           </li>
         }
-        @if (vm.authenticated) {
+        @if (authenticated()) {
           <li class="nav-item">
             <a href="javascript:void(0)" routerLink="/wishlists">{{
               t('navbar.wishlists')
@@ -43,7 +43,7 @@
           </li>
         }
       </ul>
-      @if (vm.authenticated && vm.userName) {
+      @if (authenticated() && userName()) {
         <span
           (tuiActiveZoneChange)="onAvatarMenuActiveZone($event)"
           (tuiObscured)="onAvatarMenuObscured($event)"
@@ -51,7 +51,7 @@
           <div
             class="user-avatar"
             size="s"
-            [tuiAvatar]="vm.userName | tuiInitials"
+            [tuiAvatar]="userName()! | tuiInitials"
             [tuiDropdown]="avatarDropdown"
             [tuiDropdownManual]="avatarMenuOpen"
             (click)="toggleAvatarMenu()"

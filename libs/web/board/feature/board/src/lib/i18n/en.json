@@ -24,5 +24,14 @@
   },
   "edit-dialog": {
     "submit": "Save Changes"
+  },
+  "wishlist": {
+    "delete-title": "Delete Wishlist",
+    "delete-confirmation": "Are you sure you want to delete this wishlist? This action cannot be undone.",
+    "delete-confirm": "Delete",
+    "delete-cancel": "Cancel"
+  },
+  "wish": {
+    "create-title": "Create New Wish"
   }
 }

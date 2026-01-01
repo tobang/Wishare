@@ -1,8 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  input,
   output,
-  signal,
 } from '@angular/core';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import {
@@ -14,19 +14,10 @@ import {
 } from '@taiga-ui/core';
 import { TuiTextarea, TuiTooltip } from '@taiga-ui/kit';
 import { TuiForm } from '@taiga-ui/layout';
-import {
-  Field,
-  form,
-  SchemaPath,
-  SchemaPathTree,
-} from '@angular/forms/signals';
+import { Field, form } from '@angular/forms/signals';
 import { scopeLoader } from 'scoped-translations';
-import { vestValidation } from '@wishare/web/shared/validators';
 import { FieldErrorComponent } from '@wishare/web/shared/utils';
-import {
-  CreateWishFormModel,
-  createWishValidationSuite,
-} from './wish-create.validation';
+import { CreateWishFormModel } from './wish-create.validation';
 
 @Component({
   selector: 'wishare-wish-create',
@@ -60,34 +51,27 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishCreateComponent {
-  readonly wishCreated = output<CreateWishFormModel>();
-  readonly cancelled = output<void>();
+  // Inputs - receive form from parent
+  readonly wishForm =
+    input.required<ReturnType<typeof form<CreateWishFormModel>>>();
 
-  private readonly model = signal<CreateWishFormModel>({
-    title: '',
-    description: '',
-    url: '',
-    price: 0,
-    quantity: 1,
-  });
+  // Outputs - emit actions to parent
+  readonly submit = output<void>();
+  readonly cancel = output<void>();
 
-  readonly wishForm = form(
-    this.model,
-    (
-      path: SchemaPath<CreateWishFormModel> &
-        SchemaPathTree<CreateWishFormModel>,
-    ) => {
-      vestValidation(path, createWishValidationSuite);
-    },
-  );
-
-  submit() {
-    if (this.wishForm().valid()) {
-      this.wishCreated.emit(this.wishForm().value());
-    }
+  // Getter for form validation state
+  get isValid(): boolean {
+    // wishForm() is the input signal value (FieldTree)
+    // wishForm()() calls the FieldTree to get FieldState
+    // .valid is a signal on FieldState that needs to be called
+    return this.wishForm()().valid();
   }
 
-  cancel() {
-    this.cancelled.emit();
+  onSubmit() {
+    this.submit.emit();
+  }
+
+  onCancel() {
+    this.cancel.emit();
   }
 }

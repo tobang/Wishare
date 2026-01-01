@@ -24,5 +24,14 @@
   },
   "edit-dialog": {
     "submit": "Gem ændringer"
+  },
+  "wishlist": {
+    "delete-title": "Slet ønskeliste",
+    "delete-confirmation": "Er du sikker på, at du vil slette denne ønskeliste? Denne handling kan ikke fortrydes.",
+    "delete-confirm": "Slet",
+    "delete-cancel": "Annuller"
+  },
+  "wish": {
+    "create-title": "Opret nyt ønske"
   }
 }

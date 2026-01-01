@@ -25,6 +25,7 @@ export type BoardStateModel = {
   createState: StreamState<WishlistFlat>;
   editState: StreamState<WishlistFlat>;
   reorderState: StreamState<void>;
+  deleteState: StreamState<void>;
 };
 
 /**
@@ -62,9 +63,11 @@ export type BoardActions = {
   createWishlist: CreateWishlistData;
   editWishlist: EditWishlistData;
   reorderWishlists: ReorderWishlistsData;
+  deleteWishlist: string;
 
   // State Actions - update store state
   updateBoardState: Partial<BoardStateModel>;
   resetFetchState: void;
   resetCreateState: void;
+  resetDeleteState: void;
 };

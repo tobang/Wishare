@@ -36,6 +36,7 @@ export class BoardEffects {
   private _createState$!: Observable<StreamState<WishlistFlat>>;
   private _editState$!: Observable<StreamState<WishlistFlat>>;
   private _reorderState$!: Observable<StreamState<void>>;
+  private _deleteState$!: Observable<StreamState<void>>;
   private _currentWishlists$!: ReplaySubject<BoardWishlist[]>;
 
   get fetchState$(): Observable<StreamState<BoardResult>> {
@@ -52,6 +53,10 @@ export class BoardEffects {
 
   get reorderState$(): Observable<StreamState<void>> {
     return this._reorderState$;
+  }
+
+  get deleteState$(): Observable<StreamState<void>> {
+    return this._deleteState$;
   }
 
   get currentWishlists$(): Observable<BoardWishlist[]> {
@@ -78,11 +83,13 @@ export class BoardEffects {
     const createState$ = new ReplaySubject<StreamState<WishlistFlat>>(1);
     const editState$ = new ReplaySubject<StreamState<WishlistFlat>>(1);
     const reorderState$ = new ReplaySubject<StreamState<void>>(1);
+    const deleteState$ = new ReplaySubject<StreamState<void>>(1);
 
     this._fetchState$ = fetchState$.asObservable();
     this._createState$ = createState$.asObservable();
     this._editState$ = editState$.asObservable();
     this._reorderState$ = reorderState$.asObservable();
+    this._deleteState$ = deleteState$.asObservable();
 
     rxEffects(({ register }) => {
       register(
@@ -180,6 +187,23 @@ export class BoardEffects {
             actions.fetchWishlists();
           }
           reorderState$.next(state);
+        },
+      );
+
+      // Delete wishlist effect
+      register(
+        actions.deleteWishlist$.pipe(
+          switchMap((wishlistId) =>
+            this.boardService.deleteWishlist(wishlistId),
+          ),
+          toState(),
+        ),
+        (state) => {
+          if (state.hasValue) {
+            // Trigger a refresh of wishlists after deleting
+            actions.fetchWishlists();
+          }
+          deleteState$.next(state);
         },
       );
     });
