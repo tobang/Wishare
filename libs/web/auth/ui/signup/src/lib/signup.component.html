@@ -29,11 +29,7 @@
           {{ t('signup.form.password-confirm')
           }}<span class="tui-required"></span>
         </label>
-        <input
-          tuiInput
-          type="password"
-          [field]="signUpForm.passwordConfirm"
-        />
+        <input tuiInput type="password" [field]="signUpForm.passwordConfirm" />
         <tui-icon tuiPassword />
       </tui-textfield>
       <wishare-field-error [field]="signUpForm.passwordConfirm" />

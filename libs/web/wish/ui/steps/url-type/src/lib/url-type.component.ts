@@ -13,7 +13,13 @@ import {
 } from '@angular/forms/signals';
 
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
-import { TuiButton, TuiTextfield, TuiLabel, TuiIcon, TuiInput } from '@taiga-ui/core';
+import {
+  TuiButton,
+  TuiTextfield,
+  TuiLabel,
+  TuiIcon,
+  TuiInput,
+} from '@taiga-ui/core';
 import { scopeLoader } from 'scoped-translations';
 
 import { vestValidation } from '@wishare/web/shared/validators';

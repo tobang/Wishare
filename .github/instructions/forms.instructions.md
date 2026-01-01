@@ -21,6 +21,7 @@ You should take the form name provided by the user and replace any underscores, 
 Then prefix the file name with the result.
 
 ## Element 1:
+
 Here is an example of the form model:
 
 ```typescript
@@ -34,6 +35,7 @@ export type User = {
 ```
 
 ## Element 2:
+
 When creating the form component, you should use the form model to create the form.
 Unless the user specifies otherwise, you should create a form field for each property in the form model.
 Use Taiga UI to create the fields in the template. Look at the model to determine which Taiga UI components that should be used for each field.
@@ -42,7 +44,6 @@ The form component is a regular Angular component and will consist of 3 files, u
 - A component file: component.ts,
 - A html file: component.html,
 - A scss file: component.scss.
-
 
 When creating the html part of the component, please be aware that we are using Taiga UI for the UI components.
 Please use the vestValidation function to define the form validation. Here is an example of how to create a form and use the vestValidation function in the form component:
@@ -56,8 +57,8 @@ Please use the vestValidation function to define the form validation. Here is an
   );
 ```
 
-
 ## Element 3:
+
 When creating the validation suite, you should use the form model provided by the user to create the validation vest suite.
 Here is an example of a function that creates a Vest validation suite:
 
@@ -104,8 +105,8 @@ test<FieldNames>('identifier', 'Identifier is already in use', async ({ signal }
   await lastValueFrom(
     propertyService.getValidateIdentifier(uuid, model.identifier as string).pipe(
       takeUntil(fromEvent(signal, 'abort')),
-      catchError(() => of('validateRequestError'))
-    )
+      catchError(() => of('validateRequestError')),
+    ),
   ).then((value) => {
     if (value === 'validateRequestError') {
       return Promise.reject(zxErrorCouldNotValidateId);
@@ -204,14 +205,7 @@ import { AddressFormModel } from './address.model';
 @Component({
   selector: 'wishare-address-subform',
   standalone: true,
-  imports: [
-    CommonModule,
-    Field,
-    TuiTextfield,
-    TuiInput,
-    TuiLabel,
-    FieldErrorComponent,
-  ],
+  imports: [CommonModule, Field, TuiTextfield, TuiInput, TuiLabel, FieldErrorComponent],
   templateUrl: './address-subform.component.html',
   styleUrls: ['./address-subform.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -346,18 +340,8 @@ The parent component owns the form and passes the nested FieldGroup to the subfo
 ```typescript
 // signup.component.ts
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  output,
-  signal,
-} from '@angular/core';
-import {
-  Field,
-  SchemaPath,
-  SchemaPathTree,
-  form,
-} from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, output, signal } from '@angular/core';
+import { Field, SchemaPath, SchemaPathTree, form } from '@angular/forms/signals';
 import { TuiButton, TuiTextfield, TuiInput, TuiLabel } from '@taiga-ui/core';
 import { TuiPassword } from '@taiga-ui/kit';
 
@@ -370,17 +354,7 @@ import { SignupFormModel, createEmptySignupForm } from './signup.model';
 @Component({
   selector: 'wishare-signup',
   standalone: true,
-  imports: [
-    CommonModule,
-    Field,
-    TuiTextfield,
-    TuiInput,
-    TuiLabel,
-    TuiButton,
-    FieldErrorComponent,
-    TuiPassword,
-    AddressSubformComponent,
-  ],
+  imports: [CommonModule, Field, TuiTextfield, TuiInput, TuiLabel, TuiButton, FieldErrorComponent, TuiPassword, AddressSubformComponent],
   templateUrl: './signup.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -389,12 +363,9 @@ export class SignupComponent {
 
   private readonly model = signal<SignupFormModel>(createEmptySignupForm());
 
-  readonly signUpForm = form(
-    this.model,
-    (path: SchemaPath<SignupFormModel> & SchemaPathTree<SignupFormModel>) => {
-      vestValidation(path, signupValidationSuite);
-    },
-  );
+  readonly signUpForm = form(this.model, (path: SchemaPath<SignupFormModel> & SchemaPathTree<SignupFormModel>) => {
+    vestValidation(path, signupValidationSuite);
+  });
 
   signup(event: Event): void {
     event.preventDefault();
@@ -474,10 +445,10 @@ export const checkoutValidationSuite = staticSuite((data: CheckoutFormModel, fie
 
 ### Summary
 
-| Concern | Location |
-|---------|----------|
-| Form state & `form()` call | Parent component |
-| `vestValidation()` binding | Parent component |
-| Validation suite | Parent (composes helper functions) |
-| Reusable validation logic | Helper function with prefix parameter |
-| Subform component | Pure UI — receives `FieldGroup`, displays fields & errors |
+| Concern                    | Location                                                  |
+| -------------------------- | --------------------------------------------------------- |
+| Form state & `form()` call | Parent component                                          |
+| `vestValidation()` binding | Parent component                                          |
+| Validation suite           | Parent (composes helper functions)                        |
+| Reusable validation logic  | Helper function with prefix parameter                     |
+| Subform component          | Pure UI — receives `FieldGroup`, displays fields & errors |
