@@ -7,8 +7,8 @@ export type CreateWishFormModel = {
   title: string;
   description: string;
   url: string;
-  price: number;
-  quantity: number;
+  price: string;
+  quantity: string;
 };
 
 export const createWishValidationSuite = staticSuite(
@@ -46,23 +46,31 @@ export const createWishValidationSuite = staticSuite(
     });
 
     test('price', 'Price must be a positive number', () => {
-      if (data.price > 0) {
-        enforce(data.price).greaterThanOrEquals(0);
+      if (data.price) {
+        const price = parseFloat(data.price);
+        enforce(price).isNumeric().greaterThanOrEquals(0);
       }
     });
 
     test('price', 'Price cannot exceed 999,999.99', () => {
-      if (data.price !== null && data.price !== undefined) {
-        enforce(data.price).lessThanOrEquals(999999.99);
+      if (data.price) {
+        const price = parseFloat(data.price);
+        enforce(price).lessThanOrEquals(999999.99);
       }
     });
 
     test('quantity', 'Quantity must be at least 1', () => {
-      enforce(data.quantity).greaterThanOrEquals(1);
+      if (data.quantity) {
+        const quantity = parseInt(data.quantity, 10);
+        enforce(quantity).isNumeric().greaterThanOrEquals(1);
+      }
     });
 
     test('quantity', 'Quantity cannot exceed 999', () => {
-      enforce(data.quantity).lessThanOrEquals(999);
+      if (data.quantity) {
+        const quantity = parseInt(data.quantity, 10);
+        enforce(quantity).lessThanOrEquals(999);
+      }
     });
   },
 );

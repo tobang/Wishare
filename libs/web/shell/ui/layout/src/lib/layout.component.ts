@@ -5,6 +5,7 @@ import { AuthStore } from '@wishare/web/auth/data-access';
 import { MainViewComponent } from '@wishare/web/shell/ui/main-view';
 import { NavBarComponent } from '@wishare/web/shell/ui/nav-bar';
 import { computed } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'wishare-layout',
@@ -16,6 +17,7 @@ import { computed } from '@angular/core';
 })
 export class LayoutComponent {
   private readonly authStore = inject(AuthStore);
+  private readonly transloco = inject(TranslocoService);
 
   // Use computed signals for derived state
   public readonly authenticated = computed(() =>
@@ -27,5 +29,9 @@ export class LayoutComponent {
 
   logout() {
     this.authStore.actions.logout();
+  }
+
+  switchLanguage(langCode: string) {
+    this.transloco.setActiveLang(langCode);
   }
 }

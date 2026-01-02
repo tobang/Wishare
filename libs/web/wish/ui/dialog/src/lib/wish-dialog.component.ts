@@ -19,7 +19,11 @@ import {
   CreateWishFormModel,
   createWishValidationSuite,
 } from '@wishare/web/wish/ui/steps/wish-create';
-import { WishDialogResult, WishDialogInput } from './models/wish-dialog.model';
+import {
+  WishDialogResult,
+  WishDialogInput,
+  CreateWishData,
+} from './models/wish-dialog.model';
 import { WishDialogStore } from './store/wish-dialog.store';
 
 @Component({
@@ -50,8 +54,8 @@ export class WishDialogComponent {
     title: '',
     description: '',
     url: '',
-    price: 0,
-    quantity: 1,
+    price: '',
+    quantity: '1',
   });
 
   readonly wishForm = form(
@@ -88,7 +92,14 @@ export class WishDialogComponent {
 
   onWishSubmit() {
     if (this.wishForm().valid()) {
-      const wishData = this.wishForm().value();
+      const formValue = this.wishForm().value();
+      const wishData: CreateWishData = {
+        title: formValue.title,
+        description: formValue.description || undefined,
+        url: formValue.url || undefined,
+        price: formValue.price ? parseFloat(formValue.price) : null,
+        quantity: formValue.quantity ? parseInt(formValue.quantity, 10) : 1,
+      };
       this.context.completeWith({ wishData });
     }
   }

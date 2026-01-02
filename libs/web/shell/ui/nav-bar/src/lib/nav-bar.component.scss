@@ -161,14 +161,30 @@
 
 // Avatar dropdown menu styling (uses ::ng-deep because dropdown is rendered in overlay)
 ::ng-deep tui-data-list[role='menu'] {
-  min-width: 6rem;
+  min-width: 10rem;
 
   [tuiOption] {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    position: relative;
 
-    tui-icon {
+    .language-flag {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .language-check {
+      margin-left: auto;
+      color: var(--color-brand-accent, #008891);
+      flex-shrink: 0;
+    }
+
+    &.active-language {
+      background-color: var(--tui-background-elevation-1);
+    }
+
+    tui-icon:not(.language-check) {
       color: var(--tui-text-secondary);
       flex-shrink: 0;
     }

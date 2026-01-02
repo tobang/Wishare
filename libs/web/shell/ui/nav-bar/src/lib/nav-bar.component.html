@@ -58,16 +58,22 @@
           ></div>
           <ng-template #avatarDropdown>
             <tui-data-list role="menu">
-              <button
-                tuiOption
-                new
-                type="button"
-                role="menuitem"
-                (click)="onSwitchLanguage()"
-              >
-                <tui-icon icon="@tui.languages" />
-                <span>{{ t('navbar.switchLanguage') }}</span>
-              </button>
+              @for (lang of availableLanguages; track lang.code) {
+                <button
+                  tuiOption
+                  new
+                  type="button"
+                  role="menuitem"
+                  (click)="onSwitchLanguage(lang.code)"
+                  [class.active-language]="currentLang() === lang.code"
+                >
+                  <span class="language-flag">{{ lang.flag }}</span>
+                  <span>{{ lang.name }}</span>
+                  @if (currentLang() === lang.code) {
+                    <tui-icon icon="@tui.check" class="language-check" />
+                  }
+                </button>
+              }
               <button
                 tuiOption
                 new
