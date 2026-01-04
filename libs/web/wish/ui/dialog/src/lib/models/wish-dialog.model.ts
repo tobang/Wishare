@@ -1,4 +1,4 @@
-import { Wish } from '@wishare/web/wishlist/data-access';
+import { WishFlat } from '@wishare/web/wishlist/data-access';
 
 /**
  * Data for creating a new wish (subset of WishData without system fields).
@@ -20,7 +20,7 @@ export type WishDialogResult = {
   /** The wish data - either CreateWishData for new wishes or full Wish for edits */
   wishData: CreateWishData;
   /** The existing wish being edited (only present in edit mode) */
-  existingWish?: Wish;
+  existingWish?: WishFlat;
   /** Image files to be uploaded to storage */
   imageFiles?: File[];
 };
@@ -29,7 +29,7 @@ export type WishDialogInput = {
   /** Whether we're editing an existing wish */
   editMode: boolean;
   /** The existing wish to edit (required when editMode is true) */
-  wish?: Wish;
+  wish?: WishFlat;
   /** Existing images */
   images?: (string | ArrayBuffer)[];
 };

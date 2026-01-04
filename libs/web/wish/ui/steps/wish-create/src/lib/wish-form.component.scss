@@ -1,14 +1,6 @@
 :host {
   display: block;
-  min-width: 28rem;
-  max-width: 32rem;
-  max-height: 80vh;
-  overflow-y: auto;
-
-  @media (max-width: 480px) {
-    min-width: 100%;
-    max-width: 100%;
-  }
+  width: 100%;
 }
 
 .wish-create-container {

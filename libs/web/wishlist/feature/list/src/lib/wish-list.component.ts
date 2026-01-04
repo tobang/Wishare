@@ -13,7 +13,7 @@ import { TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { WishComponent } from '@wishare/web/wish/feature/wish';
 
-import { WishlistUi } from '@wishare/web/wishlist/data-access';
+import { WishFlat, WishlistUi } from '@wishare/web/wishlist/data-access';
 
 @Component({
   selector: '[wishare-wish-list]',
@@ -52,6 +52,7 @@ export class WishListComponent {
   readonly createWishClick = output<string>();
   readonly editWishlistClick = output<WishlistUi>();
   readonly deleteWishlistClick = output<string>();
+  readonly editWishClick = output<{ wishlistId: string; wish: WishFlat }>();
 
   createWish() {
     this.createWishClick.emit(this.wishlist().$id);
@@ -63,5 +64,9 @@ export class WishListComponent {
 
   deleteWishlist() {
     this.deleteWishlistClick.emit(this.wishlist().$id);
+  }
+
+  onWishClick(wish: WishFlat) {
+    this.editWishClick.emit({ wishlistId: this.wishlist().$id, wish });
   }
 }

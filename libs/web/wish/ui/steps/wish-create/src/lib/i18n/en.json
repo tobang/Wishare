@@ -37,6 +37,6 @@
   },
   "actions": {
     "cancel": "Cancel",
-    "submit": "Add Wish"
+    "submit": "Save Wish"
   }
 }

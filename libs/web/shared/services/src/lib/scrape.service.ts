@@ -51,7 +51,23 @@ export class ScrapeService {
       ),
     ).pipe(
       map((execution) => {
-        const response: ScrapeResponse = JSON.parse(execution.responseBody);
+        // Check if responseBody is empty or invalid
+        if (!execution.responseBody || execution.responseBody.trim() === '') {
+          throw new Error(
+            `Function execution failed with status: ${execution.status}. Empty response body.`,
+          );
+        }
+
+        let response: ScrapeResponse;
+        try {
+          response = JSON.parse(execution.responseBody);
+        } catch (parseError) {
+          console.error('Failed to parse response:', execution.responseBody);
+          throw new Error(
+            `Invalid JSON response from scrape function: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`,
+          );
+        }
+
         if (!response.success || !response.payload) {
           throw new Error(response.message || 'Failed to scrape URL');
         }

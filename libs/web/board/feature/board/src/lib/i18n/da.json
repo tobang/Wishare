@@ -32,6 +32,7 @@
     "delete-cancel": "Annuller"
   },
   "wish": {
-    "create-title": "Opret nyt ønske"
+    "create-title": "Opret nyt ønske",
+    "edit-title": "Rediger ønske"
   }
 }

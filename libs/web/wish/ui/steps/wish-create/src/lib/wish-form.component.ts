@@ -40,12 +40,12 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 /** Represents an image preview with data URL */
 export type ImagePreview = {
   id: string;
-  file: File;
+  file?: File;
   dataUrl: string;
 };
 
 @Component({
-  selector: 'wishare-wish-create',
+  selector: 'wishare-wish-form',
   standalone: true,
   imports: [
     FormsModule, // Required for TuiInputFiles directive
@@ -76,11 +76,11 @@ export type ImagePreview = {
       },
     },
   ],
-  templateUrl: './wish-create.component.html',
-  styleUrls: ['./wish-create.component.scss'],
+  templateUrl: './wish-form.component.html',
+  styleUrls: ['./wish-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WishCreateComponent {
+export class WishFormComponent {
   // Inputs - receive form from parent
   readonly wishForm =
     input.required<ReturnType<typeof form<CreateWishFormModel>>>();
@@ -147,7 +147,7 @@ export class WishCreateComponent {
       }
       if (
         currentImages.some(
-          (img) => img.file.name === file.name && img.file.size === file.size,
+          (img) => img.file?.name === file.name && img.file?.size === file.size,
         )
       ) {
         return false;

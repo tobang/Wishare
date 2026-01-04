@@ -15,7 +15,7 @@ import {
 } from '@wishare/web/wish/ui/dialog';
 import { EMPTY, filter, switchMap, tap } from 'rxjs';
 import { BoardService, BoardStore } from '@wishare/web/board/data-access';
-import { WishlistUi } from '@wishare/web/wishlist/data-access';
+import { flattenWish, WishlistUi } from '@wishare/web/wishlist/data-access';
 
 import { WishlistActions } from './wishlist.types';
 
@@ -82,7 +82,11 @@ export class WishlistEffects {
                 ),
                 {
                   dismissible: true,
-                  data: { wish, images: [], editMode: true },
+                  data: {
+                    wish: flattenWish(wish),
+                    images: [],
+                    editMode: true,
+                  },
                   size: 'l',
                 },
               )

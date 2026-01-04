@@ -5,6 +5,7 @@ import {
   signal,
 } from '@angular/core';
 
+import { APPWRITE } from '@wishare/web/shared/app-config';
 import { TranslocoModule } from '@jsverse/transloco';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
@@ -16,7 +17,7 @@ import { ScrapedMetadata } from '@wishare/web/shared/services';
 import { UrlTypeComponent } from '@wishare/web/wish/ui/steps/url-type';
 import { WishTypeComponent } from '@wishare/web/wish/ui/steps/wish-type';
 import {
-  WishCreateComponent,
+  WishFormComponent,
   CreateWishFormModel,
   createWishValidationSuite,
   ImagePreview,
@@ -35,7 +36,7 @@ import { WishDialogStore } from './store/wish-dialog.store';
     TranslocoModule,
     WishTypeComponent,
     UrlTypeComponent,
-    WishCreateComponent,
+    WishFormComponent,
     TuiStepper,
     TuiConnected,
   ],
@@ -45,7 +46,10 @@ import { WishDialogStore } from './store/wish-dialog.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishDialogComponent {
-  private readonly context =
+  private readonly appwrite = inject(APPWRITE);
+  private readonly WISH_IMAGES_BUCKET = 'wish-images';
+
+  public readonly context =
     inject<TuiDialogContext<WishDialogResult | null, WishDialogInput>>(
       POLYMORPHEUS_CONTEXT,
     );
@@ -72,6 +76,38 @@ export class WishDialogComponent {
       vestValidation(path, createWishValidationSuite);
     },
   );
+
+  constructor() {
+    // Initialize form with existing wish data if in edit mode
+    if (this.context.data.editMode && this.context.data.wish) {
+      const wish = this.context.data.wish;
+      this.model.set({
+        title: wish.title,
+        description: wish.description || '',
+        url: wish.url || '',
+        price: wish.price?.toString() || '',
+        quantity: wish.quantity?.toString() || '1',
+      });
+
+      // Note: Existing images are handled via initialImages input
+      if (this.context.data.images && this.context.data.images.length > 0) {
+        const existingImages: ImagePreview[] = this.context.data.images.map(
+          (img) => {
+            const fileId = img as string;
+            const url = this.appwrite.storage.getFileView(
+              this.WISH_IMAGES_BUCKET,
+              fileId,
+            );
+            return {
+              id: crypto.randomUUID(),
+              dataUrl: url.toString(),
+            };
+          },
+        );
+        this.images.set(existingImages);
+      }
+    }
+  }
 
   closeDialog() {
     this.adapter.closeDialog(this.context);
@@ -157,7 +193,9 @@ export class WishDialogComponent {
       };
 
       // Include image Files for upload to storage
-      const imageFiles = this.images().map((img) => img.file);
+      const imageFiles = this.images()
+        .map((img) => img.file)
+        .filter((file): file is File => !!file);
 
       this.context.completeWith({
         wishData,

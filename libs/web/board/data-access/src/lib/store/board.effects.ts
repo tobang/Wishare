@@ -40,6 +40,7 @@ export class BoardEffects {
   private _reorderState$!: Observable<StreamState<void>>;
   private _deleteState$!: Observable<StreamState<void>>;
   private _createWishState$!: Observable<StreamState<WishFlat>>;
+  private _updateWishState$!: Observable<StreamState<WishFlat>>;
   private _currentWishlists$!: ReplaySubject<BoardWishlist[]>;
 
   get fetchState$(): Observable<StreamState<BoardResult>> {
@@ -64,6 +65,10 @@ export class BoardEffects {
 
   get createWishState$(): Observable<StreamState<WishFlat>> {
     return this._createWishState$;
+  }
+
+  get updateWishState$(): Observable<StreamState<WishFlat>> {
+    return this._updateWishState$;
   }
 
   get currentWishlists$(): Observable<BoardWishlist[]> {
@@ -92,6 +97,7 @@ export class BoardEffects {
     const reorderState$ = new ReplaySubject<StreamState<void>>(1);
     const deleteState$ = new ReplaySubject<StreamState<void>>(1);
     const createWishState$ = new ReplaySubject<StreamState<WishFlat>>(1);
+    const updateWishState$ = new ReplaySubject<StreamState<WishFlat>>(1);
 
     this._fetchState$ = fetchState$.asObservable();
     this._createState$ = createState$.asObservable();
@@ -99,6 +105,7 @@ export class BoardEffects {
     this._reorderState$ = reorderState$.asObservable();
     this._deleteState$ = deleteState$.asObservable();
     this._createWishState$ = createWishState$.asObservable();
+    this._updateWishState$ = updateWishState$.asObservable();
 
     rxEffects(({ register }) => {
       register(
@@ -242,6 +249,23 @@ export class BoardEffects {
             actions.fetchWishlists();
           }
           createWishState$.next(state);
+        },
+      );
+
+      // Update wish effect
+      register(
+        actions.updateWish$.pipe(
+          switchMap(({ wishId, data, images }) =>
+            this.boardService.updateWish(wishId, data, images),
+          ),
+          toState(),
+        ),
+        (state) => {
+          if (state.hasValue && state.value) {
+            // Trigger a refresh of wishlists after updating a wish
+            actions.fetchWishlists();
+          }
+          updateWishState$.next(state);
         },
       );
     });

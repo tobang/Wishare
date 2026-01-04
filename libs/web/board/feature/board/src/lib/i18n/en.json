@@ -32,6 +32,7 @@
     "delete-cancel": "Cancel"
   },
   "wish": {
-    "create-title": "Create New Wish"
+    "create-title": "Create New Wish",
+    "edit-title": "Edit Wish"
   }
 }

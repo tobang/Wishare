@@ -29,7 +29,7 @@ import {
   CreateWishlistDialogInput,
   CreateWishlistDialogResult,
 } from './create-wishlist-dialog';
-import { WishlistUi } from '@wishare/web/wishlist/data-access';
+import { WishFlat, WishlistUi } from '@wishare/web/wishlist/data-access';
 import {
   WishDialogComponent,
   WishDialogResult,
@@ -158,6 +158,38 @@ export class BoardComponent {
         console.log('[BoardComponent] Creating wish', { wishlistId, result });
         this.boardStore.actions.createWish({
           wishlistId,
+          data: result.wishData,
+          images: result.imageFiles,
+        });
+      });
+  }
+
+  editWish(event: { wishlistId: string; wish: WishFlat }) {
+    const { wishlistId, wish } = event;
+    this.dialogService
+      .open<WishDialogResult | null>(
+        new PolymorpheusComponent(WishDialogComponent, this.injector),
+        {
+          label: this.transloco.translate('board.wish.edit-title'),
+          size: 'l',
+          closable: true,
+          dismissible: true,
+          data: {
+            editMode: true,
+            wish: wish,
+            images: wish.files,
+          },
+        },
+      )
+      .pipe(filter((result): result is WishDialogResult => !!result))
+      .subscribe((result) => {
+        console.log('[BoardComponent] Updating wish', {
+          wishlistId,
+          wishId: wish.$id,
+          result,
+        });
+        this.boardStore.actions.updateWish({
+          wishId: wish.$id,
           data: result.wishData,
           images: result.imageFiles,
         });

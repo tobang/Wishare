@@ -37,6 +37,15 @@ export type CreateWishPayload = {
 };
 
 /**
+ * Payload for updating a wish
+ */
+export type UpdateWishPayload = {
+  wishId: string;
+  data: CreateWishData;
+  images?: File[];
+};
+
+/**
  * State model for board/wishlists
  */
 export type BoardStateModel = {
@@ -47,6 +56,7 @@ export type BoardStateModel = {
   reorderState: StreamState<void>;
   deleteState: StreamState<void>;
   createWishState: StreamState<WishFlat>;
+  updateWishState: StreamState<WishFlat>;
 };
 
 /**
@@ -86,6 +96,7 @@ export type BoardActions = {
   reorderWishlists: ReorderWishlistsData;
   deleteWishlist: string;
   createWish: CreateWishPayload;
+  updateWish: UpdateWishPayload;
 
   // State Actions - update store state
   updateBoardState: Partial<BoardStateModel>;
@@ -93,4 +104,5 @@ export type BoardActions = {
   resetCreateState: void;
   resetDeleteState: void;
   resetCreateWishState: void;
+  resetUpdateWishState: void;
 };

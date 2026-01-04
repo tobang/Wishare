@@ -2,14 +2,6 @@
 
 <ng-container *transloco="let t; read: 'wishcreate'">
   <div class="wish-create-container">
-    <div class="wish-create-header">
-      <div class="header-icon">
-        <tui-icon icon="@tui.gift"></tui-icon>
-      </div>
-      <h2 class="header-title">{{ t('header.title') }}</h2>
-      <p class="header-subtitle">{{ t('header.subtitle') }}</p>
-    </div>
-
     <form
       tuiForm="m"
       class="wish-form"
@@ -147,7 +139,7 @@
                     <div class="image-preview">
                       <img
                         [src]="preview.dataUrl"
-                        [alt]="preview.file.name"
+                        [alt]="preview.file?.name || 'Image ' + (i + 1)"
                         class="preview-image"
                         draggable="false"
                       />

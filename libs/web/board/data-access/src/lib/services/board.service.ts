@@ -483,6 +483,71 @@ export class BoardService {
   }
 
   /**
+   * Updates a wish in the database.
+   *
+   * @param wishId - The ID of the wish to update
+   * @param data - The new wish data
+   * @param newImages - Optional new images to upload
+   * @returns Observable of the updated wish
+   */
+  updateWish(
+    wishId: string,
+    data: CreateWishData,
+    newImages?: File[],
+  ): Observable<WishFlat> {
+    return from(this.appwrite.account.get()).pipe(
+      switchMap((account) => {
+        const upload$ =
+          newImages && newImages.length > 0
+            ? this.uploadWishImages(newImages, account.$id)
+            : of([] as string[]);
+
+        return upload$.pipe(
+          switchMap((newFileIds) => {
+            return from(
+              this.appwrite.tablesDb.getRow({
+                databaseId: DATABASE_ID,
+                tableId: WISHES_TABLE,
+                rowId: wishId,
+              }),
+            ).pipe(
+              switchMap((existingWish: any) => {
+                const existingFiles = (existingWish.files as string[]) || [];
+                const allFiles = [...existingFiles, ...newFileIds];
+
+                const updateData: Record<string, unknown> = {
+                  title: data.title,
+                  description: data.description ?? '',
+                  url: data.url ?? '',
+                  price: data.price ?? 0,
+                  quantity: data.quantity ?? 1,
+                };
+
+                if (allFiles.length > 0) {
+                  updateData['files'] = allFiles;
+                }
+
+                return from(
+                  this.appwrite.tablesDb.updateRow({
+                    databaseId: DATABASE_ID,
+                    tableId: WISHES_TABLE,
+                    rowId: wishId,
+                    data: updateData,
+                  }),
+                ).pipe(map((row) => flattenWish(row as unknown as Wish)));
+              }),
+            );
+          }),
+        );
+      }),
+      catchError((error) => {
+        console.error('[BoardService] Error updating wish:', error);
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  /**
    * Gets a file preview URL for a wish image.
    *
    * @param fileId - The file ID

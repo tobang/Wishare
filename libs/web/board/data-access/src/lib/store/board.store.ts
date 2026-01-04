@@ -45,6 +45,7 @@ export class BoardStore implements WithInitializer {
       reorderState: resetStreamState<void>(),
       deleteState: resetStreamState<void>(),
       createWishState: resetStreamState<WishFlat>(),
+      updateWishState: resetStreamState<WishFlat>(),
     });
 
     connect(this.actions.updateBoardState$, (state, update) => ({
@@ -63,6 +64,7 @@ export class BoardStore implements WithInitializer {
     connect('reorderState', this.effects.reorderState$);
     connect('deleteState', this.effects.deleteState$);
     connect('createWishState', this.effects.createWishState$);
+    connect('updateWishState', this.effects.updateWishState$);
 
     /**
      * Consolidated wishLists updates from board operations.
@@ -99,6 +101,10 @@ export class BoardStore implements WithInitializer {
 
     connect(this.actions.resetCreateWishState$, () => ({
       createWishState: resetStreamState<WishFlat>(),
+    }));
+
+    connect(this.actions.resetUpdateWishState$, () => ({
+      updateWishState: resetStreamState<WishFlat>(),
     }));
   });
   // #endregion State

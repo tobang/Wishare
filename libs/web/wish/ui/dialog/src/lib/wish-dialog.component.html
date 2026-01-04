@@ -1,46 +1,59 @@
 @let activeItemIndex = adapter.vm.activeItemIndex();
+@let isEditMode = context.data.editMode;
 
 <div class="wish-dialog-layout">
-  <div class="wish-dialog-stepper">
-    <tui-stepper
-      orientation="vertical"
-      tuiConnected
-      [activeItemIndex]="activeItemIndex"
-      (activeItemIndexChange)="setActiveItemIndex($event)"
-    >
-      <button tuiStep icon="@tui.circle-help">
-        {{ 'wish.dialog.steps.type' | transloco }}
-      </button>
-      <button tuiStep icon="@tui.link">
-        {{ 'wish.dialog.steps.link' | transloco }}
-      </button>
-      <button tuiStep icon="@tui.pencil">
-        {{ 'wish.dialog.steps.details' | transloco }}
-      </button>
-    </tui-stepper>
-  </div>
+  @if (!isEditMode) {
+    <div class="wish-dialog-stepper">
+      <tui-stepper
+        orientation="vertical"
+        tuiConnected
+        [activeItemIndex]="activeItemIndex"
+        (activeItemIndexChange)="setActiveItemIndex($event)"
+      >
+        <button tuiStep icon="@tui.circle-help">
+          {{ 'wish.dialog.steps.type' | transloco }}
+        </button>
+        <button tuiStep icon="@tui.link">
+          {{ 'wish.dialog.steps.link' | transloco }}
+        </button>
+        <button tuiStep icon="@tui.pencil">
+          {{ 'wish.dialog.steps.details' | transloco }}
+        </button>
+      </tui-stepper>
+    </div>
+  }
 
   <div class="wish-dialog-content">
-    @switch (activeItemIndex) {
-      @case (0) {
-        <wishare-wish-type
-          (createAutomatic)="createAutomatic()"
-          (createManual)="createManual()"
-        ></wishare-wish-type>
-      }
-      @case (1) {
-        <wishare-url-type
-          (getMetadata)="onMetadataReceived($event)"
-        ></wishare-url-type>
-      }
-      @case (2) {
-        <wishare-wish-create
-          [wishForm]="wishForm"
-          [initialImages]="images()"
-          (submit)="onWishSubmit()"
-          (cancel)="onWishCancel()"
-          (imagesChange)="onImagesChange($event)"
-        ></wishare-wish-create>
+    @if (isEditMode) {
+      <wishare-wish-form
+        [wishForm]="wishForm"
+        [initialImages]="images()"
+        (submit)="onWishSubmit()"
+        (cancel)="onWishCancel()"
+        (imagesChange)="onImagesChange($event)"
+      ></wishare-wish-form>
+    } @else {
+      @switch (activeItemIndex) {
+        @case (0) {
+          <wishare-wish-type
+            (createAutomatic)="createAutomatic()"
+            (createManual)="createManual()"
+          ></wishare-wish-type>
+        }
+        @case (1) {
+          <wishare-url-type
+            (getMetadata)="onMetadataReceived($event)"
+          ></wishare-url-type>
+        }
+        @case (2) {
+          <wishare-wish-form
+            [wishForm]="wishForm"
+            [initialImages]="images()"
+            (submit)="onWishSubmit()"
+            (cancel)="onWishCancel()"
+            (imagesChange)="onImagesChange($event)"
+          ></wishare-wish-form>
+        }
       }
     }
   </div>

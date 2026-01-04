@@ -17,7 +17,10 @@
   <section class="wishes-section">
     @if (wishlist().wishes?.rows?.length) {
       @for (wish of wishlist().wishes?.rows; track wish; let i = $index) {
-        <wishare-wish [wish]="wish"></wishare-wish>
+        <wishare-wish
+          [wish]="wish"
+          (wishClick)="onWishClick($event)"
+        ></wishare-wish>
       }
     } @else {
       <div class="no-wishes">

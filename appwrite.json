@@ -21,6 +21,7 @@
       "name": "Scrape Meta Tags",
       "runtime": "node-21.0",
       "path": "functions/scrapeMetaTags",
+      "commands": "npm install",
       "entrypoint": "src/main.js",
       "ignore": ["node_modules", ".npm", "*.md", ".git", ".gitignore"],
       "execute": ["any"],
