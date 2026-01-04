@@ -21,8 +21,8 @@ export type WishDialogResult = {
   wishData: CreateWishData;
   /** The existing wish being edited (only present in edit mode) */
   existingWish?: Wish;
-  /** Images to be uploaded */
-  images?: (string | ArrayBuffer)[];
+  /** Image files to be uploaded to storage */
+  imageFiles?: File[];
 };
 
 export type WishDialogInput = {

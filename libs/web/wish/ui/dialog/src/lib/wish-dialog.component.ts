@@ -11,6 +11,7 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { TuiConnected, TuiStepper } from '@taiga-ui/kit';
 import { form, SchemaPath, SchemaPathTree } from '@angular/forms/signals';
 import { vestValidation } from '@wishare/web/shared/validators';
+import { ScrapedMetadata } from '@wishare/web/shared/services';
 
 import { UrlTypeComponent } from '@wishare/web/wish/ui/steps/url-type';
 import { WishTypeComponent } from '@wishare/web/wish/ui/steps/wish-type';
@@ -18,6 +19,7 @@ import {
   WishCreateComponent,
   CreateWishFormModel,
   createWishValidationSuite,
+  ImagePreview,
 } from '@wishare/web/wish/ui/steps/wish-create';
 import {
   WishDialogResult,
@@ -58,6 +60,9 @@ export class WishDialogComponent {
     quantity: '1',
   });
 
+  // Image state managed by this smart component
+  readonly images = signal<ImagePreview[]>([]);
+
   readonly wishForm = form(
     this.model,
     (
@@ -84,10 +89,60 @@ export class WishDialogComponent {
     this.setActiveItemIndex(1);
   }
 
-  onUrlSubmit(url: string) {
-    // Pre-fill the URL in the form when automatic mode is used
-    this.model.update((current) => ({ ...current, url }));
+  /**
+   * Handles scraped metadata from URL scraping
+   * Populates form fields with extracted data and navigates to final step
+   */
+  onMetadataReceived(metadata: ScrapedMetadata) {
+    // Update form with scraped data
+    this.model.update((current) => ({
+      ...current,
+      url: metadata.url || current.url,
+      title: metadata.title || current.title,
+      description: metadata.description || current.description,
+      price: metadata.price || current.price,
+    }));
+
+    // If there's a scraped image, add it to the images
+    if (metadata.imageEncoded) {
+      this.addImageFromDataUrl(metadata.imageEncoded);
+    }
+
+    // Navigate to the final step (wish details)
     this.setActiveItemIndex(2);
+  }
+
+  /**
+   * Adds an image from a base64 data URL
+   */
+  private addImageFromDataUrl(dataUrl: string): void {
+    // Convert data URL to File for consistent handling
+    const byteString = atob(dataUrl.split(',')[1]);
+    const mimeType = dataUrl.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: mimeType });
+    const file = new File([blob], 'scraped-image.' + mimeType.split('/')[1], {
+      type: mimeType,
+    });
+
+    const imagePreview: ImagePreview = {
+      id: crypto.randomUUID(),
+      file,
+      dataUrl,
+    };
+
+    this.images.update((current) => [...current, imagePreview]);
+  }
+
+  /**
+   * Handles image changes from the child component
+   */
+  onImagesChange(images: ImagePreview[]): void {
+    this.images.set(images);
   }
 
   onWishSubmit() {
@@ -100,7 +155,14 @@ export class WishDialogComponent {
         price: formValue.price ? parseFloat(formValue.price) : null,
         quantity: formValue.quantity ? parseInt(formValue.quantity, 10) : 1,
       };
-      this.context.completeWith({ wishData });
+
+      // Include image Files for upload to storage
+      const imageFiles = this.images().map((img) => img.file);
+
+      this.context.completeWith({
+        wishData,
+        imageFiles: imageFiles.length > 0 ? imageFiles : undefined,
+      });
     }
   }
 

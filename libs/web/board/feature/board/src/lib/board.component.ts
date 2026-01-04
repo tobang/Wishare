@@ -150,13 +150,17 @@ export class BoardComponent {
           size: 'l',
           closable: true,
           dismissible: true,
-          data: { wishlistId },
+          data: { editMode: false },
         },
       )
       .pipe(filter((result): result is WishDialogResult => !!result))
       .subscribe((result) => {
-        // TODO: Handle wish creation through store
-        console.log('Wish created:', result);
+        console.log('[BoardComponent] Creating wish', { wishlistId, result });
+        this.boardStore.actions.createWish({
+          wishlistId,
+          data: result.wishData,
+          images: result.imageFiles,
+        });
       });
   }
 

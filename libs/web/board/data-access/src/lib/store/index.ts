@@ -7,5 +7,7 @@ export type {
   BoardResult,
   BoardWishlist,
   CreateWishlistData,
+  CreateWishData,
+  CreateWishPayload,
   ReorderWishlistsData,
 } from './board.types';

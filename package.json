@@ -73,6 +73,7 @@
     "eslint-plugin-playwright": "^1.6.2",
     "eslint-plugin-unused-imports": "^4.3.0",
     "jsdom": "^27.1.0",
+    "node-appwrite": "^21.1.0",
     "nx": "22.3.3",
     "prettier": "~3.6.2",
     "tslib": "^2.3.0",

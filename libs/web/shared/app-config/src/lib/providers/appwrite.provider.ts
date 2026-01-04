@@ -1,10 +1,12 @@
 import { inject, InjectionToken } from '@angular/core';
-import { Account, Client, TablesDB } from 'appwrite';
+import { Account, Client, Functions, Storage, TablesDB } from 'appwrite';
 import { APP_CONFIG } from './../app-config.token';
 
 export const APPWRITE = new InjectionToken<{
   tablesDb: TablesDB;
   account: Account;
+  functions: Functions;
+  storage: Storage;
 }>('appwrite account instance', {
   providedIn: 'root',
 
@@ -13,8 +15,10 @@ export const APPWRITE = new InjectionToken<{
     const client = new Client();
     const tablesDb = new TablesDB(client);
     const account = new Account(client);
+    const functions = new Functions(client);
+    const storage = new Storage(client);
     client.setEndpoint(env.appwriteEndpoint);
     client.setProject(env.appwriteProject);
-    return { tablesDb, account };
+    return { tablesDb, account, functions, storage };
   },
 });

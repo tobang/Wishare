@@ -19,12 +19,7 @@
       <div class="form-field">
         <label tuiLabel>
           {{ t('form.title.label') }}<span class="tui-required"></span>
-          <tui-textfield
-            tuiTextfieldSize="m"
-            [tuiTextfieldCleaner]="true"
-            iconStart="@tui.tag"
-            class="small-icon"
-          >
+          <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="true">
             <input
               tuiInput
               [placeholder]="t('form.title.placeholder')"
@@ -45,12 +40,7 @@
               [tuiTooltip]="t('form.url.hint')"
             ></tui-icon>
           </span>
-          <tui-textfield
-            tuiTextfieldSize="m"
-            [tuiTextfieldCleaner]="true"
-            iconStart="@tui.link"
-            class="small-icon"
-          >
+          <tui-textfield tuiTextfieldSize="m" [tuiTextfieldCleaner]="true">
             <input
               tuiInput
               type="url"
@@ -104,11 +94,165 @@
               tuiTextarea
               [placeholder]="t('form.description.placeholder')"
               [field]="formState.description"
-              rows="3"
+              rows="2"
             ></textarea>
           </tui-textfield>
         </label>
         <wishare-field-error [field]="formState.description" />
+      </div>
+
+      <!-- Image Upload Section -->
+      <div class="form-field">
+        <label tuiLabel>
+          {{ t('form.images.label') }}
+          <span class="field-hint">
+            <tui-icon
+              icon="@tui.info"
+              [tuiTooltip]="t('form.images.hint')"
+            ></tui-icon>
+          </span>
+        </label>
+
+        <!-- Image Preview Carousel -->
+        @if (imagePreviews().length > 0) {
+          <div class="image-carousel-container">
+            <div class="carousel-wrapper" tuiCarouselButtons>
+              @if (imagePreviews().length > 1) {
+                <button
+                  tuiButton
+                  tuiIconButton
+                  appearance="flat"
+                  size="s"
+                  iconStart="@tui.chevron-left"
+                  type="button"
+                  class="carousel-nav carousel-nav--prev"
+                  [disabled]="carouselIndex() === 0"
+                  (click)="prevImage()"
+                >
+                  Previous
+                </button>
+              }
+
+              <tui-carousel
+                class="image-carousel"
+                [draggable]="true"
+                [(index)]="carouselIndex"
+              >
+                @for (
+                  preview of imagePreviews();
+                  track preview.id;
+                  let i = $index
+                ) {
+                  <div *tuiItem class="carousel-slide">
+                    <div class="image-preview">
+                      <img
+                        [src]="preview.dataUrl"
+                        [alt]="preview.file.name"
+                        class="preview-image"
+                        draggable="false"
+                      />
+                      <button
+                        tuiButton
+                        tuiIconButton
+                        appearance="flat"
+                        size="xs"
+                        iconStart="@tui.x"
+                        type="button"
+                        class="remove-image-btn"
+                        (click)="removeImage(i)"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                }
+              </tui-carousel>
+
+              @if (imagePreviews().length > 1) {
+                <button
+                  tuiButton
+                  tuiIconButton
+                  appearance="flat"
+                  size="s"
+                  iconStart="@tui.chevron-right"
+                  type="button"
+                  class="carousel-nav carousel-nav--next"
+                  [disabled]="carouselIndex() === imagePreviews().length - 1"
+                  (click)="nextImage()"
+                >
+                  Next
+                </button>
+              }
+            </div>
+
+            @if (imagePreviews().length > 1) {
+              <tui-pagination
+                size="m"
+                class="image-pagination"
+                [length]="imagePreviews().length"
+                [(index)]="carouselIndex"
+              />
+            }
+
+            <div class="image-counter">
+              {{ imageCount() }}/5 {{ t('form.images.counter') }}
+            </div>
+          </div>
+        }
+
+        <!-- File Upload Input -->
+        @if (canAddMoreImages()) {
+          <label tuiInputFiles class="image-upload-label">
+            <input
+              tuiInputFiles
+              type="file"
+              accept="image/*"
+              [multiple]="true"
+              [maxFileSize]="maxFileSize"
+              [ngModel]="[]"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onFilesChange($event)"
+              (reject)="onFilesReject($event)"
+            />
+            <ng-template let-dragged>
+              <div
+                class="upload-content"
+                [class.upload-content--dragged]="dragged"
+              >
+                <div class="upload-icon">
+                  <tui-icon
+                    [icon]="dragged ? '@tui.image-down' : '@tui.image-plus'"
+                  ></tui-icon>
+                </div>
+                <div class="upload-text">
+                  @if (dragged) {
+                    {{ t('form.images.drop') }}
+                  } @else {
+                    {{ t('form.images.dragOrClick') }}
+                    <a tuiLink>{{ t('form.images.browse') }}</a>
+                  }
+                </div>
+                <span class="upload-hint">
+                  {{ t('form.images.formats') }}
+                </span>
+              </div>
+            </ng-template>
+          </label>
+        }
+
+        <!-- Rejected Files -->
+        @if (rejectedFiles().length > 0) {
+          <tui-files class="rejected-files">
+            @for (file of rejectedFiles(); track file.name) {
+              <tui-file
+                *tuiItem
+                state="error"
+                [file]="file"
+                (remove)="removeRejectedFile(file)"
+              />
+            }
+          </tui-files>
+        }
       </div>
 
       <!-- Action Buttons -->

@@ -21,22 +21,36 @@
             type="url"
             [placeholder]="t('step-url.placeholder')"
             [field]="frmUrl.url"
+            [readOnly]="loading()"
           />
         </tui-textfield>
       </label>
       <wishare-field-error [field]="frmUrl.url" />
     </div>
 
+    @if (errorMessage()) {
+      <div class="error-message">
+        <tui-icon icon="@tui.circle-alert"></tui-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
     <footer class="dialog-actions">
       <button
         tuiButton
-        type="submit"
+        type="button"
         appearance="primary"
         size="m"
         iconStart="@tui.download"
-        [disabled]="!frmUrl().valid()"
+        [disabled]="!frmUrl().valid() || loading()"
+        (click)="submitUrl()"
       >
-        {{ t('step-url.button') }}
+        @if (loading()) {
+          <tui-loader size="s" [inheritColor]="true"></tui-loader>
+          {{ t('step-url.loading') }}
+        } @else {
+          {{ t('step-url.button') }}
+        }
       </button>
     </footer>
   </form>

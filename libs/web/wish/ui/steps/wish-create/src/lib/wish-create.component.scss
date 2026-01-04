@@ -2,6 +2,8 @@
   display: block;
   min-width: 28rem;
   max-width: 32rem;
+  max-height: 80vh;
+  overflow-y: auto;
 
   @media (max-width: 480px) {
     min-width: 100%;
@@ -12,43 +14,43 @@
 .wish-create-container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
 }
 
 .wish-create-header {
   text-align: center;
-  padding-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
   border-bottom: 1px solid var(--tui-border-normal);
 
   .header-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
     background: linear-gradient(
       135deg,
       var(--tui-background-accent-1) 0%,
       var(--tui-background-accent-2) 100%
     );
-    border-radius: 1rem;
-    margin-bottom: var(--spacing-sm);
+    border-radius: 0.75rem;
+    margin-bottom: var(--spacing-xs);
 
     tui-icon {
-      font-size: 1.75rem;
+      font-size: 1.25rem;
       color: var(--tui-text-primary-on-accent-1);
     }
   }
 
   .header-title {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
-    margin: 0 0 0.25rem;
+    margin: 0 0 0.125rem;
     color: var(--text-primary);
   }
 
   .header-subtitle {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     color: var(--text-secondary);
     margin: 0;
   }
@@ -57,13 +59,13 @@
 .wish-form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.125rem;
 
   &--half {
     flex: 1;
@@ -73,7 +75,7 @@
 
 .form-row {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 
   @media (max-width: 480px) {
     flex-direction: column;
@@ -112,8 +114,153 @@ input[type='number'] {
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: var(--spacing-sm);
-  padding-top: var(--spacing-md);
+  gap: 0.5rem;
+  margin-top: var(--spacing-xs);
+  padding-top: var(--spacing-sm);
   border-top: 1px solid var(--tui-border-normal);
+}
+
+// Image Upload Styles
+.image-carousel-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+}
+
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  position: relative;
+}
+
+.image-carousel {
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--tui-radius-m);
+  overflow: hidden;
+  background: var(--tui-background-neutral-1);
+}
+
+.carousel-slide {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-xs);
+}
+
+.image-preview {
+  position: relative;
+  width: 100%;
+  max-width: 12rem;
+  aspect-ratio: 16/10;
+  border-radius: var(--tui-radius-m);
+  overflow: hidden;
+  background: var(--tui-background-neutral-2);
+
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .remove-image-btn {
+    position: absolute;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+  }
+}
+
+.carousel-nav {
+  flex-shrink: 0;
+
+  &:disabled {
+    opacity: 0.3;
+  }
+}
+
+.image-pagination {
+  align-self: center;
+}
+
+.image-counter {
+  font-size: 0.75rem;
+  color: var(--tui-text-tertiary);
+  text-align: center;
+}
+
+.image-upload-label {
+  margin-top: var(--spacing-xs);
+  border: 2px dashed var(--tui-border-normal);
+  border-radius: var(--tui-radius-m);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+  min-height: 5rem;
+
+  &:hover {
+    border-color: var(--tui-border-hover);
+    background: var(--tui-background-neutral-1-hover);
+  }
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  text-align: center;
+  color: var(--tui-text-secondary);
+  min-height: 4rem;
+
+  &--dragged {
+    background: var(--tui-background-accent-1-hover);
+    border-color: var(--tui-background-accent-1);
+  }
+}
+
+.upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--tui-background-neutral-1);
+  color: var(--tui-text-secondary);
+
+  tui-icon {
+    font-size: 1rem;
+  }
+}
+
+.upload-text {
+  font-size: 0.875rem;
+  line-height: 1.4;
+
+  a {
+    font-weight: 500;
+  }
+}
+
+.upload-hint {
+  font-size: 0.75rem;
+  color: var(--tui-text-tertiary);
+}
+
+.rejected-files {
+  margin-top: var(--spacing-sm);
 }

@@ -1,6 +1,20 @@
 {
   "projectId": "694ab35e00384ed4a1a5",
   "projectName": "Wishare",
+  "buckets": [
+    {
+      "$id": "wish-images",
+      "name": "Wish Images",
+      "enabled": true,
+      "maximumFileSize": 5242880,
+      "allowedFileExtensions": ["jpg", "jpeg", "png", "gif", "webp"],
+      "compression": "gzip",
+      "encryption": true,
+      "antivirus": true,
+      "fileSecurity": true,
+      "$permissions": ["create(\"users\")", "read(\"users\")"]
+    }
+  ],
   "functions": [
     {
       "$id": "scrapeMetaTags",
@@ -21,49 +35,24 @@
   "databases": [
     {
       "$id": "wishare",
-      "name": "Wishare Database"
+      "name": "Wishare Database",
+      "enabled": true
     }
   ],
   "collections": [
     {
       "$id": "wishes",
-      "name": "Wishes",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
       "databaseId": "wishare",
+      "name": "Wishes",
       "enabled": true,
       "documentSecurity": true,
       "attributes": [
-        {
-          "key": "title",
-          "type": "string",
-          "size": 255,
-          "required": true,
-          "array": false,
-          "default": null
-        },
-        {
-          "key": "description",
-          "type": "string",
-          "size": 2000,
-          "required": false,
-          "array": false,
-          "default": null
-        },
-        {
-          "key": "uid",
-          "type": "string",
-          "size": 255,
-          "required": true,
-          "array": false,
-          "default": null
-        },
-        {
-          "key": "url",
-          "type": "string",
-          "size": 1000,
-          "required": false,
-          "array": false,
-          "default": null
-        },
         {
           "key": "price",
           "type": "double",
@@ -92,71 +81,107 @@
           "default": 1
         },
         {
-          "key": "image",
+          "key": "title",
           "type": "string",
-          "size": 5000,
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "string",
           "required": false,
           "array": false,
-          "default": null
+          "size": 2000,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "uid",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1000,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "image",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 5000,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "files",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "wlid",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
         {
           "key": "uid_idx",
           "type": "key",
+          "status": "available",
           "attributes": ["uid"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "wlid_idx",
+          "type": "key",
+          "status": "available",
+          "attributes": ["wlid"],
           "orders": ["ASC"]
         }
       ]
     },
     {
       "$id": "wishlists",
-      "name": "Wishlists",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
       "databaseId": "wishare",
+      "name": "Wishlists",
       "enabled": true,
       "documentSecurity": true,
-      "permissions": [
-        {
-          "permission": "create",
-          "target": "users"
-        },
-        {
-          "permission": "read",
-          "target": "users"
-        },
-        {
-          "permission": "update",
-          "target": "users"
-        },
-        {
-          "permission": "delete",
-          "target": "users"
-        }
-      ],
       "attributes": [
-        {
-          "key": "title",
-          "type": "string",
-          "size": 255,
-          "required": true,
-          "array": false,
-          "default": null
-        },
-        {
-          "key": "description",
-          "type": "string",
-          "size": 1000,
-          "required": false,
-          "array": false,
-          "default": null
-        },
         {
           "key": "uid",
           "type": "string",
-          "size": 255,
           "required": true,
           "array": false,
-          "default": null
+          "size": 255,
+          "default": null,
+          "encrypt": false
         },
         {
           "key": "priority",
@@ -170,34 +195,43 @@
         {
           "key": "visibility",
           "type": "string",
-          "size": 50,
-          "format": "enum",
-          "elements": ["draft", "published", "archived"],
           "required": false,
           "array": false,
+          "elements": ["draft", "published", "archived"],
+          "format": "enum",
           "default": "draft"
         },
         {
-          "key": "wishes",
-          "type": "relationship",
-          "relatedCollection": "wishes",
-          "relationType": "oneToMany",
-          "twoWay": true,
-          "twoWayKey": "wishlist",
-          "onDelete": "cascade",
-          "side": "parent"
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1000,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
         {
           "key": "uid_idx",
           "type": "key",
+          "status": "available",
           "attributes": ["uid"],
           "orders": ["ASC"]
         },
         {
           "key": "priority_uid_idx",
           "type": "unique",
+          "status": "available",
           "attributes": ["priority", "uid"],
           "orders": ["ASC", "ASC"]
         }

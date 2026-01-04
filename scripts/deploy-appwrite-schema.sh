@@ -41,8 +41,7 @@ fi
 
 echo "This will deploy:"
 echo "  • Database: wishare"
-echo "  • Collection: wishes (9 attributes)"
-echo "  • Collection: wishlists (5 attributes)"
+echo "  • Tables: wishes, wishlists (with relationship)"
 echo ""
 read -p "Continue? (y/N) " -n 1 -r
 echo
@@ -51,8 +50,11 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 echo ""
-echo "🔧 Deploying..."
-appwrite push collection
+echo "🔧 Deploying TablesDB schema..."
+appwrite push tables
 
 echo ""
 echo -e "${GREEN}✅ Done!${NC}"
+echo ""
+echo -e "${YELLOW}Note: If the relationship wasn't created, you may need to manually"
+echo "create it in the Appwrite Console under TablesDB → wishlists → Columns${NC}"

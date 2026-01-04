@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   output,
   signal,
 } from '@angular/core';
@@ -19,11 +20,13 @@ import {
   TuiLabel,
   TuiIcon,
   TuiInput,
+  TuiLoader,
 } from '@taiga-ui/core';
 import { scopeLoader } from 'scoped-translations';
 
 import { vestValidation } from '@wishare/web/shared/validators';
 import { FieldErrorComponent } from '@wishare/web/shared/utils';
+import { ScrapeService, ScrapedMetadata } from '@wishare/web/shared/services';
 import { urlValidationSuite, UrlFormModel } from './url-type.validation';
 
 @Component({
@@ -38,6 +41,7 @@ import { urlValidationSuite, UrlFormModel } from './url-type.validation';
     TuiInput,
     TuiLabel,
     TuiIcon,
+    TuiLoader,
     TranslocoModule,
   ],
   providers: [
@@ -56,7 +60,16 @@ import { urlValidationSuite, UrlFormModel } from './url-type.validation';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UrlTypeComponent {
-  readonly getUrl = output<string>();
+  private readonly scrapeService = inject(ScrapeService);
+
+  /** Emits scraped metadata when URL is successfully scraped */
+  readonly getMetadata = output<ScrapedMetadata>();
+
+  /** Loading state */
+  readonly loading = signal(false);
+
+  /** Error message */
+  readonly errorMessage = signal<string | null>(null);
 
   private readonly model = signal<UrlFormModel>({
     url: '',
@@ -74,6 +87,21 @@ export class UrlTypeComponent {
       return;
     }
     const { url } = this.frmUrl().value();
-    this.getUrl.emit(url);
+
+    this.loading.set(true);
+    this.errorMessage.set(null);
+
+    this.scrapeService.scrapeUrl(url).subscribe({
+      next: (metadata) => {
+        this.loading.set(false);
+        this.getMetadata.emit(metadata);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.errorMessage.set(
+          err.message || 'Failed to fetch details from URL',
+        );
+      },
+    });
   }
 }

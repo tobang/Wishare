@@ -104,6 +104,56 @@ export default async ({ req, res, log, error }) => {
       }
     }
 
+    // Extract price from various sources
+    let price =
+      getMetaTag('price') ||
+      $('meta[property="product:price:amount"]').attr('content') ||
+      '';
+
+    // Try to find price in JSON-LD structured data
+    if (!price) {
+      $('script[type="application/ld+json"]').each((i, elem) => {
+        try {
+          const jsonData = JSON.parse($(elem).html() || '{}');
+          // Check for Product schema
+          if (jsonData['@type'] === 'Product' && jsonData.offers) {
+            price = jsonData.offers.price || jsonData.offers.lowPrice || '';
+          }
+          // Check for array of schemas
+          if (Array.isArray(jsonData)) {
+            jsonData.forEach((item) => {
+              if (item['@type'] === 'Product' && item.offers) {
+                price = item.offers.price || item.offers.lowPrice || '';
+              }
+            });
+          }
+        } catch (e) {
+          // Skip invalid JSON
+        }
+      });
+    }
+
+    // Try common price selectors as fallback
+    if (!price) {
+      const priceSelectors = [
+        '.site-currency-lg',
+        '.site-currency-attention-large',
+        '.price',
+        '[itemprop="price"]',
+        '.product-price',
+        '[data-price]',
+      ];
+
+      for (const selector of priceSelectors) {
+        const priceEl = $(selector).first();
+        const priceContent = priceEl.attr('content') || priceEl.text()?.trim();
+        if (priceContent) {
+          price = priceContent;
+          break;
+        }
+      }
+    }
+
     // Build response object
     const scrapedData = {
       url,
@@ -115,10 +165,7 @@ export default async ({ req, res, log, error }) => {
       description: getMetaTag('description'),
       image: imageUrl,
       imageEncoded,
-      price:
-        getMetaTag('price') ||
-        $('meta[property="product:price:amount"]').attr('content') ||
-        '',
+      price,
       author: getMetaTag('author'),
       siteName: getMetaTag('site_name'),
       type: getMetaTag('type'),

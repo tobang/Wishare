@@ -3,7 +3,7 @@ import { rxState } from '@rx-angular/state';
 import { rxActions } from '@rx-angular/state/actions';
 
 import { resetStreamState, WithInitializer } from '@wishare/web/shared/utils';
-import { WishlistFlat } from '@wishare/web/wishlist/data-access';
+import { WishFlat, WishlistFlat } from '@wishare/web/wishlist/data-access';
 import { filter, map, merge } from 'rxjs';
 
 import { createBoardViewModel, BoardViewModel } from './board.selectors';
@@ -44,6 +44,7 @@ export class BoardStore implements WithInitializer {
       editState: resetStreamState<WishlistFlat>(),
       reorderState: resetStreamState<void>(),
       deleteState: resetStreamState<void>(),
+      createWishState: resetStreamState<WishFlat>(),
     });
 
     connect(this.actions.updateBoardState$, (state, update) => ({
@@ -61,6 +62,7 @@ export class BoardStore implements WithInitializer {
     connect('editState', this.effects.editState$);
     connect('reorderState', this.effects.reorderState$);
     connect('deleteState', this.effects.deleteState$);
+    connect('createWishState', this.effects.createWishState$);
 
     /**
      * Consolidated wishLists updates from board operations.
@@ -93,6 +95,10 @@ export class BoardStore implements WithInitializer {
 
     connect(this.actions.resetDeleteState$, () => ({
       deleteState: resetStreamState<void>(),
+    }));
+
+    connect(this.actions.resetCreateWishState$, () => ({
+      createWishState: resetStreamState<WishFlat>(),
     }));
   });
   // #endregion State

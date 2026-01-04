@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import {
   catchError,
+  forkJoin,
   from,
   map,
   Observable,
@@ -10,7 +11,15 @@ import {
   throwError,
 } from 'rxjs';
 
-import { Account, ID, Permission, Query, Role, TablesDB } from 'appwrite';
+import {
+  Account,
+  ID,
+  Permission,
+  Query,
+  Role,
+  Storage,
+  TablesDB,
+} from 'appwrite';
 
 import { APPWRITE } from '@wishare/web/shared/app-config';
 import {
@@ -21,57 +30,77 @@ import {
   Wishlist,
   WishlistFlat,
 } from '@wishare/web/wishlist/data-access';
-import { BoardWishlist } from '../store/board.types';
+import { BoardWishlist, CreateWishData } from '../store/board.types';
 
 // Database constants
 const DATABASE_ID = 'wishare';
 const WISHLISTS_TABLE = 'wishlists';
 const WISHES_TABLE = 'wishes';
+const WISH_IMAGES_BUCKET = 'wish-images';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
   private readonly appwrite: {
     tablesDb: TablesDB;
     account: Account;
+    storage: Storage;
   } = inject(APPWRITE);
 
   /**
-   * Fetches all wishlists with their wishes in a single query
-   * using TablesDB native relationship loading via Query.select()
+   * Fetches all wishlists with their wishes.
+   * First fetches wishlists, then fetches all wishes for the user and groups them.
    */
   getBoard(): Observable<BoardWishlist[]> {
     return from(this.appwrite.account.get()).pipe(
       switchMap((account) =>
-        from(
-          this.appwrite.tablesDb.listRows({
-            databaseId: DATABASE_ID,
-            tableId: WISHLISTS_TABLE,
-            queries: [
-              Query.equal('uid', account.$id),
-              Query.orderAsc('priority'),
-              Query.select(['*', 'wishes.*']),
-            ],
-          }),
-        ),
+        forkJoin({
+          wishlists: from(
+            this.appwrite.tablesDb.listRows({
+              databaseId: DATABASE_ID,
+              tableId: WISHLISTS_TABLE,
+              queries: [
+                Query.equal('uid', account.$id),
+                Query.orderAsc('priority'),
+              ],
+            }),
+          ),
+          wishes: from(
+            this.appwrite.tablesDb.listRows({
+              databaseId: DATABASE_ID,
+              tableId: WISHES_TABLE,
+              queries: [Query.equal('uid', account.$id)],
+            }),
+          ),
+        }),
       ),
-      map((result) =>
-        result.rows.map((row) => {
-          const rowData = row as unknown as Record<string, unknown>;
+      map(({ wishlists, wishes }) => {
+        // Group wishes by wishlist ID (wlid)
+        const wishesByWishlist = new Map<string, WishFlat[]>();
+        wishes.rows.forEach((row) => {
+          const wish = flattenWish(row as unknown as Wish);
+          const wishData = row as unknown as Record<string, unknown>;
+          const wlid = (wishData['wlid'] as string) || '';
+          if (wlid) {
+            const existing = wishesByWishlist.get(wlid) || [];
+            existing.push(wish);
+            wishesByWishlist.set(wlid, existing);
+          }
+        });
+
+        // Map wishlists with their wishes
+        return wishlists.rows.map((row) => {
           const flatWishlist = flattenWishlist(row as unknown as Wishlist);
-          const rawWishes = Array.isArray(rowData['wishes'])
-            ? rowData['wishes']
-            : [];
-          const wishes = rawWishes.map((wish) => flattenWish(wish as Wish));
+          const wishlistWishes = wishesByWishlist.get(flatWishlist.$id) || [];
 
           return {
             ...flatWishlist,
             wishes:
-              wishes.length > 0
-                ? { total: wishes.length, rows: wishes }
+              wishlistWishes.length > 0
+                ? { total: wishlistWishes.length, rows: wishlistWishes }
                 : undefined,
           } as BoardWishlist;
-        }),
-      ),
+        });
+      }),
     );
   }
 
@@ -96,14 +125,14 @@ export class BoardService {
   }
 
   /**
-   * Get wishes for a specific wishlist using the native relationship
+   * Get wishes for a specific wishlist using the wlid field
    */
   getWishes(wishlistId: string): Observable<WishFlat[]> {
     return from(
       this.appwrite.tablesDb.listRows({
         databaseId: DATABASE_ID,
         tableId: WISHES_TABLE,
-        queries: [Query.equal('wishlist', wishlistId)],
+        queries: [Query.equal('wlid', wishlistId)],
       }),
     ).pipe(
       map((result) =>
@@ -290,6 +319,181 @@ export class BoardService {
         rowId: wishlistId,
       }),
     ).pipe(map(() => undefined));
+  }
+
+  /**
+   * Creates a new wish with optional image uploads.
+   * Uploads images first, then creates the wish with file references.
+   *
+   * @param wishlistId - The ID of the wishlist to add the wish to
+   * @param data - The wish data
+   * @param images - Optional array of File objects to upload
+   * @returns Observable of the created wish
+   */
+  createWish(
+    wishlistId: string,
+    data: CreateWishData,
+    images?: File[],
+  ): Observable<WishFlat> {
+    console.log('[BoardService] createWish called', {
+      wishlistId,
+      data,
+      images,
+    });
+
+    return from(this.appwrite.account.get()).pipe(
+      switchMap((account) => {
+        console.log('[BoardService] Got account', account.$id);
+
+        return from(
+          this.appwrite.tablesDb.listRows({
+            databaseId: DATABASE_ID,
+            tableId: WISHES_TABLE,
+            queries: [
+              Query.equal('wlid', wishlistId),
+              Query.orderDesc('priority'),
+              Query.limit(1),
+            ],
+          }),
+        ).pipe(
+          switchMap((result) => {
+            const maxPriority = this.extractPriority(result.rows[0]);
+            const nextPriority = maxPriority + 1;
+            console.log('[BoardService] Next priority', nextPriority);
+
+            // If there are images, upload them first
+            if (images && images.length > 0) {
+              console.log('[BoardService] Uploading', images.length, 'images');
+              return this.uploadWishImages(images, account.$id).pipe(
+                switchMap((fileIds) => {
+                  console.log(
+                    '[BoardService] Images uploaded, fileIds:',
+                    fileIds,
+                  );
+                  return this.createWishRow(
+                    wishlistId,
+                    account.$id,
+                    data,
+                    nextPriority,
+                    fileIds,
+                  );
+                }),
+              );
+            }
+
+            // No images, just create the wish
+            console.log('[BoardService] No images, creating wish directly');
+            return this.createWishRow(
+              wishlistId,
+              account.$id,
+              data,
+              nextPriority,
+              [],
+            );
+          }),
+        );
+      }),
+      map((row) => {
+        console.log('[BoardService] Wish created successfully', row);
+        return flattenWish(row as unknown as Wish);
+      }),
+      catchError((error) => {
+        console.error('[BoardService] Error creating wish:', error);
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  /**
+   * Uploads multiple images to the wish-images bucket.
+   *
+   * @param images - Array of File objects to upload
+   * @param userId - The user ID for permissions
+   * @returns Observable of array of file IDs
+   */
+  private uploadWishImages(
+    images: File[],
+    userId: string,
+  ): Observable<string[]> {
+    const uploads = images.map((file) =>
+      from(
+        this.appwrite.storage.createFile({
+          bucketId: WISH_IMAGES_BUCKET,
+          fileId: ID.unique(),
+          file,
+          permissions: [
+            Permission.read(Role.user(userId)),
+            Permission.update(Role.user(userId)),
+            Permission.delete(Role.user(userId)),
+          ],
+        }),
+      ).pipe(map((result) => result.$id)),
+    );
+
+    return forkJoin(uploads);
+  }
+
+  /**
+   * Creates a wish row in the database.
+   *
+   * @param wishlistId - The wishlist ID
+   * @param userId - The user ID
+   * @param data - The wish data
+   * @param priority - The priority for ordering
+   * @param fileIds - Array of uploaded file IDs
+   * @returns Promise of the created row
+   */
+  private createWishRow(
+    wishlistId: string,
+    userId: string,
+    data: CreateWishData,
+    priority: number,
+    fileIds: string[],
+  ): Observable<unknown> {
+    // Build the wish data object
+    const wishData: Record<string, unknown> = {
+      title: data.title,
+      description: data.description ?? '',
+      url: data.url ?? '',
+      price: data.price ?? 0,
+      quantity: data.quantity ?? 1,
+      priority,
+      uid: userId,
+      wlid: wishlistId,
+    };
+
+    // Only include files if there are any
+    if (fileIds.length > 0) {
+      wishData['files'] = fileIds;
+    }
+
+    return from(
+      this.appwrite.tablesDb.createRow({
+        databaseId: DATABASE_ID,
+        tableId: WISHES_TABLE,
+        rowId: ID.unique(),
+        data: wishData,
+        permissions: [
+          Permission.read(Role.user(userId)),
+          Permission.update(Role.user(userId)),
+          Permission.delete(Role.user(userId)),
+        ],
+      }),
+    );
+  }
+
+  /**
+   * Gets a file preview URL for a wish image.
+   *
+   * @param fileId - The file ID
+   * @returns URL for the file preview
+   */
+  getWishImagePreviewUrl(fileId: string): string {
+    const result = this.appwrite.storage.getFilePreview({
+      bucketId: WISH_IMAGES_BUCKET,
+      fileId,
+    });
+    return result.toString();
   }
 
   /**

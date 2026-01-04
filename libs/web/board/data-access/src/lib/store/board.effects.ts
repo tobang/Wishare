@@ -3,15 +3,17 @@ import { RxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 
 import {
+  catchError,
   from,
   map,
   Observable,
   ReplaySubject,
   switchMap,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { StreamState, toState } from '@wishare/web/shared/utils';
-import { WishlistFlat } from '@wishare/web/wishlist/data-access';
+import { WishFlat, WishlistFlat } from '@wishare/web/wishlist/data-access';
 
 import { BoardService } from '../services/board.service';
 import { BoardActions, BoardResult, BoardWishlist } from './board.types';
@@ -37,6 +39,7 @@ export class BoardEffects {
   private _editState$!: Observable<StreamState<WishlistFlat>>;
   private _reorderState$!: Observable<StreamState<void>>;
   private _deleteState$!: Observable<StreamState<void>>;
+  private _createWishState$!: Observable<StreamState<WishFlat>>;
   private _currentWishlists$!: ReplaySubject<BoardWishlist[]>;
 
   get fetchState$(): Observable<StreamState<BoardResult>> {
@@ -57,6 +60,10 @@ export class BoardEffects {
 
   get deleteState$(): Observable<StreamState<void>> {
     return this._deleteState$;
+  }
+
+  get createWishState$(): Observable<StreamState<WishFlat>> {
+    return this._createWishState$;
   }
 
   get currentWishlists$(): Observable<BoardWishlist[]> {
@@ -84,12 +91,14 @@ export class BoardEffects {
     const editState$ = new ReplaySubject<StreamState<WishlistFlat>>(1);
     const reorderState$ = new ReplaySubject<StreamState<void>>(1);
     const deleteState$ = new ReplaySubject<StreamState<void>>(1);
+    const createWishState$ = new ReplaySubject<StreamState<WishFlat>>(1);
 
     this._fetchState$ = fetchState$.asObservable();
     this._createState$ = createState$.asObservable();
     this._editState$ = editState$.asObservable();
     this._reorderState$ = reorderState$.asObservable();
     this._deleteState$ = deleteState$.asObservable();
+    this._createWishState$ = createWishState$.asObservable();
 
     rxEffects(({ register }) => {
       register(
@@ -204,6 +213,35 @@ export class BoardEffects {
             actions.fetchWishlists();
           }
           deleteState$.next(state);
+        },
+      );
+
+      // Create wish effect
+      register(
+        actions.createWish$.pipe(
+          tap((payload) =>
+            console.log('[BoardEffects] createWish action received', payload),
+          ),
+          switchMap(({ wishlistId, data, images }) =>
+            this.boardService.createWish(wishlistId, data, images).pipe(
+              tap((result) =>
+                console.log('[BoardEffects] createWish result', result),
+              ),
+              catchError((error) => {
+                console.error('[BoardEffects] createWish error', error);
+                throw error;
+              }),
+            ),
+          ),
+          toState(),
+        ),
+        (state) => {
+          console.log('[BoardEffects] createWish state', state);
+          if (state.hasValue && state.value) {
+            // Trigger a refresh of wishlists after creating a wish
+            actions.fetchWishlists();
+          }
+          createWishState$.next(state);
         },
       );
     });

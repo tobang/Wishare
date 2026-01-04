@@ -17,6 +17,26 @@ export type BoardResult = {
 };
 
 /**
+ * Data for creating a new wish (matches dialog output)
+ */
+export type CreateWishData = {
+  title: string;
+  description?: string;
+  url?: string;
+  price: number | null;
+  quantity: number;
+};
+
+/**
+ * Payload for creating a wish including wishlist context and images
+ */
+export type CreateWishPayload = {
+  wishlistId: string;
+  data: CreateWishData;
+  images?: File[];
+};
+
+/**
  * State model for board/wishlists
  */
 export type BoardStateModel = {
@@ -26,6 +46,7 @@ export type BoardStateModel = {
   editState: StreamState<WishlistFlat>;
   reorderState: StreamState<void>;
   deleteState: StreamState<void>;
+  createWishState: StreamState<WishFlat>;
 };
 
 /**
@@ -64,10 +85,12 @@ export type BoardActions = {
   editWishlist: EditWishlistData;
   reorderWishlists: ReorderWishlistsData;
   deleteWishlist: string;
+  createWish: CreateWishPayload;
 
   // State Actions - update store state
   updateBoardState: Partial<BoardStateModel>;
   resetFetchState: void;
   resetCreateState: void;
   resetDeleteState: void;
+  resetCreateWishState: void;
 };

@@ -24,6 +24,15 @@
     "description": {
       "label": "Beskrivelse",
       "placeholder": "Tilføj noter, størrelse, farvepræferencer eller andre detaljer..."
+    },
+    "images": {
+      "label": "Billeder",
+      "hint": "Upload op til 5 billeder af dit ønske (maks 5MB hver)",
+      "dragOrClick": "Træk og slip billeder her eller ",
+      "browse": "gennemse",
+      "drop": "Slip dine billeder her!",
+      "formats": "JPG, PNG, GIF, WebP",
+      "counter": "billeder"
     }
   },
   "actions": {

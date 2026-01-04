@@ -208,14 +208,16 @@ export class AuthEffects {
                 'login',
               ),
             ),
-            switchMap((trans: string) =>
-              this.alertService.open(trans).pipe(
+            switchMap((trans: string) => {
+              // Access alertService inside switchMap to defer injection until TuiRoot is available
+              const alertService = this.alertService;
+              return alertService.open(trans).pipe(
                 catchError((error) => {
                   console.error('Alert service error:', error);
                   return EMPTY;
                 }),
-              ),
-            ),
+              );
+            }),
           ),
         );
 

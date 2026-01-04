@@ -24,6 +24,15 @@
     "description": {
       "label": "Description",
       "placeholder": "Add notes, size, color preferences or other details..."
+    },
+    "images": {
+      "label": "Images",
+      "hint": "Upload up to 5 images of your wish (max 5MB each)",
+      "dragOrClick": "Drag and drop images here or ",
+      "browse": "browse",
+      "drop": "Drop your images here!",
+      "formats": "JPG, PNG, GIF, WebP",
+      "counter": "images"
     }
   },
   "actions": {
