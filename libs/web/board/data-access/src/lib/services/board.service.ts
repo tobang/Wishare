@@ -21,7 +21,7 @@ import {
   TablesDB,
 } from 'appwrite';
 
-import { APPWRITE } from '@wishare/web/shared/app-config';
+import { APP_CONFIG, APPWRITE } from '@wishare/web/shared/app-config';
 import {
   flattenWish,
   flattenWishlist,
@@ -32,19 +32,23 @@ import {
 } from '@wishare/web/wishlist/data-access';
 import { BoardWishlist, CreateWishData } from '../store/board.types';
 
-// Database constants
-const DATABASE_ID = 'wishare';
+// Table and bucket constants
 const WISHLISTS_TABLE = 'wishlists';
 const WISHES_TABLE = 'wishes';
 const WISH_IMAGES_BUCKET = 'wish-images';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
+  private readonly config = inject(APP_CONFIG);
   private readonly appwrite: {
     tablesDb: TablesDB;
     account: Account;
     storage: Storage;
   } = inject(APPWRITE);
+
+  private get databaseId(): string {
+    return this.config.appwriteDatabase;
+  }
 
   /**
    * Fetches all wishlists with their wishes.
@@ -56,7 +60,7 @@ export class BoardService {
         forkJoin({
           wishlists: from(
             this.appwrite.tablesDb.listRows({
-              databaseId: DATABASE_ID,
+              databaseId: this.databaseId,
               tableId: WISHLISTS_TABLE,
               queries: [
                 Query.equal('uid', account.$id),
@@ -66,9 +70,9 @@ export class BoardService {
           ),
           wishes: from(
             this.appwrite.tablesDb.listRows({
-              databaseId: DATABASE_ID,
+              databaseId: this.databaseId,
               tableId: WISHES_TABLE,
-              queries: [Query.equal('uid', account.$id)],
+              queries: [Query.equal('uid', account.$id), Query.limit(1000)],
             }),
           ),
         }),
@@ -115,7 +119,7 @@ export class BoardService {
       switchMap((account) =>
         from(
           this.appwrite.tablesDb.listRows({
-            databaseId: DATABASE_ID,
+            databaseId: this.databaseId,
             tableId: WISHLISTS_TABLE,
             queries: [
               Query.equal('uid', account.$id),
@@ -136,9 +140,9 @@ export class BoardService {
   getWishes(wishlistId: string): Observable<WishFlat[]> {
     return from(
       this.appwrite.tablesDb.listRows({
-        databaseId: DATABASE_ID,
+        databaseId: this.databaseId,
         tableId: WISHES_TABLE,
-        queries: [Query.equal('wlid', wishlistId)],
+        queries: [Query.equal('wlid', wishlistId), Query.limit(100)],
       }),
     ).pipe(
       map((result) =>
@@ -155,7 +159,7 @@ export class BoardService {
       switchMap((account) =>
         from(
           this.appwrite.tablesDb.listRows({
-            databaseId: DATABASE_ID,
+            databaseId: this.databaseId,
             tableId: WISHLISTS_TABLE,
             queries: [
               Query.equal('uid', account.$id),
@@ -170,7 +174,7 @@ export class BoardService {
 
             return from(
               this.appwrite.tablesDb.createRow({
-                databaseId: DATABASE_ID,
+                databaseId: this.databaseId,
                 tableId: WISHLISTS_TABLE,
                 rowId: ID.unique(),
                 data: {
@@ -263,7 +267,7 @@ export class BoardService {
     ) => {
       for (const item of items) {
         await this.appwrite.tablesDb.updateRow({
-          databaseId: DATABASE_ID,
+          databaseId: this.databaseId,
           tableId: WISHLISTS_TABLE,
           rowId: item.id,
           data: { priority: item.priority },
@@ -354,7 +358,7 @@ export class BoardService {
     ) => {
       for (const item of items) {
         await this.appwrite.tablesDb.updateRow({
-          databaseId: DATABASE_ID,
+          databaseId: this.databaseId,
           tableId: WISHES_TABLE,
           rowId: item.id,
           data: { priority: item.priority },
@@ -393,7 +397,7 @@ export class BoardService {
   ): Observable<WishlistFlat> {
     return from(
       this.appwrite.tablesDb.updateRow({
-        databaseId: DATABASE_ID,
+        databaseId: this.databaseId,
         tableId: WISHLISTS_TABLE,
         rowId: wishlistId,
         data: {
@@ -411,7 +415,7 @@ export class BoardService {
   deleteWishlist(wishlistId: string): Observable<void> {
     return from(
       this.appwrite.tablesDb.deleteRow({
-        databaseId: DATABASE_ID,
+        databaseId: this.databaseId,
         tableId: WISHLISTS_TABLE,
         rowId: wishlistId,
       }),
@@ -444,7 +448,7 @@ export class BoardService {
 
         return from(
           this.appwrite.tablesDb.listRows({
-            databaseId: DATABASE_ID,
+            databaseId: this.databaseId,
             tableId: WISHES_TABLE,
             queries: [
               Query.equal('wlid', wishlistId),
@@ -566,7 +570,7 @@ export class BoardService {
 
     return from(
       this.appwrite.tablesDb.createRow({
-        databaseId: DATABASE_ID,
+        databaseId: this.databaseId,
         tableId: WISHES_TABLE,
         rowId: ID.unique(),
         data: wishData,
@@ -603,7 +607,7 @@ export class BoardService {
           switchMap((newFileIds) => {
             return from(
               this.appwrite.tablesDb.getRow({
-                databaseId: DATABASE_ID,
+                databaseId: this.databaseId,
                 tableId: WISHES_TABLE,
                 rowId: wishId,
               }),
@@ -626,7 +630,7 @@ export class BoardService {
 
                 return from(
                   this.appwrite.tablesDb.updateRow({
-                    databaseId: DATABASE_ID,
+                    databaseId: this.databaseId,
                     tableId: WISHES_TABLE,
                     rowId: wishId,
                     data: updateData,
