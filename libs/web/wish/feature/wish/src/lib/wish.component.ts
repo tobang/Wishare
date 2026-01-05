@@ -1,3 +1,4 @@
+import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,14 +8,13 @@ import {
   output,
 } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
-import { TuiCardLarge } from '@taiga-ui/layout';
 import { BoardService } from '@wishare/web/board/data-access';
 import { WishFlat } from '@wishare/web/wishlist/data-access';
 
 @Component({
   selector: 'wishare-wish',
   standalone: true,
-  imports: [TuiCardLarge, TuiIcon],
+  imports: [CdkDragHandle, TuiIcon],
   templateUrl: './wish.component.html',
   styleUrls: ['./wish.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

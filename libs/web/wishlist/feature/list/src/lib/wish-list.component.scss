@@ -141,3 +141,32 @@
     }
   }
 }
+
+// Wish drag placeholder
+.wish-drag-placeholder {
+  background-color: var(--bg-surface-hover);
+  border: 2px dashed var(--border-default);
+  border-radius: var(--tui-radius-m);
+  min-height: 68px;
+  margin: var(--spacing-1) 0;
+}
+
+// Styles for wishes being dragged
+.wishes-section {
+  &.cdk-drop-list-dragging {
+    wishare-wish:not(.cdk-drag-placeholder) {
+      transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+}
+
+// Wish drag preview (while dragging)
+wishare-wish.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: var(--tui-radius-m);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.15);
+
+  .wish-wrap {
+    margin: 0;
+  }
+}

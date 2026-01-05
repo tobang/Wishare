@@ -76,6 +76,15 @@ export type ReorderWishlistsData = {
 };
 
 /**
+ * Data for reordering wishes within a wishlist
+ */
+export type ReorderWishesData = {
+  wishlistId: string;
+  previousIndex: number;
+  currentIndex: number;
+};
+
+/**
  * Data for editing a wishlist
  */
 export type EditWishlistData = {
@@ -94,6 +103,7 @@ export type BoardActions = {
   createWishlist: CreateWishlistData;
   editWishlist: EditWishlistData;
   reorderWishlists: ReorderWishlistsData;
+  reorderWishes: ReorderWishesData;
   deleteWishlist: string;
   createWish: CreateWishPayload;
   updateWish: UpdateWishPayload;

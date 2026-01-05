@@ -14,13 +14,25 @@
     </aside>
   </header>
 
-  <section class="wishes-section">
+  <section
+    class="wishes-section"
+    cdkDropList
+    cdkDropListOrientation="vertical"
+    [cdkDropListData]="wishlist().wishes?.rows || []"
+    (cdkDropListDropped)="onWishDrop($event)"
+    [cdkDropListLockAxis]="'y'"
+  >
     @if (wishlist().wishes?.rows?.length) {
-      @for (wish of wishlist().wishes?.rows; track wish; let i = $index) {
+      @for (wish of wishlist().wishes?.rows; track wish.$id; let i = $index) {
         <wishare-wish
+          cdkDrag
+          [cdkDragData]="wish"
+          [cdkDragLockAxis]="'y'"
           [wish]="wish"
           (wishClick)="onWishClick($event)"
-        ></wishare-wish>
+        >
+          <div class="wish-drag-placeholder" *cdkDragPlaceholder></div>
+        </wishare-wish>
       }
     } @else {
       <div class="no-wishes">

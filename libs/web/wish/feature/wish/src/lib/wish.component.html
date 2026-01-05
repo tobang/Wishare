@@ -1,5 +1,8 @@
 <div class="wish-wrap" [class.selected]="selected()">
   <div class="wish">
+    <div class="drag-handle" cdkDragHandle>
+      <tui-icon icon="@tui.grip-vertical" class="handle-icon"></tui-icon>
+    </div>
     <div class="content-container">
       <div class="wish-image">
         @if (wish().files?.length) {

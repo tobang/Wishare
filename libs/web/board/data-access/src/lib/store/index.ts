@@ -10,4 +10,5 @@ export type {
   CreateWishData,
   CreateWishPayload,
   ReorderWishlistsData,
+  ReorderWishesData,
 } from './board.types';

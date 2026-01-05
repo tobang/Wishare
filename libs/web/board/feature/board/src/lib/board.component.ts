@@ -35,6 +35,7 @@ import {
   WishDialogResult,
 } from '@wishare/web/wish/ui/dialog';
 import { ConfirmationDialogComponent } from '@wishare/web/shared/ui/confirmation-dialog';
+import { ReorderWishesEvent } from '@wishare/web/wishlist/feature/list';
 
 @Component({
   selector: 'wishare-board',
@@ -220,5 +221,9 @@ export class BoardComponent {
       .subscribe(() => {
         this.boardStore.actions.deleteWishlist(wishlistId);
       });
+  }
+
+  reorderWishes(event: ReorderWishesEvent) {
+    this.boardStore.actions.reorderWishes(event);
   }
 }

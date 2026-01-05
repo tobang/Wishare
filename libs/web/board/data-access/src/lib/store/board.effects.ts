@@ -206,6 +206,66 @@ export class BoardEffects {
         },
       );
 
+      // Reorder wishes effect
+      register(
+        actions.reorderWishes$.pipe(
+          withLatestFrom(this._currentWishlists$),
+          switchMap(
+            ([{ wishlistId, previousIndex, currentIndex }, wishlists]) => {
+              // Find the wishlist
+              const wishlist = wishlists.find((wl) => wl.$id === wishlistId);
+              if (!wishlist?.wishes?.rows) {
+                return from(Promise.resolve());
+              }
+
+              const wishes = [...wishlist.wishes.rows];
+              const [movedItem] = wishes.splice(previousIndex, 1);
+              wishes.splice(currentIndex, 0, movedItem);
+
+              // Update current wishlists optimistically
+              const updatedWishlists = wishlists.map((wl) => {
+                if (wl.$id === wishlistId) {
+                  return {
+                    ...wl,
+                    wishes: { ...wl.wishes!, rows: wishes },
+                  };
+                }
+                return wl;
+              });
+              this._currentWishlists$.next(updatedWishlists);
+
+              // Create priority updates ONLY for wishes whose priority changed
+              const updates = wishes
+                .map((wish, index) => ({
+                  id: wish.$id,
+                  oldPriority: wish.priority,
+                  newPriority: index + 1,
+                }))
+                .filter((update) => update.oldPriority !== update.newPriority)
+                .map((update) => ({
+                  id: update.id,
+                  priority: update.newPriority,
+                  oldPriority: update.oldPriority,
+                }));
+
+              // If no updates needed, return early
+              if (updates.length === 0) {
+                return from(Promise.resolve());
+              }
+
+              return this.boardService.updateWishPriorities(updates);
+            },
+          ),
+          toState(),
+        ),
+        (state) => {
+          if (state.hasError) {
+            // On error, refresh to get the correct order from the backend
+            actions.fetchWishlists();
+          }
+        },
+      );
+
       // Delete wishlist effect
       register(
         actions.deleteWishlist$.pipe(

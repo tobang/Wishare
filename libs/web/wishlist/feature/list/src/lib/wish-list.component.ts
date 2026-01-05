@@ -1,4 +1,10 @@
-import { CdkDragHandle, DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDragPlaceholder,
+  CdkDropList,
+} from '@angular/cdk/drag-drop';
 
 import {
   ChangeDetectionStrategy,
@@ -15,13 +21,24 @@ import { WishComponent } from '@wishare/web/wish/feature/wish';
 
 import { WishFlat, WishlistUi } from '@wishare/web/wishlist/data-access';
 
+/**
+ * Data emitted when wishes are reordered within a wishlist
+ */
+export interface ReorderWishesEvent {
+  wishlistId: string;
+  previousIndex: number;
+  currentIndex: number;
+}
+
 @Component({
   selector: '[wishare-wish-list]',
   standalone: true,
   imports: [
     WishComponent,
-    DragDropModule,
+    CdkDrag,
     CdkDragHandle,
+    CdkDragPlaceholder,
+    CdkDropList,
     TuiButton,
     TuiCardLarge,
     TuiHeader,
@@ -53,6 +70,7 @@ export class WishListComponent {
   readonly editWishlistClick = output<WishlistUi>();
   readonly deleteWishlistClick = output<string>();
   readonly editWishClick = output<{ wishlistId: string; wish: WishFlat }>();
+  readonly reorderWishesClick = output<ReorderWishesEvent>();
 
   createWish() {
     this.createWishClick.emit(this.wishlist().$id);
@@ -68,5 +86,17 @@ export class WishListComponent {
 
   onWishClick(wish: WishFlat) {
     this.editWishClick.emit({ wishlistId: this.wishlist().$id, wish });
+  }
+
+  onWishDrop(event: CdkDragDrop<WishFlat[]>) {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+
+    this.reorderWishesClick.emit({
+      wishlistId: this.wishlist().$id,
+      previousIndex: event.previousIndex,
+      currentIndex: event.currentIndex,
+    });
   }
 }
