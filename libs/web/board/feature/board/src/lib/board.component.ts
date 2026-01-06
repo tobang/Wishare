@@ -11,6 +11,7 @@ import {
   inject,
   Injector,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   TranslocoModule,
   TRANSLOCO_SCOPE,
@@ -73,8 +74,10 @@ export class BoardComponent {
   private readonly dialogService = inject(TuiDialogService);
   private readonly injector = inject(Injector);
   private readonly transloco = inject(TranslocoService);
+  private readonly router = inject(Router);
 
   public readonly wishLists = this.boardStore.vm.wishLists;
+
   public readonly isLoading = this.boardStore.vm.isLoading;
 
   constructor() {
@@ -225,5 +228,9 @@ export class BoardComponent {
 
   reorderWishes(event: ReorderWishesEvent) {
     this.boardStore.actions.reorderWishes(event);
+  }
+
+  openWishlist(wishlistId: string) {
+    this.router.navigate(['wishlists', wishlistId]);
   }
 }

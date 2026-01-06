@@ -1,0 +1,47 @@
+input {
+  display: none;
+}
+
+.loader-centered {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+:host {
+  display: block;
+  padding: 2rem;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.details-header {
+  margin-bottom: 2rem;
+}
+
+.wishlist-description {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--tui-text-tertiary);
+  margin-top: 0.25rem;
+}
+
+.wishes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--tui-text-02);
+}

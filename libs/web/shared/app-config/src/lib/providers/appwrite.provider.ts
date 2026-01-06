@@ -3,6 +3,7 @@ import { Account, Client, Functions, Storage, TablesDB } from 'appwrite';
 import { APP_CONFIG } from './../app-config.token';
 
 export const APPWRITE = new InjectionToken<{
+  client: Client;
   tablesDb: TablesDB;
   account: Account;
   functions: Functions;
@@ -19,6 +20,6 @@ export const APPWRITE = new InjectionToken<{
     const storage = new Storage(client);
     client.setEndpoint(env.appwriteEndpoint);
     client.setProject(env.appwriteProject);
-    return { tablesDb, account, functions, storage };
+    return { client, tablesDb, account, functions, storage };
   },
 });

@@ -29,6 +29,11 @@
   align-items: center;
   gap: var(--spacing-2);
   min-width: 0;
+  cursor: pointer;
+
+  &:hover .card-title {
+    text-decoration: underline;
+  }
 }
 
 .wishlist-icon {

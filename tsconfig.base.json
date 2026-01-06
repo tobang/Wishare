@@ -78,6 +78,9 @@
       ],
       "@wishare/web/wishlist/feature/list": [
         "libs/web/wishlist/feature/list/src/index.ts"
+      ],
+      "@wishare/web/wishlist/feature/details": [
+        "libs/web/wishlist/feature/details/src/index.ts"
       ]
     }
   },

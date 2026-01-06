@@ -39,13 +39,17 @@ if [ ! -f "appwrite.json" ]; then
     exit 1
 fi
 
-echo "This will deploy:"
-echo "  • Database: wishare"
-echo "  • Tables: wishes, wishlists (with relationship)"
+echo -e "${RED}⚠️  WARNING: 'appwrite push tables' can DELETE existing data!${NC}"
 echo ""
-read -p "Continue? (y/N) " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+echo "This script is DANGEROUS and should only be used for:"
+echo "  • Initial setup of a NEW database"
+echo "  • Development/testing environments"
+echo ""
+echo -e "${YELLOW}For production, manually update the schema in Appwrite Console.${NC}"
+echo ""
+read -p "Type 'DELETE' to confirm you understand data may be lost: " CONFIRM
+if [[ "$CONFIRM" != "DELETE" ]]; then
+    echo "Aborted."
     exit 0
 fi
 

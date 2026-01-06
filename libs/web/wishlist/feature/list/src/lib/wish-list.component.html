@@ -5,7 +5,7 @@
   *transloco="let t"
 >
   <header tuiHeader class="card-header">
-    <div class="header-left">
+    <div class="header-left" (click)="openDetails()">
       <tui-icon icon="@tui.list" class="wishlist-icon"></tui-icon>
       <h3 tuiTitle class="card-title">{{ wishlist().title }}</h3>
     </div>

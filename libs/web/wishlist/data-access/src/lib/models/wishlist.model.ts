@@ -10,6 +10,12 @@ export interface WishlistData {
   readonly visibility: 'draft' | 'published' | 'archived';
   readonly priority: number;
   readonly uid: string;
+  /**
+   * One-to-many relationship: A wishlist can have many wishes.
+   * This is the parent side of the two-way relationship.
+   * When loading via query selection, this will contain the related wishes.
+   */
+  readonly wishes?: WishFlat[];
 }
 
 /**
@@ -32,10 +38,12 @@ export type WishlistUi = WishlistFlat & {
 /**
  * Helper to flatten a Wishlist row for easier access in templates.
  * Handles both TablesDB format (data nested under 'data') and direct format.
+ * Accepts Models.Row to avoid type casts at call sites.
  */
-export function flattenWishlist(row: Wishlist): WishlistFlat {
+export function flattenWishlist(row: Models.Row): WishlistFlat {
+  const wishlistRow = row as Wishlist;
   // TablesDB may return data at top level or nested under 'data'
-  const data = row.data ?? (row as unknown as WishlistData);
+  const data = wishlistRow.data ?? (row as unknown as WishlistData);
   return {
     ...row,
     ...data,

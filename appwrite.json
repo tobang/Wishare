@@ -4,18 +4,36 @@
   "buckets": [
     {
       "$id": "wish-images",
+      "$permissions": ["create(\"users\")", "read(\"users\")"],
+      "fileSecurity": true,
       "name": "Wish Images",
       "enabled": true,
       "maximumFileSize": 5242880,
       "allowedFileExtensions": ["jpg", "jpeg", "png", "gif", "webp"],
       "compression": "gzip",
       "encryption": true,
-      "antivirus": true,
-      "fileSecurity": true,
-      "$permissions": ["create(\"users\")", "read(\"users\")"]
+      "antivirus": true
     }
   ],
   "functions": [
+    {
+      "$id": "reorderItems",
+      "name": "Reorder Items",
+      "runtime": "node-21.0",
+      "path": "functions/reorderItems",
+      "commands": "npm install",
+      "entrypoint": "src/main.js",
+      "ignore": ["node_modules", ".npm", "*.md", ".git", ".gitignore"],
+      "execute": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 60,
+      "enabled": true,
+      "logging": true,
+      "variables": {},
+      "scopes": ["documents.read", "documents.write"],
+      "specification": "s-1vcpu-512mb"
+    },
     {
       "$id": "scrapeMetaTags",
       "name": "Scrape Meta Tags",
@@ -30,7 +48,25 @@
       "timeout": 30,
       "enabled": true,
       "logging": true,
-      "variables": {}
+      "variables": {},
+      "scopes": [],
+      "specification": "s-8vcpu-8gb"
+    },
+    {
+      "$id": "6957c07900148eba4dac",
+      "execute": ["any"],
+      "name": "scrapeMeta",
+      "enabled": true,
+      "logging": true,
+      "runtime": "node-21.0",
+      "scopes": ["users.read"],
+      "events": [],
+      "schedule": "",
+      "timeout": 15,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "specification": "s-0.5vcpu-512mb",
+      "path": "functions/scrapeMeta"
     }
   ],
   "databases": [
@@ -138,7 +174,7 @@
         {
           "key": "wlid",
           "type": "string",
-          "required": true,
+          "required": false,
           "array": false,
           "size": 255,
           "default": null,
@@ -219,6 +255,18 @@
           "size": 1000,
           "default": null,
           "encrypt": false
+        },
+        {
+          "key": "wishes",
+          "type": "relationship",
+          "required": false,
+          "array": false,
+          "relatedCollection": "wishes",
+          "relationType": "oneToMany",
+          "twoWay": true,
+          "twoWayKey": "wishlist",
+          "onDelete": "cascade",
+          "side": "parent"
         }
       ],
       "indexes": [
@@ -238,5 +286,260 @@
         }
       ]
     }
-  ]
+  ],
+  "tables": [
+    {
+      "$id": "wishes",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "wishare",
+      "name": "Wishes",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 2000,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "uid",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1000,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "image",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 5000,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "wlid",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "price",
+          "type": "double",
+          "required": false,
+          "array": false,
+          "min": 0,
+          "max": 999999,
+          "default": null
+        },
+        {
+          "key": "priority",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 1,
+          "max": 999,
+          "default": 1
+        },
+        {
+          "key": "quantity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 1,
+          "max": 999,
+          "default": 1
+        },
+        {
+          "key": "files",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "uid_idx",
+          "type": "key",
+          "status": "available",
+          "columns": ["uid"],
+          "orders": []
+        },
+        {
+          "key": "wlid_idx",
+          "type": "key",
+          "status": "available",
+          "columns": ["wlid"],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "wishlists",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "wishare",
+      "name": "Wishlists",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1000,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "uid",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "priority",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 1,
+          "max": 999,
+          "default": 1
+        },
+        {
+          "key": "visibility",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "elements": ["draft", "published", "archived"],
+          "format": "enum",
+          "default": "draft"
+        },
+        {
+          "key": "wishes",
+          "type": "relationship",
+          "required": false,
+          "array": false,
+          "relatedTable": "wishes",
+          "relationType": "oneToMany",
+          "twoWay": true,
+          "twoWayKey": "wishlist",
+          "onDelete": "cascade",
+          "side": "parent"
+        }
+      ],
+      "indexes": [
+        {
+          "key": "uid_idx",
+          "type": "key",
+          "status": "available",
+          "columns": ["uid"],
+          "orders": []
+        },
+        {
+          "key": "priority_uid_idx",
+          "type": "unique",
+          "status": "available",
+          "columns": ["priority", "uid"],
+          "orders": []
+        }
+      ]
+    }
+  ],
+  "tablesDB": [
+    {
+      "$id": "wishare",
+      "name": "Wishare Database",
+      "enabled": true
+    }
+  ],
+  "settings": {
+    "services": {
+      "account": true,
+      "avatars": true,
+      "databases": true,
+      "locale": true,
+      "health": true,
+      "storage": true,
+      "teams": true,
+      "users": true,
+      "sites": true,
+      "functions": true,
+      "graphql": true,
+      "messaging": true
+    },
+    "auth": {
+      "methods": {
+        "jwt": true,
+        "phone": true,
+        "invites": true,
+        "anonymous": true,
+        "email-otp": true,
+        "magic-url": true,
+        "email-password": true
+      },
+      "security": {
+        "duration": 31536000,
+        "limit": 0,
+        "sessionsLimit": 10,
+        "passwordHistory": 0,
+        "passwordDictionary": false,
+        "personalDataCheck": false,
+        "sessionAlerts": false,
+        "mockNumbers": []
+      }
+    }
+  }
 }

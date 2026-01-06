@@ -9,10 +9,14 @@ export interface WishData {
   readonly quantity: number;
   readonly priority: number;
   readonly uid: string;
-  /** @deprecated Use wishlist relationship instead */
+  /** @deprecated Use wishlist relationship instead - kept for backward compatibility */
   readonly wlid?: string;
-  /** Relationship to parent wishlist (two-way key from wishlists.wishes) */
-  readonly wishlist?: string;
+  /**
+   * Two-way relationship to parent wishlist.
+   * This is the child side of the one-to-many relationship.
+   * Contains the wishlist ID or the full wishlist object when loaded via query selection.
+   */
+  readonly wishlist?: string | Record<string, unknown>;
   readonly url?: string;
   readonly price: number;
   readonly files?: string[];
@@ -34,10 +38,12 @@ export interface WishFlat extends Models.Row, WishData {}
 /**
  * Helper to flatten a Wish row for easier access in templates.
  * Handles both TablesDB format (data nested under 'data') and direct format.
+ * Accepts Models.Row to avoid type casts at call sites.
  */
-export function flattenWish(row: Wish): WishFlat {
+export function flattenWish(row: Models.Row): WishFlat {
+  const wishRow = row as Wish;
   // TablesDB may return data at top level or nested under 'data'
-  const data = row.data ?? (row as unknown as WishData);
+  const data = wishRow.data ?? (row as unknown as WishData);
   return {
     ...row,
     ...data,

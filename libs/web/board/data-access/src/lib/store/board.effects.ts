@@ -15,8 +15,82 @@ import {
 import { StreamState, toState } from '@wishare/web/shared/utils';
 import { WishFlat, WishlistFlat } from '@wishare/web/wishlist/data-access';
 
-import { BoardService } from '../services/board.service';
+import { BoardService, PRIORITY_GAP } from '../services/board.service';
 import { BoardActions, BoardResult, BoardWishlist } from './board.types';
+
+function rebalance(
+  items: { $id: string; priority: number }[],
+): Array<{ id: string; priority: number; oldPriority?: number }> {
+  return items.map((item, index) => ({
+    id: item.$id,
+    priority: (index + 1) * PRIORITY_GAP,
+    oldPriority: item.priority,
+  }));
+}
+
+function calculatePriorityUpdates(
+  items: { $id: string; priority: number }[],
+  currentIndex: number,
+  movedItemId: string,
+): Array<{ id: string; priority: number; oldPriority?: number }> {
+  const itemsClone = [...items];
+  const prevItem = itemsClone[currentIndex - 1];
+  const nextItem = itemsClone[currentIndex + 1];
+
+  // If list has only 1 item
+  if (itemsClone.length <= 1) {
+    return [
+      {
+        id: movedItemId,
+        priority: PRIORITY_GAP,
+        oldPriority: itemsClone[currentIndex]?.priority,
+      },
+    ];
+  }
+
+  const prevPriority = prevItem ? prevItem.priority : 0; // 0 is virtual start
+  const nextPriority = nextItem ? nextItem.priority : 0;
+
+  // Case 1: Insert at Start
+  if (!prevItem) {
+    // If next item priority is too small to split to integer
+    if (nextPriority < 2) {
+      return rebalance(itemsClone);
+    }
+    return [
+      {
+        id: movedItemId,
+        priority: Math.floor(nextPriority / 2),
+        oldPriority: itemsClone[currentIndex].priority,
+      },
+    ];
+  }
+
+  // Case 2: Insert at End
+  if (!nextItem) {
+    return [
+      {
+        id: movedItemId,
+        priority: prevPriority + PRIORITY_GAP,
+        oldPriority: itemsClone[currentIndex].priority,
+      },
+    ];
+  }
+
+  // Case 3: Middle
+  const gap = nextPriority - prevPriority;
+  if (gap < 2) {
+    return rebalance(itemsClone);
+  }
+
+  return [
+    {
+      id: movedItemId,
+      priority: Math.floor((prevPriority + nextPriority) / 2),
+      oldPriority: itemsClone[currentIndex].priority,
+    },
+  ];
+}
 
 /**
  * Effects for board actions.
@@ -170,23 +244,20 @@ export class BoardEffects {
             const [movedItem] = reorderedWishlists.splice(previousIndex, 1);
             reorderedWishlists.splice(currentIndex, 0, movedItem);
 
-            // Update current wishlists optimistically
-            this._currentWishlists$.next(reorderedWishlists);
+            const updates = calculatePriorityUpdates(
+              reorderedWishlists,
+              currentIndex,
+              movedItem.$id,
+            );
 
-            // Create priority updates ONLY for wishlists whose priority changed
-            // Priority is 1-based, with lower numbers appearing first
-            const updates = reorderedWishlists
-              .map((wishlist, index) => ({
-                id: wishlist.$id,
-                oldPriority: wishlist.priority,
-                newPriority: index + 1,
-              }))
-              .filter((update) => update.oldPriority !== update.newPriority)
-              .map((update) => ({
-                id: update.id,
-                priority: update.newPriority,
-                oldPriority: update.oldPriority,
-              }));
+            // Apply priority updates
+            const finalWishlists = reorderedWishlists.map((item) => {
+              const update = updates.find((u) => u.id === item.$id);
+              return update ? { ...item, priority: update.priority } : item;
+            });
+
+            // Update current wishlists optimistically
+            this._currentWishlists$.next(finalWishlists);
 
             // If no updates needed, return early
             if (updates.length === 0) {
@@ -222,31 +293,29 @@ export class BoardEffects {
               const [movedItem] = wishes.splice(previousIndex, 1);
               wishes.splice(currentIndex, 0, movedItem);
 
+              const updates = calculatePriorityUpdates(
+                wishes,
+                currentIndex,
+                movedItem.$id,
+              );
+
+              // Apply priority updates
+              const finalWishes = wishes.map((item) => {
+                const update = updates.find((u) => u.id === item.$id);
+                return update ? { ...item, priority: update.priority } : item;
+              });
+
               // Update current wishlists optimistically
               const updatedWishlists = wishlists.map((wl) => {
-                if (wl.$id === wishlistId) {
+                if (wl.$id === wishlistId && wl.wishes) {
                   return {
                     ...wl,
-                    wishes: { ...wl.wishes!, rows: wishes },
+                    wishes: { ...wl.wishes, rows: finalWishes },
                   };
                 }
                 return wl;
               });
               this._currentWishlists$.next(updatedWishlists);
-
-              // Create priority updates ONLY for wishes whose priority changed
-              const updates = wishes
-                .map((wish, index) => ({
-                  id: wish.$id,
-                  oldPriority: wish.priority,
-                  newPriority: index + 1,
-                }))
-                .filter((update) => update.oldPriority !== update.newPriority)
-                .map((update) => ({
-                  id: update.id,
-                  priority: update.newPriority,
-                  oldPriority: update.oldPriority,
-                }));
 
               // If no updates needed, return early
               if (updates.length === 0) {

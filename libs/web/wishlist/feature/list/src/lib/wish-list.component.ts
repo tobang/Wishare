@@ -71,6 +71,7 @@ export class WishListComponent {
   readonly deleteWishlistClick = output<string>();
   readonly editWishClick = output<{ wishlistId: string; wish: WishFlat }>();
   readonly reorderWishesClick = output<ReorderWishesEvent>();
+  readonly wishListClick = output<string>();
 
   createWish() {
     this.createWishClick.emit(this.wishlist().$id);
@@ -98,5 +99,10 @@ export class WishListComponent {
       previousIndex: event.previousIndex,
       currentIndex: event.currentIndex,
     });
+  }
+
+  openDetails() {
+    console.log('Opening details for wishlist', this.wishlist().$id);
+    this.wishListClick.emit(this.wishlist().$id);
   }
 }

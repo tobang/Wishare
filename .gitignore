@@ -49,3 +49,5 @@ __screenshots__/
 .env
 .env.local
 .env.*.local
+
+vitest.config.*.timestamp*

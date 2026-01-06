@@ -1,0 +1,24 @@
+@if (wishlistStream().isLoading) {
+  <tui-loader class="loader-centered" [overlay]="true"></tui-loader>
+} @else {
+  @if (wishlistStream().value; as wishlist) {
+    <div class="details-container">
+      <header class="details-header" tuiHeader>
+        <h1 tuiTitle>
+          {{ wishlist.title }}
+          @if (wishlist.description) {
+            <span class="wishlist-description">{{ wishlist.description }}</span>
+          }
+        </h1>
+      </header>
+
+      <div class="wishes-grid">
+        @for (wish of wishlist.wishes?.rows || []; track wish.$id) {
+          <wishare-wish [wish]="wish"></wishare-wish>
+        } @empty {
+          <div class="empty-state">No wishes found in this list.</div>
+        }
+      </div>
+    </div>
+  }
+}
