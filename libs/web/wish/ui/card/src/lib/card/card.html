@@ -1,0 +1,40 @@
+<div class="card">
+  <div class="card__image-container">
+    @if (wish().files?.length) {
+    <img
+      [src]="getImageUrl(wish().files![0])"
+      [alt]="wish().title"
+      class="card__image"
+    />
+    } @else {
+    <div class="card__image card__image--placeholder">
+      <tui-icon icon="@tui.image" class="placeholder-icon"></tui-icon>
+    </div>
+    } @if (wish().priority) {
+    <span class="card__tag card__tag--{{ getPriorityColor(wish().priority) }}">
+      {{ getPriorityLabel(wish().priority) }}
+    </span>
+    }
+  </div>
+
+  <div class="card__content">
+    <h4 class="card__title">{{ wish().title }}</h4>
+
+    @if (wish().description) {
+    <p class="card__description">{{ wish().description }}</p>
+    }
+
+    <div class="card__footer">
+      <div class="card__meta">
+        @if (wish().price) {
+        <span class="card__price"
+          >{{ wish().price | currency:'DKK':'symbol':'1.0-0':locale }}</span
+        >
+        }
+      </div>
+      <span class="card__date"
+        >{{ wish().$createdAt | date:'mediumDate':undefined:locale }}</span
+      >
+    </div>
+  </div>
+</div>

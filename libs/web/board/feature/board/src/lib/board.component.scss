@@ -78,6 +78,11 @@
 
 .wishlist-item {
   @extend %grid-item-width;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 // Skeleton loading styles

@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,14 +9,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TuiLoader } from '@taiga-ui/core';
 import { WishlistDetailsStore } from './store/wishlist-details.store';
-import { WishComponent } from '@wishare/web/wish/feature/wish';
-import { TuiIcon, TuiTitle } from '@taiga-ui/core';
+import { WishCardComponent } from '@wishare/web/wish/ui/card';
+import { TuiTitle } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
 
 @Component({
   selector: 'wishare-wishlist-details',
   standalone: true,
-  imports: [CommonModule, TuiLoader, WishComponent, TuiHeader, TuiTitle],
+  imports: [CommonModule, TuiLoader, WishCardComponent, TuiHeader, TuiTitle],
   providers: [WishlistDetailsStore],
   templateUrl: './wishlist-details.component.html',
   styleUrls: ['./wishlist-details.component.scss'],

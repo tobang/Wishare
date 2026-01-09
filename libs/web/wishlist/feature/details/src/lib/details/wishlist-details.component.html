@@ -14,7 +14,7 @@
 
       <div class="wishes-grid">
         @for (wish of wishlist.wishes?.rows || []; track wish.$id) {
-          <wishare-wish [wish]="wish"></wishare-wish>
+          <wishare-wish-card [wish]="wish"></wishare-wish-card>
         } @empty {
           <div class="empty-state">No wishes found in this list.</div>
         }

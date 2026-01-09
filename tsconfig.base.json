@@ -81,7 +81,8 @@
       ],
       "@wishare/web/wishlist/feature/details": [
         "libs/web/wishlist/feature/details/src/index.ts"
-      ]
+      ],
+      "@wishare/web/wish/ui/card": ["libs/web/wish/ui/card/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,12 +1,21 @@
 import { Client, Databases } from 'node-appwrite';
 
 export default async ({ req, res, log, error }) => {
+  // For local Docker: use APPWRITE_ENDPOINT override or the internal docker network
+  // The default APPWRITE_FUNCTION_API_ENDPOINT may not be reachable from inside the executor container
+  const endpoint =
+    process.env.APPWRITE_ENDPOINT ||
+    process.env.APPWRITE_FUNCTION_API_ENDPOINT ||
+    'http://appwrite/v1';
+
+  log(`Using endpoint: ${endpoint}`);
+
   const client = new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(endpoint)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
     .setKey(req.headers['x-appwrite-key']);
 
-  const db = new Databases(client);
+  const databases = new Databases(client);
 
   try {
     const { databaseId, tableId, updates } = JSON.parse(req.body);
@@ -26,7 +35,7 @@ export default async ({ req, res, log, error }) => {
     // 2. Phase 1: Move to temp priority (Sequential)
     // This moves items "out of the way" so we can slot them into their final positions without unique constraint errors
     for (const [index, update] of updates.entries()) {
-      await db.updateDocument(databaseId, tableId, update.id, {
+      await databases.updateDocument(databaseId, tableId, update.id, {
         priority: tempBase + index,
       });
     }
@@ -36,7 +45,7 @@ export default async ({ req, res, log, error }) => {
     // as long as the target spots are free (which they should be after Phase 1, assuming no other user is messing with these exact items)
     const sortedUpdates = [...updates].sort((a, b) => a.priority - b.priority);
     for (const update of sortedUpdates) {
-      await db.updateDocument(databaseId, tableId, update.id, {
+      await databases.updateDocument(databaseId, tableId, update.id, {
         priority: update.priority,
       });
     }

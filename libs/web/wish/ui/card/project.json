@@ -1,0 +1,20 @@
+{
+  "name": "card",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/web/wish/ui/card/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["type:ui", "scope:wish"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../../../coverage/libs/web/wish/ui/card"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
