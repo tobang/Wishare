@@ -11,6 +11,7 @@ import {
   Component,
   input,
   output,
+  signal,
 } from '@angular/core';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { scopeLoader } from 'scoped-translations';
@@ -65,6 +66,10 @@ export class WishListComponent {
   // Inputs - receive data from parent
   readonly wishlist = input.required<WishlistUi>();
 
+  // Scroll state
+  readonly canScrollUp = signal(false);
+  readonly canScrollDown = signal(true);
+
   // Outputs - emit actions to parent
   readonly createWishClick = output<string>();
   readonly editWishlistClick = output<WishlistUi>();
@@ -104,5 +109,15 @@ export class WishListComponent {
   openDetails() {
     console.log('Opening details for wishlist', this.wishlist().$id);
     this.wishListClick.emit(this.wishlist().$id);
+  }
+
+  onScroll(event: Event) {
+    const element = event.target as HTMLElement;
+    const scrollTop = element.scrollTop;
+    const scrollHeight = element.scrollHeight;
+    const clientHeight = element.clientHeight;
+
+    this.canScrollUp.set(scrollTop > 5);
+    this.canScrollDown.set(scrollTop + clientHeight < scrollHeight - 5);
   }
 }

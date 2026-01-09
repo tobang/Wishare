@@ -38,6 +38,14 @@
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.025em;
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    var(--color-brand-secondary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 
   @media (min-width: 768px) {
     font-size: 2rem;
@@ -46,11 +54,12 @@
 
 .wishlist-count {
   font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  background: var(--bg-surface-hover);
+  font-weight: 600;
+  color: var(--color-brand-primary);
+  background: var(--bg-card-secondary);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
+  border: 1px solid var(--color-brand-primary);
 }
 
 %grid-item-width {
@@ -133,9 +142,14 @@
     width: 4rem;
     height: 4rem;
     border-radius: 1rem;
-    background: var(--bg-card-secondary);
-    color: var(--color-brand-primary);
+    background: linear-gradient(
+      135deg,
+      var(--color-brand-primary) 0%,
+      var(--color-brand-secondary) 100%
+    );
+    color: white;
     margin-bottom: var(--spacing-4);
+    box-shadow: 0 4px 12px rgba(52, 98, 108, 0.3);
 
     tui-icon {
       font-size: 2rem;

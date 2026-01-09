@@ -14,32 +14,53 @@
     </aside>
   </header>
 
-  <section
-    class="wishes-section"
-    cdkDropList
-    cdkDropListOrientation="vertical"
-    [cdkDropListData]="wishlist().wishes?.rows || []"
-    (cdkDropListDropped)="onWishDrop($event)"
-    [cdkDropListLockAxis]="'y'"
-  >
-    @if (wishlist().wishes?.rows?.length) {
-      @for (wish of wishlist().wishes?.rows; track wish.$id; let i = $index) {
-        <wishare-wish
-          cdkDrag
-          [cdkDragData]="wish"
-          [cdkDragLockAxis]="'y'"
-          [wish]="wish"
-          (wishClick)="onWishClick($event)"
-        >
-          <div class="wish-drag-placeholder" *cdkDragPlaceholder></div>
-        </wishare-wish>
-      }
-    } @else {
-      <div class="no-wishes">
-        <span class="no-wishes-text">{{ t('wishlist.no-wishes') }}</span>
+  <div class="wishes-container">
+    @if ((wishlist().wishes?.rows?.length || 0) > 3 && canScrollUp()) {
+      <div class="scroll-indicator scroll-indicator-top">
+        <tui-icon
+          icon="@tui.chevron-up"
+          class="scroll-arrow scroll-arrow-up"
+        ></tui-icon>
       </div>
     }
-  </section>
+
+    <section
+      class="wishes-section"
+      cdkDropList
+      cdkDropListOrientation="vertical"
+      [cdkDropListData]="wishlist().wishes?.rows || []"
+      (cdkDropListDropped)="onWishDrop($event)"
+      [cdkDropListLockAxis]="'y'"
+      (scroll)="onScroll($event)"
+    >
+      @if (wishlist().wishes?.rows?.length) {
+        @for (wish of wishlist().wishes?.rows; track wish.$id; let i = $index) {
+          <wishare-wish
+            cdkDrag
+            [cdkDragData]="wish"
+            [cdkDragLockAxis]="'y'"
+            [wish]="wish"
+            (wishClick)="onWishClick($event)"
+          >
+            <div class="wish-drag-placeholder" *cdkDragPlaceholder></div>
+          </wishare-wish>
+        }
+      } @else {
+        <div class="no-wishes">
+          <span class="no-wishes-text">{{ t('wishlist.no-wishes') }}</span>
+        </div>
+      }
+    </section>
+
+    @if ((wishlist().wishes?.rows?.length || 0) > 3 && canScrollDown()) {
+      <div class="scroll-indicator scroll-indicator-bottom">
+        <tui-icon
+          icon="@tui.chevron-down"
+          class="scroll-arrow scroll-arrow-down"
+        ></tui-icon>
+      </div>
+    }
+  </div>
 
   <footer class="card-footer">
     <button

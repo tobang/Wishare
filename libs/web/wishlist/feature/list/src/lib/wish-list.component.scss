@@ -8,10 +8,14 @@
   flex-direction: column;
   transition:
     box-shadow 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    border-color 0.2s ease;
+  border-left: 3px solid transparent;
+  position: relative;
 
   &:hover {
     box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.12);
+    border-left-color: var(--color-brand-primary);
   }
 }
 
@@ -38,8 +42,15 @@
 
 .wishlist-icon {
   flex-shrink: 0;
-  color: var(--color-brand-primary);
-  font-size: 1.25rem;
+  color: white;
+  font-size: 1rem;
+  padding: 0.375rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    var(--color-brand-secondary) 100%
+  );
 }
 
 .card-title {
@@ -72,28 +83,91 @@
   font-size: 1rem;
 }
 
+.wishes-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+}
+
 .wishes-section {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
   min-height: 100px;
-  max-height: 300px;
+  // Show max 3 wishes (each ~76px: 48px image + 16px padding + 8px margin + 4px gap)
+  max-height: calc(3 * 76px + var(--spacing-1) * 2);
   overflow-y: auto;
   padding: var(--spacing-1) 0;
 
-  // Custom scrollbar
+  // Hide scrollbar but keep functionality
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
   &::-webkit-scrollbar {
-    width: 4px;
+    display: none;
+  }
+}
+
+.scroll-indicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  height: 20px;
+  pointer-events: none;
+  z-index: 1;
+
+  &.scroll-indicator-top {
+    top: 0;
+    background: linear-gradient(
+      to bottom,
+      var(--bg-surface) 0%,
+      transparent 100%
+    );
   }
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
+  &.scroll-indicator-bottom {
+    bottom: 0;
+    background: linear-gradient(to top, var(--bg-surface) 0%, transparent 100%);
+  }
+}
+
+.scroll-arrow {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  width: 16px;
+  height: 16px;
+
+  &.scroll-arrow-down {
+    animation: bounce-down 1.5s infinite;
   }
 
-  &::-webkit-scrollbar-thumb {
-    background: var(--border-default);
-    border-radius: 2px;
+  &.scroll-arrow-up {
+    animation: bounce-up 1.5s infinite;
+  }
+}
+
+@keyframes bounce-down {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes bounce-up {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
   }
 }
 
@@ -102,7 +176,11 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-6) var(--spacing-4);
-  background: var(--bg-muted);
+  background: linear-gradient(
+    135deg,
+    var(--bg-muted) 0%,
+    var(--bg-surface-hover) 100%
+  );
   border-radius: 0.75rem;
   border: 1px dashed var(--border-default);
 }
@@ -110,6 +188,7 @@
 .no-wishes-text {
   color: var(--text-muted);
   font-size: 0.875rem;
+  font-style: italic;
 }
 
 .card-footer {

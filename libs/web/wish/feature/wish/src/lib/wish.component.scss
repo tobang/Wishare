@@ -24,10 +24,12 @@
     border-radius: var(--tui-radius-m);
     border: 1px solid var(--border-light);
     transition: all 0.2s ease;
+    border-left: 2px solid transparent;
 
     &:hover {
       background-color: var(--bg-surface-hover);
       border-color: var(--border-default);
+      border-left-color: var(--color-brand-primary);
     }
   }
 
@@ -82,11 +84,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: var(--bg-muted);
+        background: linear-gradient(
+          135deg,
+          var(--bg-muted) 0%,
+          var(--bg-surface-hover) 100%
+        );
         color: var(--text-muted);
 
         tui-icon {
           font-size: 1.25rem;
+          opacity: 0.6;
         }
       }
     }
