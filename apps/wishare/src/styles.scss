@@ -191,10 +191,16 @@ $brand-primary-darker: color.adjust($brand-primary, $lightness: -10%);
   --font-size-h5: var(--font-size-xl); // 20px
   --font-size-h6: var(--font-size-lg); // 18px
 
-  // Taiga UI overrides
+  // Taiga UI overrides (v5 uses --tui-background-accent-* for primary buttons)
   --tui-primary: var(--color-primary) !important;
   --tui-primary-hover: var(--color-primary-light) !important;
   --tui-primary-active: var(--color-primary-dark) !important;
+
+  // Taiga UI v5 button appearance colors
+  --tui-background-accent-1: var(--color-brand-primary) !important;
+  --tui-background-accent-1-hover: var(--color-primary-light) !important;
+  --tui-background-accent-1-pressed: var(--color-primary-dark) !important;
+  --tui-background-accent-2: var(--color-brand-secondary) !important;
 
   // Legacy variable mappings (for backwards compatibility)
   --primary-color: var(--color-primary);
@@ -368,6 +374,15 @@ $brand-primary-darker: color.adjust($brand-primary, $lightness: -10%);
   --font-size-h5: var(--font-size-xl); // 20px
   --font-size-h6: var(--font-size-lg); // 18px
 
+  // Taiga UI v5 button appearance colors (dark mode)
+  --tui-background-accent-1: #{color.adjust($brand-primary, $lightness: 10%)} !important;
+  --tui-background-accent-1-hover: #{color.adjust(
+      $brand-primary,
+      $lightness: 15%
+    )} !important;
+  --tui-background-accent-1-pressed: #{$brand-primary} !important;
+  --tui-background-accent-2: #{$brand-secondary} !important;
+
   // Legacy variable mappings
   --primary-color: var(--color-primary);
   --secondary-color: var(--color-brand-secondary);
@@ -506,6 +521,15 @@ $brand-primary-darker: color.adjust($brand-primary, $lightness: -10%);
     --spacing-card-padding: var(--spacing-6);
     --spacing-input-padding: var(--spacing-3);
     --spacing-button-padding: var(--spacing-4);
+
+    // Taiga UI v5 button appearance colors (auto dark mode)
+    --tui-background-accent-1: #{color.adjust($brand-primary, $lightness: 10%)} !important;
+    --tui-background-accent-1-hover: #{color.adjust(
+        $brand-primary,
+        $lightness: 15%
+      )} !important;
+    --tui-background-accent-1-pressed: #{$brand-primary} !important;
+    --tui-background-accent-2: #{$brand-secondary} !important;
 
     // Legacy variable mappings
     --primary-color: var(--color-primary);

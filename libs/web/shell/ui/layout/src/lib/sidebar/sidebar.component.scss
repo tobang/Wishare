@@ -1,0 +1,103 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.sidebar {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    var(--color-brand-secondary) 100%
+  );
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar-header {
+  padding: 0 1rem 2rem 1rem;
+  display: flex;
+  justify-content: flex-start; /* Align logo to left like design */
+  padding-left: 2.3rem;
+}
+
+.logo {
+  height: 32px; /* Smaller logo fitting the design */
+  width: auto;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  padding-left: 1rem;
+}
+
+.menu-item {
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 99px 0 0 99px; /* Rounded only on the left side */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  position: relative;
+
+  tui-icon {
+    font-size: 1.25rem;
+  }
+
+  span {
+    font-weight: 500;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  &.active {
+    background: var(--bg-page);
+    color: var(--color-brand-secondary);
+    font-weight: 700;
+    box-shadow: none;
+
+    /* Ensure icon inherits the active text color */
+    tui-icon {
+      color: var(--color-brand-secondary);
+    }
+
+    /* Top inverted corner */
+    &::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -20px;
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      border-bottom-right-radius: 20px;
+      box-shadow: 5px 5px 0 5px var(--bg-page);
+    }
+
+    /* Bottom inverted corner */
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: -20px;
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      border-top-right-radius: 20px;
+      box-shadow: 5px -5px 0 5px var(--bg-page);
+    }
+  }
+}

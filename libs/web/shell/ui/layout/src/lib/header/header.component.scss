@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.app-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 1.5rem;
+  background-color: var(
+    --tertiary-color
+  ); /* Match landing page navbar background */
+}
+
+.user-avatar {
+  flex-shrink: 0;
+  background: var(--color-brand-accent, #008891);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.language-flag {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.active-language {
+  background-color: var(--tui-base-02);
+}
+
+.language-check {
+  margin-left: auto;
+  opacity: 0.6;
+}

@@ -1,9 +1,23 @@
-<div class="page-wrapper">
-  <wishare-nav-bar
-    [authenticated]="authenticated()"
-    [userName]="userName()"
-    (logout)="logout()"
-    (switchLanguage)="switchLanguage($event)"
-  ></wishare-nav-bar>
-  <wishare-main-view></wishare-main-view>
-</div>
+@if (isPublicPage()) {
+  <div class="page-wrapper">
+    <wishare-nav-bar
+      [authenticated]="authenticated()"
+      [userName]="userName()"
+      (logout)="logout()"
+      (switchLanguage)="switchLanguage($event)"
+    ></wishare-nav-bar>
+    <wishare-main-view></wishare-main-view>
+  </div>
+} @else {
+  <div class="app-wrapper">
+    <wishare-sidebar></wishare-sidebar>
+    <div class="app-content">
+      <wishare-app-header
+        [userName]="userName()"
+        (logout)="logout()"
+        (switchLanguage)="switchLanguage($event)"
+      ></wishare-app-header>
+      <wishare-main-view></wishare-main-view>
+    </div>
+  </div>
+}
