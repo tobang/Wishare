@@ -1,5 +1,14 @@
 @use '@taiga-ui/core/styles/taiga-ui-local';
 
+:host {
+  display: block;
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    var(--color-brand-secondary) 100%
+  ) !important;
+}
+
 // Hero Section
 .hero {
   position: relative;

@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.main-view {
+  min-height: 100%;
+}

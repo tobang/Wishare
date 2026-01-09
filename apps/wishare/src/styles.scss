@@ -2,6 +2,14 @@
 
 @use 'sass:color';
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* App shell handles scrolling */
+}
+
 // ============================================
 // WISHARE THEME SYSTEM
 // ============================================
@@ -778,4 +786,43 @@ img {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+// ============================================
+// GLOBAL SCROLLBAR STYLES
+// ============================================
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+// ============================================
+// APP SHELL OVERRIDES
+// ============================================
+/*
+  Ensures that routed pages have a background color,
+  as the .app-container in app.ts is now transparent
+  to support the transparent scrollbar track.
+*/
+.app-container > *:not(router-outlet) {
+  background-color: var(--bg-page, #ffffff);
 }
