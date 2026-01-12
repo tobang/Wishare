@@ -4,11 +4,42 @@
 
 .app-header {
   height: 64px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  background-color: var(--bg-page); /* Seamless with page background */
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0; /* Allow text truncation */
+
+  h1,
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.header-right {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 0 1.5rem;
-  background-color: var(--bg-page); /* Seamless with page background */
+  gap: 0.75rem;
 }
 
 .user-avatar {

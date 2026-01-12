@@ -1,7 +1,25 @@
+<!-- Header portal content - back button -->
+<ng-template headerContent="left">
+  <button
+    tuiIconButton
+    type="button"
+    appearance="flat"
+    size="m"
+    (click)="navigateToBoard()"
+  >
+    <tui-icon icon="@tui.chevron-left" />
+  </button>
+</ng-template>
+
 @if (wishlistStream().isLoading) {
   <tui-loader class="loader-centered" [overlay]="true"></tui-loader>
 } @else {
   @if (wishlistStream().value; as wishlist) {
+    <!-- Header portal content - page title -->
+    <ng-template headerContent="center">
+      <h1>{{ wishlist.title }}</h1>
+    </ng-template>
+
     <div class="details-container">
       <header class="details-header" tuiHeader>
         <h1 tuiTitle>

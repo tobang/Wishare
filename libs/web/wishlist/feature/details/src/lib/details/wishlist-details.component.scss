@@ -13,13 +13,17 @@ input {
 :host {
   display: block;
   padding: 2rem;
-  height: 100%;
   box-sizing: border-box;
 }
 
 .details-container {
   max-width: 1200px;
   margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.back-button {
+  margin-bottom: 1rem;
 }
 
 .details-header {

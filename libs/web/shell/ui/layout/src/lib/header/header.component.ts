@@ -11,6 +11,8 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TuiActiveZone, TuiObscured } from '@taiga-ui/cdk';
 import { TuiDataList, TuiDropdown, TuiIcon } from '@taiga-ui/core';
 import { TuiAvatar, TuiInitialsPipe } from '@taiga-ui/kit';
+import { PortalModule } from '@angular/cdk/portal';
+import { HeaderPortalService } from '@wishare/web/shared/services';
 
 import { LayoutTranslationProvider } from '../layout.translation';
 
@@ -27,11 +29,30 @@ import { LayoutTranslationProvider } from '../layout.translation';
     TuiActiveZone,
     TuiObscured,
     TuiIcon,
+    PortalModule,
   ],
   providers: [LayoutTranslationProvider],
   template: `
     <header class="app-header" *transloco="let t">
+      <!-- Left content portal (back buttons, breadcrumbs) -->
+      <div class="header-left">
+        @if (headerPortal.leftContent(); as portal) {
+          <ng-template [cdkPortalOutlet]="portal"></ng-template>
+        }
+      </div>
+
+      <!-- Center content portal (page title) -->
+      <div class="header-center">
+        @if (headerPortal.centerContent(); as portal) {
+          <ng-template [cdkPortalOutlet]="portal"></ng-template>
+        }
+      </div>
+
+      <!-- Right content portal + user avatar -->
       <div class="header-right">
+        @if (headerPortal.rightContent(); as portal) {
+          <ng-template [cdkPortalOutlet]="portal"></ng-template>
+        }
         @if (userName()) {
           <span
             (tuiActiveZoneChange)="onAvatarMenuActiveZone($event)"
@@ -85,6 +106,7 @@ import { LayoutTranslationProvider } from '../layout.translation';
 })
 export class AppHeaderComponent {
   private readonly transloco = inject(TranslocoService);
+  readonly headerPortal = inject(HeaderPortalService);
 
   readonly userName = input<string | null>(null);
   readonly logout = output<void>();
