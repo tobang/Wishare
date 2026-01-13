@@ -29,6 +29,7 @@ docker run -it --rm \
 ```
 
 **During installation, you'll be asked:**
+
 - HTTP Port: Press Enter for default (80)
 - HTTPS Port: Press Enter for default (443)
 - Hostname: Enter `localhost` or your local IP
@@ -44,6 +45,7 @@ docker compose up -d
 ### 3. Access Appwrite Console
 
 Open your browser and go to:
+
 ```
 http://localhost
 ```
@@ -87,7 +89,7 @@ You should see the Appwrite console login/signup page.
 3. Verify it matches `environment.ts`:
 
 ```typescript
-appwriteProject: 'wishare'
+appwriteProject: 'wishare';
 ```
 
 ### 5. Create Database
@@ -112,11 +114,11 @@ You need to create the following collections:
 5. Go to **Attributes** tab
 6. Add these attributes:
 
-| Attribute | Type | Size | Required |
-|-----------|------|------|----------|
-| title | String | 255 | Yes |
-| uid | String | 255 | Yes |
-| description | String | 1000 | No |
+| Attribute   | Type   | Size | Required |
+| ----------- | ------ | ---- | -------- |
+| title       | String | 255  | Yes      |
+| uid         | String | 255  | Yes      |
+| description | String | 1000 | No       |
 
 7. Create an Index:
    - Go to **Indexes** tab
@@ -141,19 +143,15 @@ You need to create the following collections:
 4. Click **Create**
 5. Add attributes:
 
-| Attribute | Type | Size | Required |
-|-----------|------|------|----------|
-| title | String | 255 | Yes |
-| wlid | String | 255 | Yes |
-| url | String | 1000 | No |
-| description | String | 2000 | No |
-| price | String | 50 | No |
-| image | String | 1000 | No |
+| Attribute   | Type   | Size | Required |
+| ----------- | ------ | ---- | -------- |
+| title       | String | 255  | Yes      |
+| url         | String | 1000 | No       |
+| description | String | 2000 | No       |
+| price       | String | 50   | No       |
+| image       | String | 1000 | No       |
 
-6. Create an Index:
-   - Type: **Key**
-   - Attribute: `wlid`
-   - Order: ASC
+6. The `wishlist` attribute is created automatically via the two-way relationship from wishlists.
 
 7. Set Permissions (same as wishlists)
 
@@ -177,8 +175,8 @@ Check your Angular app configuration matches:
 ```typescript
 export const environment: AppConfig = {
   production: false,
-  appwriteDatabase: 'wishare',      // ✓ Database ID
-  appwriteProject: 'wishare',       // ✓ Project ID
+  appwriteDatabase: 'wishare', // ✓ Database ID
+  appwriteProject: 'wishare', // ✓ Project ID
   appwriteEndpoint: 'http://localhost/v1', // ✓ Endpoint
 };
 ```
@@ -217,6 +215,7 @@ nx serve wishare
 ```
 
 Then open http://localhost:4200 and try to:
+
 - Sign up for an account
 - Log in
 - Create a wishlist
@@ -228,6 +227,7 @@ Then open http://localhost:4200 and try to:
 ### Issue: Port 80 Already in Use
 
 **Solution 1**: Change Appwrite port
+
 ```bash
 cd ~/appwrite/appwrite
 nano .env
@@ -242,11 +242,13 @@ docker compose up -d
 ```
 
 Then update your Angular config:
+
 ```typescript
 appwriteEndpoint: 'http://localhost:8080/v1',
 ```
 
 **Solution 2**: Stop the conflicting service
+
 ```bash
 # Find what's using port 80
 sudo lsof -i :80
@@ -265,17 +267,20 @@ brew install docker-compose
 ### Issue: Cannot Connect to Appwrite
 
 1. Check Appwrite is running:
+
 ```bash
 docker ps | grep appwrite
 ```
 
 2. Check logs:
+
 ```bash
 cd ~/appwrite/appwrite
 docker compose logs -f appwrite
 ```
 
 3. Verify endpoint in browser:
+
 ```
 http://localhost/v1/health/version
 ```
@@ -354,11 +359,11 @@ docker compose down
 
 Your app uses these settings from `environment.ts`:
 
-| Variable | Value | Description |
-|----------|-------|-------------|
-| `appwriteEndpoint` | `http://localhost/v1` | Appwrite API endpoint |
-| `appwriteProject` | `wishare` | Project ID from console |
-| `appwriteDatabase` | `wishare` | Database ID from console |
+| Variable           | Value                 | Description              |
+| ------------------ | --------------------- | ------------------------ |
+| `appwriteEndpoint` | `http://localhost/v1` | Appwrite API endpoint    |
+| `appwriteProject`  | `wishare`             | Project ID from console  |
+| `appwriteDatabase` | `wishare`             | Database ID from console |
 
 ---
 

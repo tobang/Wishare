@@ -13,6 +13,7 @@ import { WishCardComponent } from '@wishare/web/wish/ui/card';
 import { TuiTitle } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
 import { HeaderContentDirective } from '@wishare/web/shared/services';
+import { WishFlat } from '@wishare/web/wishlist/data-access';
 
 @Component({
   selector: 'wishare-wishlist-details',
@@ -33,7 +34,7 @@ import { HeaderContentDirective } from '@wishare/web/shared/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WishlistDetailsComponent implements OnInit {
-  private readonly store = inject(WishlistDetailsStore);
+  protected readonly store = inject(WishlistDetailsStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -41,6 +42,34 @@ export class WishlistDetailsComponent implements OnInit {
 
   public navigateToBoard(): void {
     this.router.navigate(['/wishlists']);
+  }
+
+  /**
+   * Checks if the current user is the owner of a wish.
+   */
+  isWishOwner(wish: WishFlat): boolean {
+    return this.store.isWishOwner(wish);
+  }
+
+  /**
+   * Checks if the current user has reserved a wish.
+   */
+  isReservedByCurrentUser(wish: WishFlat): boolean {
+    return this.store.isReservedByCurrentUser(wish);
+  }
+
+  /**
+   * Handles the reserve action from a wish card.
+   */
+  onReserveWish(wishId: string): void {
+    this.store.actions.reserveWish(wishId);
+  }
+
+  /**
+   * Handles the unreserve action from a wish card.
+   */
+  onUnreserveWish(wishId: string): void {
+    this.store.actions.unreserveWish(wishId);
   }
 
   ngOnInit() {

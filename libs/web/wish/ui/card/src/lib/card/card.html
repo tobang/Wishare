@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" [class.card--reserved]="!isOwner() && isReserved">
   <div class="card__image-container">
     @if (wish().files?.length) {
     <img
@@ -13,6 +13,19 @@
     } @if (wish().priority) {
     <span class="card__tag card__tag--{{ getPriorityColor(wish().priority) }}">
       {{ getPriorityLabel(wish().priority) }}
+    </span>
+    }
+    <!-- Reservation badge for non-owners -->
+    @if (!isOwner() && isReserved) {
+    <span
+      class="card__reservation-badge"
+      [class.card__reservation-badge--mine]="isReservedByMe()"
+    >
+      @if (isReservedByMe()) {
+      <tui-icon icon="@tui.check" class="badge-icon"></tui-icon>
+      Reserved by you } @else {
+      <tui-icon icon="@tui.lock" class="badge-icon"></tui-icon>
+      Reserved }
     </span>
     }
   </div>
@@ -36,5 +49,36 @@
         >{{ wish().$createdAt | date:'mediumDate':undefined:locale }}</span
       >
     </div>
+
+    <!-- Reservation actions for non-owners -->
+    @if (!isOwner()) {
+    <div class="card__actions">
+      @if (!isReserved) {
+      <button
+        tuiButton
+        type="button"
+        appearance="primary"
+        size="s"
+        (click)="onReserveClick(); $event.stopPropagation()"
+      >
+        <tui-icon icon="@tui.gift" class="action-icon"></tui-icon>
+        Reserve
+      </button>
+      } @else if (isReservedByMe()) {
+      <button
+        tuiButton
+        type="button"
+        appearance="secondary"
+        size="s"
+        (click)="onUnreserveClick(); $event.stopPropagation()"
+      >
+        <tui-icon icon="@tui.x" class="action-icon"></tui-icon>
+        Cancel Reservation
+      </button>
+      } @else {
+      <span class="card__reserved-text"> Someone is getting this! </span>
+      }
+    </div>
+    }
   </div>
 </div>

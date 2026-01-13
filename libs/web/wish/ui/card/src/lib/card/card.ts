@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   input,
+  output,
 } from '@angular/core';
 import {
   CommonModule,
@@ -12,7 +13,7 @@ import {
 } from '@angular/common';
 import localeDa from '@angular/common/locales/da';
 import { WishFlat } from '@wishare/web/wishlist/data-access';
-import { TuiIcon } from '@taiga-ui/core';
+import { TuiIcon, TuiButton } from '@taiga-ui/core';
 import { BoardService } from '@wishare/web/board/data-access';
 import { TranslocoService } from '@jsverse/transloco';
 
@@ -22,7 +23,7 @@ registerLocaleData(localeDa);
 @Component({
   selector: 'wishare-wish-card',
   standalone: true,
-  imports: [CommonModule, TuiIcon, DatePipe, CurrencyPipe],
+  imports: [CommonModule, TuiIcon, TuiButton, DatePipe, CurrencyPipe],
   templateUrl: './card.html',
   styleUrl: './card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,8 +34,43 @@ export class WishCardComponent {
 
   readonly wish = input.required<WishFlat>();
 
+  /**
+   * Whether the current user owns this wish.
+   * When true, reservation UI is hidden.
+   */
+  readonly isOwner = input<boolean>(false);
+
+  /**
+   * Whether the current user has reserved this wish.
+   */
+  readonly isReservedByMe = input<boolean>(false);
+
+  /**
+   * Emits when the user wants to reserve this wish.
+   */
+  readonly reserve = output<string>();
+
+  /**
+   * Emits when the user wants to unreserve this wish.
+   */
+  readonly unreserve = output<string>();
+
   get locale(): string {
     return this.transloco.getActiveLang();
+  }
+
+  /**
+   * Whether the wish is reserved by anyone.
+   */
+  get isReserved(): boolean {
+    return !!this.wish().reservedBy;
+  }
+
+  /**
+   * Whether the wish is reserved by someone else (not the current user).
+   */
+  get isReservedByOther(): boolean {
+    return this.isReserved && !this.isReservedByMe();
   }
 
   getImageUrl(fileId: string): string {
@@ -65,5 +101,13 @@ export class WishCardComponent {
       default:
         return 'Normal';
     }
+  }
+
+  onReserveClick(): void {
+    this.reserve.emit(this.wish().$id);
+  }
+
+  onUnreserveClick(): void {
+    this.unreserve.emit(this.wish().$id);
   }
 }

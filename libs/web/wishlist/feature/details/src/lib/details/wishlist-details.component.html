@@ -32,7 +32,13 @@
 
       <div class="wishes-grid">
         @for (wish of wishlist.wishes?.rows || []; track wish.$id) {
-          <wishare-wish-card [wish]="wish"></wishare-wish-card>
+          <wishare-wish-card
+            [wish]="wish"
+            [isOwner]="isWishOwner(wish)"
+            [isReservedByMe]="isReservedByCurrentUser(wish)"
+            (reserve)="onReserveWish($event)"
+            (unreserve)="onUnreserveWish($event)"
+          ></wishare-wish-card>
         } @empty {
           <div class="empty-state">No wishes found in this list.</div>
         }

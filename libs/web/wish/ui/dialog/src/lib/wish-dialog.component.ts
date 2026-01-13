@@ -148,6 +148,18 @@ export class WishDialogComponent {
     this.setActiveItemIndex(2);
   }
 
+  /** Map of MIME types to allowed file extensions */
+  private readonly MIME_TO_EXTENSION: Record<string, string> = {
+    'image/jpeg': 'jpg',
+    'image/jpg': 'jpg',
+    'image/png': 'png',
+    'image/gif': 'gif',
+    'image/webp': 'webp',
+  };
+
+  /** Allowed MIME types for wish images */
+  private readonly ALLOWED_MIME_TYPES = Object.keys(this.MIME_TO_EXTENSION);
+
   /**
    * Adds an image from a base64 data URL
    */
@@ -155,13 +167,23 @@ export class WishDialogComponent {
     // Convert data URL to File for consistent handling
     const byteString = atob(dataUrl.split(',')[1]);
     const mimeType = dataUrl.split(',')[0].split(':')[1].split(';')[0];
+
+    // Skip images with unsupported MIME types
+    if (!this.ALLOWED_MIME_TYPES.includes(mimeType)) {
+      console.warn(
+        `[WishDialog] Skipping image with unsupported MIME type: ${mimeType}`,
+      );
+      return;
+    }
+
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
     for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
     const blob = new Blob([ab], { type: mimeType });
-    const file = new File([blob], 'scraped-image.' + mimeType.split('/')[1], {
+    const extension = this.MIME_TO_EXTENSION[mimeType];
+    const file = new File([blob], `scraped-image.${extension}`, {
       type: mimeType,
     });
 

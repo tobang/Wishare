@@ -39,3 +39,37 @@
 # General Guidelines for creating documentation
 
 - If you create any documentation related to code generation/refactoring, please place the in the docs folder
+
+## General Guidelines for Browser Automation
+
+Use `agent-browser` for web automation. Run `agent-browser --help` for all commands.
+
+### Credentials
+
+Browser test credentials are stored in `.env.browser` (gitignored). Before running browser automation that requires login, source this file:
+
+```bash
+source .env.browser
+```
+
+The file contains:
+
+- `BROWSER_TEST_EMAIL` - Email for login
+- `BROWSER_TEST_PASSWORD` - Password for login
+
+### Core workflow
+
+1. `agent-browser open <url>` - Navigate to page
+2. `agent-browser snapshot -i` - Get interactive elements with refs (@e1, @e2)
+3. `agent-browser click @e1` / `fill @e2 "text"` - Interact using refs
+4. Re-snapshot after page changes
+
+### Login workflow
+
+After opening the app and getting a snapshot with login fields:
+
+```bash
+agent-browser fill @email_field "$BROWSER_TEST_EMAIL"
+agent-browser fill @password_field "$BROWSER_TEST_PASSWORD"
+agent-browser click @login_button
+```

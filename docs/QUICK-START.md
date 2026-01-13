@@ -49,16 +49,17 @@ curl http://localhost/v1/health/version
    - ID: `wishare`
    - Name: `Wishare Database`
 6. **Create Collections**:
-   
+
    **Collection: wishlists**
    - ID: `wishlists`
    - Attributes: `title` (string, 255), `uid` (string, 255), `description` (string, 1000)
+   - Relationship: `wishes` (oneToMany to wishes, twoWay: true, twoWayKey: `wishlist`)
    - Index: `uid` (ASC)
-   
+
    **Collection: wishes**
    - ID: `wishes`
-   - Attributes: `title` (string, 255), `wlid` (string, 255), `url` (string, 1000), `description` (string, 2000)
-   - Index: `wlid` (ASC)
+   - Attributes: `title` (string, 255), `url` (string, 1000), `description` (string, 2000)
+   - Relationship: `wishlist` (created automatically via two-way relationship)
 
 ---
 
@@ -124,6 +125,7 @@ cd ~/appwrite/appwrite && docker compose logs -f
 ## Troubleshooting
 
 ### Port 80 in use?
+
 ```bash
 # Find what's using it
 sudo lsof -i :80
@@ -133,6 +135,7 @@ sudo apachectl stop
 ```
 
 ### Appwrite not responding?
+
 ```bash
 # Check containers
 docker ps
@@ -143,6 +146,7 @@ docker compose restart
 ```
 
 ### CORS errors?
+
 - Verify `localhost` is added as a platform in Appwrite Console
 - Make sure hostname is exactly `localhost` (no protocol)
 

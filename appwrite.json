@@ -78,217 +78,6 @@
       "enabled": true
     }
   ],
-  "collections": [
-    {
-      "$id": "wishes",
-      "$permissions": [
-        "create(\"users\")",
-        "read(\"users\")",
-        "update(\"users\")",
-        "delete(\"users\")"
-      ],
-      "databaseId": "wishare",
-      "name": "Wishes",
-      "enabled": true,
-      "documentSecurity": true,
-      "attributes": [
-        {
-          "key": "price",
-          "type": "double",
-          "required": false,
-          "array": false,
-          "min": 0,
-          "max": 999999.99,
-          "default": null
-        },
-        {
-          "key": "priority",
-          "type": "integer",
-          "required": false,
-          "array": false,
-          "min": 1,
-          "max": 999,
-          "default": 1
-        },
-        {
-          "key": "quantity",
-          "type": "integer",
-          "required": false,
-          "array": false,
-          "min": 1,
-          "max": 999,
-          "default": 1
-        },
-        {
-          "key": "title",
-          "type": "string",
-          "required": true,
-          "array": false,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "description",
-          "type": "string",
-          "required": false,
-          "array": false,
-          "size": 2000,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "uid",
-          "type": "string",
-          "required": true,
-          "array": false,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "url",
-          "type": "string",
-          "required": false,
-          "array": false,
-          "size": 1000,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "image",
-          "type": "string",
-          "required": false,
-          "array": false,
-          "size": 5000,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "files",
-          "type": "string",
-          "required": false,
-          "array": true,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "wlid",
-          "type": "string",
-          "required": false,
-          "array": false,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        }
-      ],
-      "indexes": [
-        {
-          "key": "uid_idx",
-          "type": "key",
-          "status": "available",
-          "attributes": ["uid"],
-          "orders": ["ASC"]
-        },
-        {
-          "key": "wlid_idx",
-          "type": "key",
-          "status": "available",
-          "attributes": ["wlid"],
-          "orders": ["ASC"]
-        }
-      ]
-    },
-    {
-      "$id": "wishlists",
-      "$permissions": [
-        "create(\"users\")",
-        "read(\"users\")",
-        "update(\"users\")",
-        "delete(\"users\")"
-      ],
-      "databaseId": "wishare",
-      "name": "Wishlists",
-      "enabled": true,
-      "documentSecurity": true,
-      "attributes": [
-        {
-          "key": "uid",
-          "type": "string",
-          "required": true,
-          "array": false,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "priority",
-          "type": "integer",
-          "required": false,
-          "array": false,
-          "min": 1,
-          "max": 999,
-          "default": 1
-        },
-        {
-          "key": "visibility",
-          "type": "string",
-          "required": false,
-          "array": false,
-          "elements": ["draft", "published", "archived"],
-          "format": "enum",
-          "default": "draft"
-        },
-        {
-          "key": "title",
-          "type": "string",
-          "required": true,
-          "array": false,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "description",
-          "type": "string",
-          "required": false,
-          "array": false,
-          "size": 1000,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "wishes",
-          "type": "relationship",
-          "required": false,
-          "array": false,
-          "relatedCollection": "wishes",
-          "relationType": "oneToMany",
-          "twoWay": true,
-          "twoWayKey": "wishlist",
-          "onDelete": "cascade",
-          "side": "parent"
-        }
-      ],
-      "indexes": [
-        {
-          "key": "uid_idx",
-          "type": "key",
-          "status": "available",
-          "attributes": ["uid"],
-          "orders": ["ASC"]
-        },
-        {
-          "key": "priority_uid_idx",
-          "type": "unique",
-          "status": "available",
-          "attributes": ["priority", "uid"],
-          "orders": ["ASC", "ASC"]
-        }
-      ]
-    }
-  ],
   "tables": [
     {
       "$id": "wishes",
@@ -304,6 +93,33 @@
       "rowSecurity": true,
       "columns": [
         {
+          "key": "price",
+          "type": "double",
+          "required": false,
+          "array": false,
+          "min": 0,
+          "max": 999999.99,
+          "default": null
+        },
+        {
+          "key": "priority",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 0,
+          "max": 2000000000,
+          "default": 0
+        },
+        {
+          "key": "quantity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 1,
+          "max": 999,
+          "default": 1
+        },
+        {
           "key": "title",
           "type": "string",
           "required": true,
@@ -349,42 +165,6 @@
           "encrypt": false
         },
         {
-          "key": "wlid",
-          "type": "string",
-          "required": false,
-          "array": false,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "price",
-          "type": "double",
-          "required": false,
-          "array": false,
-          "min": 0,
-          "max": 999999,
-          "default": null
-        },
-        {
-          "key": "priority",
-          "type": "integer",
-          "required": false,
-          "array": false,
-          "min": 1,
-          "max": 999,
-          "default": 1
-        },
-        {
-          "key": "quantity",
-          "type": "integer",
-          "required": false,
-          "array": false,
-          "min": 1,
-          "max": 999,
-          "default": 1
-        },
-        {
           "key": "files",
           "type": "string",
           "required": false,
@@ -392,24 +172,38 @@
           "size": 255,
           "default": null,
           "encrypt": false
-        }
-      ],
-      "indexes": [
-        {
-          "key": "uid_idx",
-          "type": "key",
-          "status": "available",
-          "columns": ["uid"],
-          "orders": []
         },
         {
-          "key": "wlid_idx",
-          "type": "key",
-          "status": "available",
-          "columns": ["wlid"],
-          "orders": []
+          "key": "reservedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "reservedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "wishlists",
+          "type": "relationship",
+          "required": false,
+          "array": false,
+          "relatedTable": "wishlists",
+          "relationType": "oneToMany",
+          "twoWay": true,
+          "twoWayKey": "wishes",
+          "onDelete": "cascade",
+          "side": "child"
         }
-      ]
+      ],
+      "indexes": []
     },
     {
       "$id": "wishlists",
@@ -424,6 +218,33 @@
       "enabled": true,
       "rowSecurity": true,
       "columns": [
+        {
+          "key": "uid",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "priority",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "min": 0,
+          "max": 2000000000,
+          "default": 0
+        },
+        {
+          "key": "visibility",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "elements": ["draft", "published", "archived"],
+          "format": "enum",
+          "default": "draft"
+        },
         {
           "key": "title",
           "type": "string",
@@ -443,33 +264,6 @@
           "encrypt": false
         },
         {
-          "key": "uid",
-          "type": "string",
-          "required": true,
-          "array": false,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "priority",
-          "type": "integer",
-          "required": false,
-          "array": false,
-          "min": 1,
-          "max": 999,
-          "default": 1
-        },
-        {
-          "key": "visibility",
-          "type": "string",
-          "required": false,
-          "array": false,
-          "elements": ["draft", "published", "archived"],
-          "format": "enum",
-          "default": "draft"
-        },
-        {
           "key": "wishes",
           "type": "relationship",
           "required": false,
@@ -477,7 +271,7 @@
           "relatedTable": "wishes",
           "relationType": "oneToMany",
           "twoWay": true,
-          "twoWayKey": "wishlist",
+          "twoWayKey": "wishlists",
           "onDelete": "cascade",
           "side": "parent"
         }

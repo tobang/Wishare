@@ -33,7 +33,7 @@ function flattenRow<T extends Models.Row>(row: Models.Row): T {
  * @param tablesDb - The TablesDB instance
  * @param databaseId - The database ID
  * @param key - The key field on source rows (e.g., '$id')
- * @param field - The field on joined table to match against (e.g., 'wlid')
+ * @param field - The field on joined table to match against (e.g., 'wishlist')
  * @param tableId - The table ID to join from (also used as the key name)
  */
 export const leftJoin = <

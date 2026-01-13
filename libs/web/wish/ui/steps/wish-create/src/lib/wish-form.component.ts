@@ -36,6 +36,12 @@ import { CreateWishFormModel } from './wish-create.validation';
 const MAX_IMAGES = 5;
 /** Maximum file size in bytes (5 MB) */
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+/** Allowed file extensions (must match Appwrite bucket config) */
+export const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+/** Accept string for file inputs */
+export const ALLOWED_IMAGE_ACCEPT = ALLOWED_IMAGE_EXTENSIONS.map(
+  (ext) => `.${ext}`,
+).join(',');
 
 /** Represents an image preview with data URL */
 export type ImagePreview = {
@@ -101,6 +107,9 @@ export class WishFormComponent {
 
   /** Maximum file size for validation */
   readonly maxFileSize = MAX_FILE_SIZE;
+
+  /** Accepted file types for the file input */
+  readonly acceptedFileTypes = ALLOWED_IMAGE_ACCEPT;
 
   /** Set of files currently being processed to prevent duplicates */
   private readonly processingFiles = new Set<string>();

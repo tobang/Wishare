@@ -49,5 +49,6 @@ __screenshots__/
 .env
 .env.local
 .env.*.local
+.env.browser
 
 vitest.config.*.timestamp*

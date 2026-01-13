@@ -9,17 +9,25 @@ export interface WishData {
   readonly quantity: number;
   readonly priority: number;
   readonly uid: string;
-  /** @deprecated Use wishlist relationship instead - kept for backward compatibility */
-  readonly wlid?: string;
   /**
    * Two-way relationship to parent wishlist.
    * This is the child side of the one-to-many relationship.
    * Contains the wishlist ID or the full wishlist object when loaded via query selection.
    */
-  readonly wishlist?: string | Record<string, unknown>;
+  readonly wishlists?: string | Record<string, unknown>;
   readonly url?: string;
   readonly price: number;
   readonly files?: string[];
+  /**
+   * User ID of the person who reserved this wish.
+   * Null or undefined if not reserved.
+   */
+  readonly reservedBy?: string | null;
+  /**
+   * Timestamp when the wish was reserved.
+   * Null or undefined if not reserved.
+   */
+  readonly reservedAt?: string | null;
 }
 
 /**

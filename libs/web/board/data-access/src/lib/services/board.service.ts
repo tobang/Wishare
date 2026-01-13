@@ -167,7 +167,7 @@ export class BoardService {
         databaseId: this.databaseId,
         tableId: WISHES_TABLE,
         queries: [
-          Query.equal('wishlist', wishlistId),
+          Query.equal('wishlists', wishlistId),
           Query.limit(100),
           Query.orderAsc('priority'),
         ],
@@ -389,7 +389,7 @@ export class BoardService {
         databaseId: this.databaseId,
         tableId: WISHES_TABLE,
         queries: [
-          Query.equal('wishlist', wishlistId),
+          Query.equal('wishlists', wishlistId),
           Query.orderDesc('priority'),
           Query.limit(1),
         ],
@@ -488,7 +488,7 @@ export class BoardService {
       priority,
       uid: userId,
       // Use the relationship field to link to the wishlist
-      wishlist: wishlistId,
+      wishlists: wishlistId,
     };
 
     // Only include files if there are any
@@ -597,6 +597,162 @@ export class BoardService {
     // TablesDB returns data at top level
     return (rowData['priority'] as number) ?? 0;
   }
+
+  // #region Wish Reservations
+
+  /**
+   * Reserves a wish for the current user.
+   * Validates that the user is not the owner of the wish.
+   *
+   * @param wishId - The ID of the wish to reserve
+   * @returns Observable of the updated wish
+   * @throws Error if user tries to reserve their own wish or if wish is already reserved
+   */
+  reserveWish(wishId: string): Observable<WishFlat> {
+    const userId = this.getCurrentUserId();
+
+    return from(
+      this.appwrite.tablesDb.getRow({
+        databaseId: this.databaseId,
+        tableId: WISHES_TABLE,
+        rowId: wishId,
+      }),
+    ).pipe(
+      switchMap((existingWish: unknown) => {
+        const wishData = existingWish as Record<string, unknown>;
+        const wishOwnerId = wishData['uid'] as string;
+        const reservedBy = wishData['reservedBy'] as string | null;
+
+        // Prevent owner from reserving their own wish
+        if (wishOwnerId === userId) {
+          return throwError(
+            () => new Error('You cannot reserve your own wish'),
+          );
+        }
+
+        // Check if wish is already reserved
+        if (reservedBy) {
+          if (reservedBy === userId) {
+            return throwError(
+              () => new Error('You have already reserved this wish'),
+            );
+          }
+          return throwError(
+            () => new Error('This wish has already been reserved by someone'),
+          );
+        }
+
+        return from(
+          this.appwrite.tablesDb.updateRow({
+            databaseId: this.databaseId,
+            tableId: WISHES_TABLE,
+            rowId: wishId,
+            data: {
+              reservedBy: userId,
+              reservedAt: new Date().toISOString(),
+            },
+          }),
+        ).pipe(map((row) => flattenWish(row)));
+      }),
+      catchError((error) => {
+        console.error('[BoardService] Error reserving wish:', error);
+        if (error instanceof Error && error.message.includes('cannot')) {
+          return throwError(() => error);
+        }
+        return throwError(() =>
+          this.handleAppwriteError(error, 'reserve wish'),
+        );
+      }),
+    );
+  }
+
+  /**
+   * Unreserves a wish that was previously reserved by the current user.
+   *
+   * @param wishId - The ID of the wish to unreserve
+   * @returns Observable of the updated wish
+   * @throws Error if the wish is not reserved by the current user
+   */
+  unreserveWish(wishId: string): Observable<WishFlat> {
+    const userId = this.getCurrentUserId();
+
+    return from(
+      this.appwrite.tablesDb.getRow({
+        databaseId: this.databaseId,
+        tableId: WISHES_TABLE,
+        rowId: wishId,
+      }),
+    ).pipe(
+      switchMap((existingWish: unknown) => {
+        const wishData = existingWish as Record<string, unknown>;
+        const reservedBy = wishData['reservedBy'] as string | null;
+
+        // Check if wish is reserved by the current user
+        if (!reservedBy) {
+          return throwError(() => new Error('This wish is not reserved'));
+        }
+
+        if (reservedBy !== userId) {
+          return throwError(
+            () => new Error('You can only cancel your own reservations'),
+          );
+        }
+
+        return from(
+          this.appwrite.tablesDb.updateRow({
+            databaseId: this.databaseId,
+            tableId: WISHES_TABLE,
+            rowId: wishId,
+            data: {
+              reservedBy: null,
+              reservedAt: null,
+            },
+          }),
+        ).pipe(map((row) => flattenWish(row)));
+      }),
+      catchError((error) => {
+        console.error('[BoardService] Error unreserving wish:', error);
+        if (error instanceof Error && error.message.includes('cannot')) {
+          return throwError(() => error);
+        }
+        return throwError(() =>
+          this.handleAppwriteError(error, 'unreserve wish'),
+        );
+      }),
+    );
+  }
+
+  /**
+   * Checks if the current user is the owner of a wish.
+   *
+   * @param wish - The wish to check
+   * @returns true if the current user owns the wish
+   */
+  isWishOwner(wish: WishFlat): boolean {
+    try {
+      const userId = this.getCurrentUserId();
+      return wish.uid === userId;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Checks if the current user has reserved a wish.
+   *
+   * @param wish - The wish to check
+   * @returns true if the current user has reserved the wish
+   */
+  isReservedByCurrentUser(wish: WishFlat): boolean {
+    try {
+      const userId = this.getCurrentUserId();
+      return wish.reservedBy === userId;
+    } catch {
+      return false;
+    }
+  }
+
+  // #endregion Wish Reservations
 
   // #region Realtime Subscriptions
 

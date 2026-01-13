@@ -134,3 +134,65 @@
   font-size: var(--font-size-xs, 0.75rem);
   color: var(--text-muted, #9ca3af);
 }
+
+// Reservation styles
+.card--reserved {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.02);
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.card__reservation-badge {
+  position: absolute;
+  top: var(--spacing-3, 0.75rem);
+  right: var(--spacing-3, 0.75rem);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1, 0.25rem);
+  padding: var(--spacing-1, 0.25rem) var(--spacing-3, 0.75rem);
+  border-radius: 2rem;
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 600;
+  background: rgba(107, 114, 128, 0.9);
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+  z-index: 2;
+
+  .badge-icon {
+    font-size: 0.875rem;
+  }
+
+  &--mine {
+    background: rgba(22, 163, 74, 0.9);
+  }
+}
+
+.card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-3, 0.75rem);
+  padding-top: var(--spacing-3, 0.75rem);
+  border-top: 1px solid var(--border-light, #f3f4f6);
+
+  .action-icon {
+    margin-right: var(--spacing-1, 0.25rem);
+    font-size: 1rem;
+  }
+}
+
+.card__reserved-text {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-secondary, #6b7280);
+  font-style: italic;
+}

@@ -220,9 +220,24 @@ export default async ({ req, res, log, error }) => {
                   `Image too large after fetch (${buffer.length} bytes), skipping encoding`,
                 );
               } else {
-                // Determine image type from URL or default to jpg
-                const imageMatch = imageUrl.match(/\.([^./?#]+)($|\?|#)/);
-                const imageType = imageMatch?.[1] || 'jpg';
+                // Determine image type from Content-Type header first, then URL
+                let imageType = 'jpg'; // default fallback
+
+                const contentType = imageResponse.headers.get('content-type');
+                if (contentType && contentType.startsWith('image/')) {
+                  // Extract subtype (e.g., 'image/webp' -> 'webp', 'image/jpeg' -> 'jpeg')
+                  imageType = contentType.split('/')[1].split(';')[0];
+                  log(`Image type from Content-Type: ${imageType}`);
+                } else {
+                  // Fallback to URL extension
+                  const imageMatch = imageUrl.match(/\.([^./?#]+)($|\?|#)/);
+                  if (imageMatch?.[1]) {
+                    imageType = imageMatch[1];
+                    log(`Image type from URL extension: ${imageType}`);
+                  } else {
+                    log(`No image type found, using default: ${imageType}`);
+                  }
+                }
 
                 imageEncoded = `data:image/${imageType};base64,${buffer.toString('base64')}`;
                 log(
