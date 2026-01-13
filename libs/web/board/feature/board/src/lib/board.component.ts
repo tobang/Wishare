@@ -159,7 +159,6 @@ export class BoardComponent {
       )
       .pipe(filter((result): result is WishDialogResult => !!result))
       .subscribe((result) => {
-        console.log('[BoardComponent] Creating wish', { wishlistId, result });
         this.boardStore.actions.createWish({
           wishlistId,
           data: result.wishData,
@@ -187,11 +186,6 @@ export class BoardComponent {
       )
       .pipe(filter((result): result is WishDialogResult => !!result))
       .subscribe((result) => {
-        console.log('[BoardComponent] Updating wish', {
-          wishlistId,
-          wishId: wish.$id,
-          result,
-        });
         this.boardStore.actions.updateWish({
           wishId: wish.$id,
           data: result.wishData,

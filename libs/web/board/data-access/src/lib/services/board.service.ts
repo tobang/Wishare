@@ -398,14 +398,7 @@ export class BoardService {
     data: CreateWishData,
     images?: File[],
   ): Observable<WishFlat> {
-    console.log('[BoardService] createWish called', {
-      wishlistId,
-      data,
-      images,
-    });
-
     const userId = this.getCurrentUserId();
-    console.log('[BoardService] Got user ID', userId);
 
     return from(
       this.appwrite.tablesDb.listRows({
@@ -421,14 +414,11 @@ export class BoardService {
       switchMap((result) => {
         const maxPriority = this.extractPriority(result.rows[0]);
         const nextPriority = maxPriority + PRIORITY_GAP;
-        console.log('[BoardService] Next priority', nextPriority);
 
         // If there are images, upload them first
         if (images && images.length > 0) {
-          console.log('[BoardService] Uploading', images.length, 'images');
           return this.uploadWishImages(images, userId).pipe(
             switchMap((fileIds) => {
-              console.log('[BoardService] Images uploaded, fileIds:', fileIds);
               return this.createWishRow(
                 wishlistId,
                 userId,
@@ -441,11 +431,9 @@ export class BoardService {
         }
 
         // No images, just create the wish
-        console.log('[BoardService] No images, creating wish directly');
         return this.createWishRow(wishlistId, userId, data, nextPriority, []);
       }),
       map((row) => {
-        console.log('[BoardService] Wish created successfully', row);
         return flattenWish(row);
       }),
       catchError((error) => {

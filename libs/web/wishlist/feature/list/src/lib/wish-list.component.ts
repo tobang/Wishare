@@ -107,7 +107,6 @@ export class WishListComponent {
   }
 
   openDetails() {
-    console.log('Opening details for wishlist', this.wishlist().$id);
     this.wishListClick.emit(this.wishlist().$id);
   }
 

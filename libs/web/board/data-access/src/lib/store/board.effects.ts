@@ -355,16 +355,9 @@ export class BoardEffects {
       // Create wish effect
       register(
         actions.createWish$.pipe(
-          tap((payload) =>
-            console.log('[BoardEffects] createWish action received', payload),
-          ),
           switchMap(({ wishlistId, data, images }) =>
             this.boardService.createWish(wishlistId, data, images).pipe(
-              tap((result) =>
-                console.log('[BoardEffects] createWish result', result),
-              ),
               catchError((error) => {
-                console.error('[BoardEffects] createWish error', error);
                 throw error;
               }),
             ),
@@ -372,7 +365,6 @@ export class BoardEffects {
           toState(),
         ),
         (state) => {
-          console.log('[BoardEffects] createWish state', state);
           if (state.hasValue && state.value) {
             // Trigger a refresh of wishlists after creating a wish
             actions.fetchWishlists();
