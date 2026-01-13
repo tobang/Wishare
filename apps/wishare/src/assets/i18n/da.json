@@ -1,6 +1,12 @@
 {
   "title": "Dansk titel",
   "wish": {
+    "card": {
+      "delete-confirm-title": "Slet ønske",
+      "delete-confirm-message": "Er du sikker på, at du vil slette \"{{title}}\"? Denne handling kan ikke fortrydes.",
+      "delete-confirm-yes": "Slet",
+      "delete-confirm-no": "Annuller"
+    },
     "dialog": {
       "steps": {
         "type": "Type",

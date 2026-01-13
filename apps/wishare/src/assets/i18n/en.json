@@ -1,6 +1,12 @@
 {
   "title": "English title",
   "wish": {
+    "card": {
+      "delete-confirm-title": "Delete Wish",
+      "delete-confirm-message": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+      "delete-confirm-yes": "Delete",
+      "delete-confirm-no": "Cancel"
+    },
     "dialog": {
       "steps": {
         "type": "Type",
