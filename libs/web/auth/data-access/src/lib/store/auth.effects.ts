@@ -9,7 +9,7 @@ import { RxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 
 import { TranslocoService } from '@jsverse/transloco';
-import { TuiAlertService } from '@taiga-ui/core';
+import { TuiNotificationService } from '@taiga-ui/core';
 import { APPWRITE } from '@wishare/web/shared/app-config';
 
 import {
@@ -18,6 +18,7 @@ import {
   from,
   map,
   Observable,
+  of,
   shareReplay,
   switchMap,
   tap,
@@ -54,12 +55,12 @@ export class AuthEffects {
   private readonly appwrite: { tablesDb: TablesDB; account: Account } =
     inject(APPWRITE);
 
-  // TuiAlertService and TranslocoService are injected lazily because
+  // TuiNotificationService and TranslocoService are injected lazily because
   // AuthEffects is instantiated during APP_INITIALIZER before TuiRoot is available
-  private _alertService: TuiAlertService<unknown> | null = null;
-  private get alertService(): TuiAlertService<unknown> {
+  private _alertService: TuiNotificationService | null = null;
+  private get alertService(): TuiNotificationService {
     if (!this._alertService) {
-      this._alertService = this.injector.get(TuiAlertService);
+      this._alertService = this.injector.get(TuiNotificationService);
     }
     return this._alertService;
   }
@@ -105,6 +106,8 @@ export class AuthEffects {
    */
   register(actions: RxActions<AuthActions, object>) {
     // Create shared observables for state streams
+    // Note: toState() is applied inside switchMap so that errors are caught per-attempt.
+    // This allows subsequent login attempts to work after a failed attempt.
     this._loginState$ = actions.loginWithCredentials$.pipe(
       switchMap(({ email, password }) =>
         from(
@@ -115,9 +118,9 @@ export class AuthEffects {
         ).pipe(
           switchMap(() => this.appwrite.account.get()),
           map(mapAccountToLoginResult),
+          toState(),
         ),
       ),
-      toState(),
       shareReplay({ bufferSize: 1, refCount: false }),
     );
 
@@ -139,9 +142,9 @@ export class AuthEffects {
           ),
           switchMap(() => this.appwrite.account.get()),
           map(mapAccountToLoginResult),
+          toState(),
         ),
       ),
-      toState(),
       shareReplay({ bufferSize: 1, refCount: false }),
     );
 
@@ -154,11 +157,12 @@ export class AuthEffects {
           catchError((error) => {
             console.error('Logout session deletion error:', error);
             // Continue with local cleanup even if server logout fails
-            return EMPTY;
+            // Return void to allow the toState() to emit a success state
+            return of(undefined as void);
           }),
+          toState(),
         ),
       ),
-      toState(),
       shareReplay({ bufferSize: 1, refCount: false }),
     );
 
