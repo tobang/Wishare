@@ -15,6 +15,7 @@ export type WishlistDetailsStateModel = {
   wishlist: StreamState<BoardWishlist>;
   reserveState: StreamState<WishFlat>;
   unreserveState: StreamState<WishFlat>;
+  deleteState: StreamState<void>;
   currentWishlistId: string | null;
 };
 
@@ -22,8 +23,10 @@ type WishlistDetailsActions = {
   loadWishlist: string;
   reserveWish: string;
   unreserveWish: string;
+  deleteWish: string;
   resetReserveState: void;
   resetUnreserveState: void;
+  resetDeleteState: void;
 };
 
 @Injectable()
@@ -38,6 +41,7 @@ export class WishlistDetailsStore {
         wishlist: resetStreamState(),
         reserveState: resetStreamState(),
         unreserveState: resetStreamState(),
+        deleteState: resetStreamState(),
         currentWishlistId: null,
       });
 
@@ -93,6 +97,25 @@ export class WishlistDetailsStore {
         ),
       );
 
+      // Delete wish action - deletes the wish and reloads wishlist
+      connect(
+        'deleteState',
+        this.actions.deleteWish$.pipe(
+          switchMap((wishId) =>
+            this.boardService.deleteWish(wishId).pipe(
+              tap(() => {
+                // Reload the wishlist to get updated data
+                const wishlistId = this.store.get('currentWishlistId');
+                if (wishlistId) {
+                  this.actions.loadWishlist(wishlistId);
+                }
+              }),
+              toState(),
+            ),
+          ),
+        ),
+      );
+
       // Reset states
       connect(this.actions.resetReserveState$, () => ({
         reserveState: resetStreamState<WishFlat>(),
@@ -101,12 +124,17 @@ export class WishlistDetailsStore {
       connect(this.actions.resetUnreserveState$, () => ({
         unreserveState: resetStreamState<WishFlat>(),
       }));
+
+      connect(this.actions.resetDeleteState$, () => ({
+        deleteState: resetStreamState<void>(),
+      }));
     },
   );
 
   public readonly wishlist = this.store.signal('wishlist');
   public readonly reserveState = this.store.signal('reserveState');
   public readonly unreserveState = this.store.signal('unreserveState');
+  public readonly deleteState = this.store.signal('deleteState');
 
   /**
    * Returns the current user ID or null if not authenticated.

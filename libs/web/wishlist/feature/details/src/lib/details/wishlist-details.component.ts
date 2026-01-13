@@ -72,6 +72,13 @@ export class WishlistDetailsComponent implements OnInit {
     this.store.actions.unreserveWish(wishId);
   }
 
+  /**
+   * Handles the delete action from a wish card.
+   */
+  onDeleteWish(wishId: string): void {
+    this.store.actions.deleteWish(wishId);
+  }
+
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('wishlistId');

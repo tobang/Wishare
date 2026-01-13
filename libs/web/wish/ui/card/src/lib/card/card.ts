@@ -55,6 +55,11 @@ export class WishCardComponent {
    */
   readonly unreserve = output<string>();
 
+  /**
+   * Emits when the user wants to delete this wish.
+   */
+  readonly delete = output<string>();
+
   get locale(): string {
     return this.transloco.getActiveLang();
   }
@@ -109,5 +114,9 @@ export class WishCardComponent {
 
   onUnreserveClick(): void {
     this.unreserve.emit(this.wish().$id);
+  }
+
+  onDeleteClick(): void {
+    this.delete.emit(this.wish().$id);
   }
 }

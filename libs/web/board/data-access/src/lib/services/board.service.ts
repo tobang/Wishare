@@ -362,6 +362,29 @@ export class BoardService {
   }
 
   /**
+   * Deletes a wish by its ID.
+   * Associated images in the wish-images bucket will need to be deleted separately if needed.
+   *
+   * @param wishId - The ID of the wish to delete
+   * @returns Observable that completes when the wish is deleted
+   */
+  deleteWish(wishId: string): Observable<void> {
+    return from(
+      this.appwrite.tablesDb.deleteRow({
+        databaseId: this.databaseId,
+        tableId: WISHES_TABLE,
+        rowId: wishId,
+      }),
+    ).pipe(
+      map(() => undefined),
+      catchError((error) => {
+        console.error('[BoardService] Error deleting wish:', error);
+        return throwError(() => this.handleAppwriteError(error, 'delete wish'));
+      }),
+    );
+  }
+
+  /**
    * Creates a new wish with optional image uploads.
    * Uploads images first, then creates the wish with file references.
    *

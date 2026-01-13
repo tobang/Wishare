@@ -135,6 +135,20 @@
   color: var(--text-muted, #9ca3af);
 }
 
+.card__footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2, 0.5rem);
+}
+
+.card__delete-btn {
+  --tui-text-action: var(--text-muted, #9ca3af);
+
+  &:hover {
+    --tui-text-action: var(--color-error, #dc2626);
+  }
+}
+
 // Reservation styles
 .card--reserved {
   position: relative;

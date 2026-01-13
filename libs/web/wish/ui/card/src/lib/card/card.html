@@ -45,9 +45,23 @@
         >
         }
       </div>
-      <span class="card__date"
-        >{{ wish().$createdAt | date:'mediumDate':undefined:locale }}</span
-      >
+      <div class="card__footer-right">
+        <span class="card__date"
+          >{{ wish().$createdAt | date:'mediumDate':undefined:locale }}</span
+        >
+        @if (isOwner()) {
+        <button
+          tuiIconButton
+          type="button"
+          appearance="flat"
+          size="s"
+          class="card__delete-btn"
+          (click)="onDeleteClick(); $event.stopPropagation()"
+        >
+          <tui-icon icon="@tui.trash-2" />
+        </button>
+        }
+      </div>
     </div>
 
     <!-- Reservation actions for non-owners -->
