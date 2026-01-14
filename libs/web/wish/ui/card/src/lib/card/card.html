@@ -1,5 +1,13 @@
 <div class="card" [class.card--reserved]="!isOwner() && isReserved">
-  <div class="card__image-container">
+  <div
+    class="card__image-container"
+    [class.card__image-container--clickable]="isOwner()"
+    [attr.tabindex]="isOwner() ? 0 : null"
+    [attr.role]="isOwner() ? 'button' : null"
+    (click)="isOwner() && onEditClick()"
+    (keydown.enter)="isOwner() && onEditClick()"
+    (keydown.space)="isOwner() && onEditClick(); $event.preventDefault()"
+  >
     @if (wish().files?.length) {
     <img
       [src]="getImageUrl(wish().files![0])"
@@ -31,10 +39,30 @@
   </div>
 
   <div class="card__content">
-    <h4 class="card__title">{{ wish().title }}</h4>
+    <h4
+      class="card__title"
+      [class.card__title--clickable]="isOwner()"
+      [attr.tabindex]="isOwner() ? 0 : null"
+      [attr.role]="isOwner() ? 'button' : null"
+      (click)="isOwner() && onEditClick()"
+      (keydown.enter)="isOwner() && onEditClick()"
+      (keydown.space)="isOwner() && onEditClick(); $event.preventDefault()"
+    >
+      {{ wish().title }}
+    </h4>
 
     @if (wish().description) {
-    <p class="card__description">{{ wish().description }}</p>
+    <p
+      class="card__description"
+      [class.card__description--clickable]="isOwner()"
+      [attr.tabindex]="isOwner() ? 0 : null"
+      [attr.role]="isOwner() ? 'button' : null"
+      (click)="isOwner() && onEditClick()"
+      (keydown.enter)="isOwner() && onEditClick()"
+      (keydown.space)="isOwner() && onEditClick(); $event.preventDefault()"
+    >
+      {{ wish().description }}
+    </p>
     }
 
     <div class="card__footer">
@@ -49,7 +77,21 @@
         <span class="card__date"
           >{{ wish().$createdAt | date:'mediumDate':undefined:locale }}</span
         >
-        @if (isOwner()) {
+        @if (wish().url) {
+        <a
+          tuiIconButton
+          type="button"
+          appearance="flat"
+          size="s"
+          class="card__url-btn"
+          [href]="wish().url"
+          target="_blank"
+          rel="noopener noreferrer"
+          (click)="$event.stopPropagation()"
+        >
+          <tui-icon icon="@tui.external-link" />
+        </a>
+        } @if (isOwner()) {
         <button
           tuiIconButton
           type="button"

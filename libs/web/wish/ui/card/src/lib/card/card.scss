@@ -21,6 +21,10 @@
   aspect-ratio: 16 / 10;
   overflow: hidden;
   background: var(--bg-muted, #f5f7fa);
+
+  &--clickable {
+    cursor: pointer;
+  }
 }
 
 .card__image {
@@ -95,6 +99,14 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-primary, #34626c);
+    }
+  }
 }
 
 .card__description {
@@ -107,6 +119,14 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex: 1;
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-primary, #34626c);
+    }
+  }
 }
 
 .card__footer {

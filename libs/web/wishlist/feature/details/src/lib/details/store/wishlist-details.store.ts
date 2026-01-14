@@ -7,7 +7,11 @@ import {
   toState,
   resetStreamState,
 } from '@wishare/web/shared/utils';
-import { BoardWishlist, BoardService } from '@wishare/web/board/data-access';
+import {
+  BoardWishlist,
+  BoardService,
+  CreateWishData,
+} from '@wishare/web/board/data-access';
 import { WishFlat } from '@wishare/web/wishlist/data-access';
 import { AuthStore } from '@wishare/web/auth/data-access';
 
@@ -16,6 +20,7 @@ export type WishlistDetailsStateModel = {
   reserveState: StreamState<WishFlat>;
   unreserveState: StreamState<WishFlat>;
   deleteState: StreamState<void>;
+  updateWishState: StreamState<WishFlat>;
   currentWishlistId: string | null;
 };
 
@@ -24,9 +29,11 @@ type WishlistDetailsActions = {
   reserveWish: string;
   unreserveWish: string;
   deleteWish: string;
+  updateWish: { wishId: string; data: CreateWishData; images?: File[] };
   resetReserveState: void;
   resetUnreserveState: void;
   resetDeleteState: void;
+  resetUpdateWishState: void;
 };
 
 @Injectable()
@@ -42,6 +49,7 @@ export class WishlistDetailsStore {
         reserveState: resetStreamState(),
         unreserveState: resetStreamState(),
         deleteState: resetStreamState(),
+        updateWishState: resetStreamState(),
         currentWishlistId: null,
       });
 
@@ -128,6 +136,29 @@ export class WishlistDetailsStore {
       connect(this.actions.resetDeleteState$, () => ({
         deleteState: resetStreamState<void>(),
       }));
+
+      // Update wish action - updates the wish and reloads wishlist
+      connect(
+        'updateWishState',
+        this.actions.updateWish$.pipe(
+          switchMap(({ wishId, data, images }) =>
+            this.boardService.updateWish(wishId, data, images).pipe(
+              tap(() => {
+                // Reload the wishlist to get updated data
+                const wishlistId = this.store.get('currentWishlistId');
+                if (wishlistId) {
+                  this.actions.loadWishlist(wishlistId);
+                }
+              }),
+              toState(),
+            ),
+          ),
+        ),
+      );
+
+      connect(this.actions.resetUpdateWishState$, () => ({
+        updateWishState: resetStreamState<WishFlat>(),
+      }));
     },
   );
 
@@ -135,6 +166,7 @@ export class WishlistDetailsStore {
   public readonly reserveState = this.store.signal('reserveState');
   public readonly unreserveState = this.store.signal('unreserveState');
   public readonly deleteState = this.store.signal('deleteState');
+  public readonly updateWishState = this.store.signal('updateWishState');
 
   /**
    * Returns the current user ID or null if not authenticated.

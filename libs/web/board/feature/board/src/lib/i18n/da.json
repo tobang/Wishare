@@ -11,6 +11,7 @@
     "button": "Opret din første ønskeliste"
   },
   "create-dialog": {
+    "header": "Opret ny ønskeliste",
     "title": {
       "label": "Titel",
       "placeholder": "Indtast titel på ønskeliste"
@@ -23,6 +24,7 @@
     "submit": "Opret ønskeliste"
   },
   "edit-dialog": {
+    "header": "Rediger ønskeliste",
     "submit": "Gem ændringer"
   },
   "wishlist": {

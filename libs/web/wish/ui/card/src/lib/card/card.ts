@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import {
   ChangeDetectionStrategy,
   Component,
@@ -69,6 +70,11 @@ export class WishCardComponent {
    */
   readonly delete = output<string>();
 
+  /**
+   * Emits when the owner wants to edit this wish.
+   */
+  readonly edit = output<string>();
+
   get locale(): string {
     return this.transloco.getActiveLang();
   }
@@ -123,6 +129,12 @@ export class WishCardComponent {
 
   onUnreserveClick(): void {
     this.unreserve.emit(this.wish().$id);
+  }
+
+  onEditClick(): void {
+    if (this.isOwner()) {
+      this.edit.emit(this.wish().$id);
+    }
   }
 
   onDeleteClick(): void {

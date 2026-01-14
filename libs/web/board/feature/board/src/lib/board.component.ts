@@ -102,7 +102,7 @@ export class BoardComponent {
       .open<CreateWishlistDialogResult | null>(
         new PolymorpheusComponent(CreateWishlistDialogComponent, this.injector),
         {
-          label: 'Create New Wishlist',
+          label: this.transloco.translate('board.create-dialog.header'),
           size: 'm',
           closable: true,
           dismissible: true,
@@ -128,7 +128,7 @@ export class BoardComponent {
       .open<CreateWishlistDialogResult | null>(
         new PolymorpheusComponent(CreateWishlistDialogComponent, this.injector),
         {
-          label: 'Edit Wishlist',
+          label: this.transloco.translate('board.edit-dialog.header'),
           size: 'm',
           closable: true,
           dismissible: true,

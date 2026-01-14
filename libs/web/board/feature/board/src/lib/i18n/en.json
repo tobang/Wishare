@@ -11,6 +11,7 @@
     "button": "Create Your First Wishlist"
   },
   "create-dialog": {
+    "header": "Create New Wishlist",
     "title": {
       "label": "Title",
       "placeholder": "Enter wishlist title"
@@ -23,6 +24,7 @@
     "submit": "Create Wishlist"
   },
   "edit-dialog": {
+    "header": "Edit Wishlist",
     "submit": "Save Changes"
   },
   "wishlist": {

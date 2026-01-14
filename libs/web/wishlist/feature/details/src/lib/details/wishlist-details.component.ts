@@ -3,17 +3,30 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  Injector,
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TuiLoader, TuiIcon, TuiButton } from '@taiga-ui/core';
+import {
+  TuiLoader,
+  TuiIcon,
+  TuiButton,
+  TuiDialogService,
+} from '@taiga-ui/core';
 import { WishlistDetailsStore } from './store/wishlist-details.store';
 import { WishCardComponent } from '@wishare/web/wish/ui/card';
 import { TuiTitle } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
 import { HeaderContentDirective } from '@wishare/web/shared/services';
 import { WishFlat } from '@wishare/web/wishlist/data-access';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import {
+  WishDialogComponent,
+  WishDialogInput,
+  WishDialogResult,
+} from '@wishare/web/wish/ui/dialog';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'wishare-wishlist-details',
@@ -37,6 +50,8 @@ export class WishlistDetailsComponent implements OnInit {
   protected readonly store = inject(WishlistDetailsStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly dialogService = inject(TuiDialogService);
+  private readonly injector = inject(Injector);
 
   public readonly wishlistStream = this.store.wishlist;
 
@@ -77,6 +92,41 @@ export class WishlistDetailsComponent implements OnInit {
    */
   onDeleteWish(wishId: string): void {
     this.store.actions.deleteWish(wishId);
+  }
+
+  /**
+   * Handles the edit action from a wish card.
+   */
+  onEditWish(wishId: string): void {
+    const wishlist = this.store.wishlist();
+    if (!wishlist.hasValue || !wishlist.value) return;
+
+    const wish = wishlist.value.wishes?.rows?.find(
+      (w: WishFlat) => w.$id === wishId,
+    );
+    if (!wish) return;
+
+    this.dialogService
+      .open<WishDialogResult | null>(
+        new PolymorpheusComponent(WishDialogComponent, this.injector),
+        {
+          dismissible: true,
+          data: {
+            wish: wish,
+            images: wish.files || [],
+            editMode: true,
+          } as WishDialogInput,
+          size: 'l',
+        },
+      )
+      .pipe(filter((result): result is WishDialogResult => result != null))
+      .subscribe((result) => {
+        this.store.actions.updateWish({
+          wishId: wish.$id,
+          data: result.wishData,
+          images: result.imageFiles,
+        });
+      });
   }
 
   ngOnInit() {
