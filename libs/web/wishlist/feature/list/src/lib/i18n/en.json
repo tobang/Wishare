@@ -4,5 +4,9 @@
   "delete-confirm-title": "Delete Wishlist",
   "delete-confirm-message": "Are you sure you want to delete \"{{title}}\"?",
   "delete-confirm-yes": "Delete",
-  "delete-confirm-no": "Cancel"
+  "delete-confirm-no": "Cancel",
+  "share-title": "Share Wishlist",
+  "share-description": "Copy this link to share your wishlist:",
+  "share-copy": "Copy",
+  "share-copied": "Copied!"
 }

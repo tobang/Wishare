@@ -27,6 +27,13 @@
     "header": "Rediger ønskeliste",
     "submit": "Gem ændringer"
   },
+  "share-dialog": {
+    "header": "Del ønskeliste",
+    "description": "Kopiér dette link for at dele din ønskeliste med venner og familie:",
+    "copy": "Kopiér",
+    "copied": "Kopieret!",
+    "close": "Luk"
+  },
   "wishlist": {
     "delete-title": "Slet ønskeliste",
     "delete-confirmation": "Er du sikker på, at du vil slette denne ønskeliste? Denne handling kan ikke fortrydes.",

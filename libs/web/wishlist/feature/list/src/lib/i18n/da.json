@@ -4,5 +4,9 @@
   "delete-confirm-title": "Slet ønskeliste",
   "delete-confirm-message": "Er du sikker på at du vil slette \"{{title}}\"?",
   "delete-confirm-yes": "Slet",
-  "delete-confirm-no": "Annuller"
+  "delete-confirm-no": "Annuller",
+  "share-title": "Del ønskeliste",
+  "share-description": "Kopiér dette link for at dele din ønskeliste:",
+  "share-copy": "Kopiér",
+  "share-copied": "Kopieret!"
 }

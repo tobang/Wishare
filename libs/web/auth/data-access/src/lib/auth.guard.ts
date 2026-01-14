@@ -34,7 +34,7 @@ export class AuthGuard {
    * Determines if a route can be activated based on authentication status.
    * First checks the signal directly for immediate access. If account state is undefined,
    * falls back to observable to wait for initialization.
-   * Redirects to /login if user is not authenticated.
+   * Redirects to /login with returnUrl if user is not authenticated.
    *
    * @returns true if authenticated, false otherwise. May return an Observable if waiting for initialization.
    */
@@ -44,7 +44,7 @@ export class AuthGuard {
     if (currentAccount !== undefined) {
       const isLoggedIn = !!currentAccount;
       if (!isLoggedIn) {
-        this.router.navigateByUrl('/login');
+        this.redirectToLogin();
       }
       return isLoggedIn;
     }
@@ -53,10 +53,26 @@ export class AuthGuard {
     return this.checkLogin().pipe(
       tap((loggedIn) => {
         if (!loggedIn) {
-          this.router.navigateByUrl('/login');
+          this.redirectToLogin();
         }
       }),
     );
+  }
+
+  /**
+   * Redirects to login page with the current URL as returnUrl query parameter.
+   * This allows redirecting back to the original page after successful login.
+   */
+  private redirectToLogin(): void {
+    const currentUrl = this.router.url;
+    // Only add returnUrl if we're not already on a public page
+    if (currentUrl && currentUrl !== '/' && !currentUrl.startsWith('/login')) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: currentUrl },
+      });
+    } else {
+      this.router.navigateByUrl('/login');
+    }
   }
 
   /**

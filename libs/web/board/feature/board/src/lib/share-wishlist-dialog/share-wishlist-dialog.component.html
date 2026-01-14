@@ -1,0 +1,33 @@
+<div class="share-dialog" *transloco="let t">
+  <p class="share-description">{{ t('board.share-dialog.description') }}</p>
+
+  <div class="share-link-field">
+    <tui-textfield tuiTextfieldSize="m">
+      <input tuiInput [value]="shareableLink" readonly />
+    </tui-textfield>
+  </div>
+
+  <footer class="dialog-actions">
+    <button
+      tuiButton
+      type="button"
+      appearance="secondary"
+      size="m"
+      (click)="close()"
+    >
+      {{ t('board.share-dialog.close') }}
+    </button>
+    <button
+      tuiButton
+      type="button"
+      [appearance]="copied() ? 'accent' : 'primary'"
+      size="m"
+      [iconStart]="copied() ? '@tui.check' : '@tui.copy'"
+      (click)="copyToClipboard()"
+    >
+      {{
+        copied() ? t('board.share-dialog.copied') : t('board.share-dialog.copy')
+      }}
+    </button>
+  </footer>
+</div>

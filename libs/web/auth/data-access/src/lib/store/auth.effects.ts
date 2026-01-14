@@ -4,7 +4,7 @@ import {
   Injector,
   runInInjectionContext,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RxActions } from '@rx-angular/state/actions';
 import { rxEffects } from '@rx-angular/state/effects';
 
@@ -81,6 +81,31 @@ export class AuthEffects {
       this._router = this.injector.get(Router);
     }
     return this._router;
+  }
+
+  private _activatedRoute: ActivatedRoute | null = null;
+  private get activatedRoute(): ActivatedRoute {
+    if (!this._activatedRoute) {
+      this._activatedRoute = this.injector.get(ActivatedRoute);
+    }
+    return this._activatedRoute;
+  }
+
+  /**
+   * Gets the returnUrl from query parameters and navigates there after login.
+   * Falls back to /wishlists if no returnUrl is present.
+   */
+  private navigateAfterLogin(): void {
+    const returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'];
+    if (
+      returnUrl &&
+      typeof returnUrl === 'string' &&
+      returnUrl.startsWith('/')
+    ) {
+      this.router.navigateByUrl(returnUrl);
+    } else {
+      this.router.navigate(['/wishlists']);
+    }
   }
 
   // State streams - initialized lazily when register() is called
@@ -179,7 +204,7 @@ export class AuthEffects {
           } else if (state.hasValue && state.value?.account) {
             // Update account in store before navigating to ensure auth guard has access
             actions.setAccount(state.value.account);
-            this.router.navigate(['/wishlists']);
+            this.navigateAfterLogin();
           }
         });
 
@@ -190,7 +215,7 @@ export class AuthEffects {
           } else if (state.hasValue && state.value?.account) {
             // Update account in store before navigating to ensure auth guard has access
             actions.setAccount(state.value.account);
-            this.router.navigate(['/wishlists']);
+            this.navigateAfterLogin();
           }
         });
 

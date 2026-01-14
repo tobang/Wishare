@@ -30,6 +30,10 @@ import {
   CreateWishlistDialogInput,
   CreateWishlistDialogResult,
 } from './create-wishlist-dialog';
+import {
+  ShareWishlistDialogComponent,
+  ShareWishlistDialogInput,
+} from './share-wishlist-dialog';
 import { WishFlat, WishlistUi } from '@wishare/web/wishlist/data-access';
 import {
   WishDialogComponent,
@@ -222,6 +226,25 @@ export class BoardComponent {
 
   reorderWishes(event: ReorderWishesEvent) {
     this.boardStore.actions.reorderWishes(event);
+  }
+
+  shareWishlist(wishlistId: string) {
+    const dialogInput: ShareWishlistDialogInput = {
+      wishlistId,
+    };
+
+    this.dialogService
+      .open(
+        new PolymorpheusComponent(ShareWishlistDialogComponent, this.injector),
+        {
+          label: this.transloco.translate('board.share-dialog.header'),
+          size: 'm',
+          closable: true,
+          dismissible: true,
+          data: dialogInput,
+        },
+      )
+      .subscribe();
   }
 
   openWishlist(wishlistId: string) {

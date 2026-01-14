@@ -44,10 +44,13 @@ export class LayoutComponent {
       map((e) => e.urlAfterRedirects),
       startWith(this.router.url),
       map((url) => {
-        // Handle root, login, and fragments/query params if necessary
-        // Simple check for now as requested
+        // Handle root, login, share routes, and fragments/query params
         const path = url.split('?')[0].split('#')[0];
-        return path === '/' || path.startsWith('/login');
+        return (
+          path === '/' ||
+          path.startsWith('/login') ||
+          path.startsWith('/share/')
+        );
       }),
     ),
     { initialValue: true },

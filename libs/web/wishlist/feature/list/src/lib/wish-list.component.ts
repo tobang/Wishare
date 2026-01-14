@@ -74,6 +74,7 @@ export class WishListComponent {
   readonly createWishClick = output<string>();
   readonly editWishlistClick = output<WishlistUi>();
   readonly deleteWishlistClick = output<string>();
+  readonly shareWishlistClick = output<string>();
   readonly editWishClick = output<{ wishlistId: string; wish: WishFlat }>();
   readonly reorderWishesClick = output<ReorderWishesEvent>();
   readonly wishListClick = output<string>();
@@ -88,6 +89,10 @@ export class WishListComponent {
 
   deleteWishlist() {
     this.deleteWishlistClick.emit(this.wishlist().$id);
+  }
+
+  shareWishlist() {
+    this.shareWishlistClick.emit(this.wishlist().$id);
   }
 
   onWishClick(wish: WishFlat) {

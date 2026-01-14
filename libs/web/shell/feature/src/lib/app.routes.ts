@@ -22,6 +22,14 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'share/wishlist/:wishlistId',
+        loadComponent: () =>
+          import('@wishare/web/wishlist/feature/details').then(
+            (m) => m.WishlistDetailsComponent,
+          ),
+        canActivate: [AuthGuard],
+      },
+      {
         path: 'wishlists/:wishlistId',
         loadComponent: () =>
           import('@wishare/web/wishlist/feature/details').then(
